@@ -4,6 +4,8 @@ import cors from 'cors'
 import helmet from 'helmet'
 import morgan from 'morgan'
 import { createClient } from '@supabase/supabase-js'
+import { validationResult } from 'express-validator'
+import courseRoutes from './routes/courses.js'
 
 const app = express()
 const PORT = process.env.PORT || 3000
@@ -16,13 +18,18 @@ const supabase = createClient(
 app.use(helmet())
 app.use(cors())
 app.use(morgan('dev'))
-app.use(express.json())
+app.use(express.json({ limit: '10mb' }))
 
 app.get('/', (req, res) => {
   res.json({ success: true, data: 'ILMS API running' })
 })
 
+app.use('/api/courses', courseRoutes)
+
 app.use((err, req, res, next) => {
+  if (err.type === 'entity.too.large') {
+    return res.status(413).json({ success: false, error: 'Request body too large' })
+  }
   console.error(err)
   res.status(500).json({ success: false, error: 'Internal server error' })
 })

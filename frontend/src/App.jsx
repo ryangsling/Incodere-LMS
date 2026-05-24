@@ -3,7 +3,7 @@ import { useAuth } from './context/AuthContext'
 import Login from './pages/Login'
 import LearnerDashboard from './pages/LearnerDashboard'
 import AdminDashboard from './pages/AdminDashboard'
-import SuperAdminDashboard from './pages/SuperAdminDashboard'
+import SuperAdminLayout from './pages/SuperAdminLayout'
 
 function ProtectedRoute({ children, roles }) {
   const { user, loading } = useAuth()
@@ -53,7 +53,7 @@ function App() {
       <Route path="/" element={<HomeRedirect />} />
       <Route path="/login" element={<Login />} />
       <Route
-        path="/dashboard"
+        path="/dashboard/*"
         element={
           <ProtectedRoute roles={['learner']}>
             <LearnerDashboard />
@@ -61,7 +61,7 @@ function App() {
         }
       />
       <Route
-        path="/admin"
+        path="/admin/*"
         element={
           <ProtectedRoute roles={['company_admin']}>
             <AdminDashboard />
@@ -69,10 +69,10 @@ function App() {
         }
       />
       <Route
-        path="/super-admin"
+        path="/super-admin/*"
         element={
           <ProtectedRoute roles={['super_admin']}>
-            <SuperAdminDashboard />
+            <SuperAdminLayout />
           </ProtectedRoute>
         }
       />
