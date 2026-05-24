@@ -45,4 +45,10 @@ export const api = {
     createLearner: (orgId, data) => request(`/api/organisations/${orgId}/learners`, { method: 'POST', body: JSON.stringify(data) }),
     deactivateUser: (userId) => request(`/api/organisations/users/${userId}/deactivate`, { method: 'PUT' }),
   },
+  enrolments: {
+    list: () => request('/api/enrolments'),
+    create: (data) => request('/api/enrolments', { method: 'POST', body: JSON.stringify(data) }),
+    delete: (id) => request(`/api/enrolments/${id}`, { method: 'DELETE' }),
+    myEnrolments: () => request('/api/enrolments/me'),
+  },
 }

@@ -1,9 +1,11 @@
 import { Routes, Route, NavLink } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import CompanyAdminLearners from './CompanyAdminLearners'
+import CompanyAdminEnrolments from './CompanyAdminEnrolments'
 
 const links = [
   { to: '/admin/learners', label: 'Learners' },
+  { to: '/admin/enrolments', label: 'Enrolments' },
 ]
 
 export default function CompanyAdminLayout() {
@@ -40,6 +42,7 @@ export default function CompanyAdminLayout() {
           <Routes>
             <Route index element={<CompanyAdminLearners />} />
             <Route path="learners" element={<CompanyAdminLearners />} />
+            <Route path="enrolments" element={<CompanyAdminEnrolments />} />
           </Routes>
         </main>
       </div>

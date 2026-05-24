@@ -61,3 +61,32 @@ export async function deleteCourse(req, res) {
   if (error) return res.status(400).json({ success: false, error: error.message })
   res.json({ success: true, data: null })
 }
+
+export async function listPublishedCourses(req, res) {
+  const { data, error } = await supabase
+    .from('courses')
+    .select('id, title, category, thumbnail_url, created_at')
+    .eq('status', 'published')
+    .order('created_at', { ascending: false })
+
+  if (error) return res.status(500).json({ success: false, error: error.message })
+  res.json({ success: true, data })
+}
+
+export async function getPublishedCourse(req, res) {
+  const { data, error } = await supabase
+    .from('courses')
+    .select(`
+      *,
+      sections (
+        id, title, sort_order,
+        lessons (id, title, type, video_url, content, sort_order)
+      )
+    `)
+    .eq('id', req.params.id)
+    .eq('status', 'published')
+    .single()
+
+  if (error) return res.status(404).json({ success: false, error: 'Course not found' })
+  res.json({ success: true, data })
+}

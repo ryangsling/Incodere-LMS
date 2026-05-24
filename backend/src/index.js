@@ -7,6 +7,7 @@ import { createClient } from '@supabase/supabase-js'
 import { validationResult } from 'express-validator'
 import courseRoutes from './routes/courses.js'
 import organisationRoutes from './routes/organisations.js'
+import enrolmentRoutes from './routes/enrolments.js'
 
 const app = express()
 const PORT = process.env.PORT || 3000
@@ -27,6 +28,7 @@ app.get('/', (req, res) => {
 
 app.use('/api/courses', courseRoutes)
 app.use('/api/organisations', organisationRoutes)
+app.use('/api/enrolments', enrolmentRoutes)
 
 app.use((err, req, res, next) => {
   if (err.type === 'entity.too.large') {
