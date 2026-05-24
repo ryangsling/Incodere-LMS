@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { api } from '../utils/api'
 
 export default function LearnerDashboard() {
   const { user, logout } = useAuth()
+  const navigate = useNavigate()
   const [enrolments, setEnrolments] = useState([])
   const [loading, setLoading] = useState(true)
 
@@ -37,7 +39,11 @@ export default function LearnerDashboard() {
 
         <div className="grid gap-4">
           {enrolments.map(enr => (
-            <div key={enr.id} className="bg-white rounded shadow-sm p-4">
+            <button
+              key={enr.id}
+              onClick={() => navigate(`/dashboard/courses/${enr.course_id}`)}
+              className="bg-white rounded shadow-sm p-4 text-left w-full hover:shadow-md transition cursor-pointer"
+            >
               <div className="flex items-center justify-between mb-3">
                 <div>
                   <h3 className="font-medium text-[#032147]">{enr.course?.title}</h3>
@@ -53,7 +59,7 @@ export default function LearnerDashboard() {
                 />
               </div>
               <p className="text-xs text-[#888888] mt-1">{enr.completed_lessons} / {enr.total_lessons} lessons</p>
-            </div>
+            </button>
           ))}
         </div>
       </main>

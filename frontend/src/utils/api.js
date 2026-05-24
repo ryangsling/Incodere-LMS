@@ -51,4 +51,9 @@ export const api = {
     delete: (id) => request(`/api/enrolments/${id}`, { method: 'DELETE' }),
     myEnrolments: () => request('/api/enrolments/me'),
   },
+  progress: {
+    markComplete: (data) => request('/api/progress', { method: 'POST', body: JSON.stringify(data) }),
+    getCourseProgress: (courseId) => request(`/api/progress/${courseId}`),
+    getEnrolledCourse: (courseId) => request(`/api/enrolments/me/${courseId}`),
+  },
 }

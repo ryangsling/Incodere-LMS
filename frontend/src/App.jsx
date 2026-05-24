@@ -2,6 +2,7 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 import { useAuth } from './context/AuthContext'
 import Login from './pages/Login'
 import LearnerDashboard from './pages/LearnerDashboard'
+import LearnerCoursePlayer from './pages/LearnerCoursePlayer'
 import CompanyAdminLayout from './pages/CompanyAdminLayout'
 import SuperAdminLayout from './pages/SuperAdminLayout'
 
@@ -53,10 +54,18 @@ function App() {
       <Route path="/" element={<HomeRedirect />} />
       <Route path="/login" element={<Login />} />
       <Route
-        path="/dashboard/*"
+        path="/dashboard"
         element={
           <ProtectedRoute roles={['learner']}>
             <LearnerDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/dashboard/courses/:courseId"
+        element={
+          <ProtectedRoute roles={['learner']}>
+            <LearnerCoursePlayer />
           </ProtectedRoute>
         }
       />
