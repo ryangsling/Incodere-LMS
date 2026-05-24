@@ -4,6 +4,8 @@ import SuperAdminSidebar from './SuperAdminSidebar'
 import CourseList from './CourseList'
 import CourseForm from './CourseForm'
 import CourseDetail from './CourseDetail'
+import OrganisationList from './OrganisationList'
+import OrganisationDetail from './OrganisationDetail'
 
 export default function SuperAdminLayout() {
   const { user, logout } = useAuth()
@@ -26,6 +28,8 @@ export default function SuperAdminLayout() {
             <Route path="courses/new" element={<CourseForm />} />
             <Route path="courses/:id/edit" element={<CourseForm />} />
             <Route path="courses/:id" element={<CourseDetail />} />
+            <Route path="organisations" element={<OrganisationList />} />
+            <Route path="organisations/:orgId" element={<OrganisationDetail />} />
           </Routes>
         </main>
       </div>

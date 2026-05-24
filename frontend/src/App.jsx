@@ -2,7 +2,7 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 import { useAuth } from './context/AuthContext'
 import Login from './pages/Login'
 import LearnerDashboard from './pages/LearnerDashboard'
-import AdminDashboard from './pages/AdminDashboard'
+import CompanyAdminLayout from './pages/CompanyAdminLayout'
 import SuperAdminLayout from './pages/SuperAdminLayout'
 
 function ProtectedRoute({ children, roles }) {
@@ -64,7 +64,7 @@ function App() {
         path="/admin/*"
         element={
           <ProtectedRoute roles={['company_admin']}>
-            <AdminDashboard />
+            <CompanyAdminLayout />
           </ProtectedRoute>
         }
       />

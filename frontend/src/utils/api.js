@@ -37,4 +37,12 @@ export const api = {
     updateLesson: (id, data) => request(`/api/courses/lessons/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
     deleteLesson: (id) => request(`/api/courses/lessons/${id}`, { method: 'DELETE' }),
   },
+  organisations: {
+    list: () => request('/api/organisations'),
+    create: (data) => request('/api/organisations', { method: 'POST', body: JSON.stringify(data) }),
+    createCompanyAdmin: (orgId, data) => request(`/api/organisations/${orgId}/company-admin`, { method: 'POST', body: JSON.stringify(data) }),
+    listUsers: (orgId) => request(`/api/organisations/${orgId}/users`),
+    createLearner: (orgId, data) => request(`/api/organisations/${orgId}/learners`, { method: 'POST', body: JSON.stringify(data) }),
+    deactivateUser: (userId) => request(`/api/organisations/users/${userId}/deactivate`, { method: 'PUT' }),
+  },
 }
