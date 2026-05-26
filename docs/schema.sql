@@ -66,6 +66,7 @@ create table enrolments (
   id uuid primary key default gen_random_uuid(),
   learner_id uuid not null references users(id) on delete cascade,
   course_id uuid not null references courses(id) on delete cascade,
+  organisation_id uuid references organisations(id) on delete cascade,
   status text not null default 'active' check (status in ('active', 'completed')),
   enrolled_at timestamptz not null default now(),
   completed_at timestamptz,

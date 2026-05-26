@@ -29,31 +29,47 @@ export default function CourseDetail() {
 
   async function addSection() {
     if (!newSectionTitle.trim()) return
-    await api.courses.createSection(id, { title: newSectionTitle })
-    setNewSectionTitle('')
-    loadCourse()
+    try {
+      await api.courses.createSection(id, { title: newSectionTitle })
+      setNewSectionTitle('')
+      loadCourse()
+    } catch (e) {
+      setError(e.message)
+    }
   }
 
   async function deleteSection(sectionId) {
-    await api.courses.deleteSection(sectionId)
-    loadCourse()
+    try {
+      await api.courses.deleteSection(sectionId)
+      loadCourse()
+    } catch (e) {
+      setError(e.message)
+    }
   }
 
   async function addLesson() {
     if (!newLesson.title.trim()) return
-    await api.courses.createLesson(newLesson.sectionId, {
-      title: newLesson.title,
-      type: newLesson.type,
-      video_url: newLesson.video_url || null,
-      content: newLesson.content || null,
-    })
-    setNewLesson({ sectionId: '', title: '', type: 'video', video_url: '', content: '' })
-    loadCourse()
+    try {
+      await api.courses.createLesson(newLesson.sectionId, {
+        title: newLesson.title,
+        type: newLesson.type,
+        video_url: newLesson.video_url || null,
+        content: newLesson.content || null,
+      })
+      setNewLesson({ sectionId: '', title: '', type: 'video', video_url: '', content: '' })
+      loadCourse()
+    } catch (e) {
+      setError(e.message)
+    }
   }
 
   async function deleteLesson(lessonId) {
-    await api.courses.deleteLesson(lessonId)
-    loadCourse()
+    try {
+      await api.courses.deleteLesson(lessonId)
+      loadCourse()
+    } catch (e) {
+      setError(e.message)
+    }
   }
 
   if (loading) return <p className="text-[#888888]">Loading course...</p>
@@ -79,9 +95,12 @@ export default function CourseDetail() {
           </Link>
           <button
             onClick={async () => {
-              if (confirm('Delete this course?')) {
+              if (!confirm('Delete this course?')) return
+              try {
                 await api.courses.delete(id)
                 navigate('/super-admin/courses')
+              } catch (e) {
+                setError(e.message)
               }
             }}
             className="px-3 py-1.5 text-sm text-red-600 border border-red-300 rounded hover:bg-red-50"

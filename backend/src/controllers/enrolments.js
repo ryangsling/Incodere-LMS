@@ -1,4 +1,4 @@
-import { supabase } from '../index.js'
+import supabase from '../db/supabase.js'
 
 export async function listEnrolments(req, res) {
   const isSuperAdmin = req.user.role === 'super_admin'
@@ -54,7 +54,7 @@ export async function createEnrolment(req, res) {
     return res.status(403).json({ success: false, error: 'Some learners do not belong to your organisation' })
   }
 
-  const records = validIds.map(id => ({ learner_id: id, course_id, organisation_id: orgId }))
+  const records = validIds.map(id => ({ learner_id: id, course_id }))
   const { data, error } = await supabase.from('enrolments').insert(records).select()
 
   if (error) return res.status(400).json({ success: false, error: error.message })
@@ -66,13 +66,13 @@ export async function deleteEnrolment(req, res) {
 
   const { data: enrolment } = await supabase
     .from('enrolments')
-    .select('organisation_id')
+    .select('id, learner:users!learner_id(organisation_id)')
     .eq('id', id)
     .single()
 
   if (!enrolment) return res.status(404).json({ success: false, error: 'Enrolment not found' })
 
-  if (req.user.role !== 'super_admin' && enrolment.organisation_id !== req.user.organisation_id) {
+  if (req.user.role !== 'super_admin' && enrolment.learner?.organisation_id !== req.user.organisation_id) {
     return res.status(403).json({ success: false, error: 'Forbidden' })
   }
 
@@ -91,29 +91,35 @@ export async function myEnrolments(req, res) {
   if (enrolErr) return res.status(500).json({ success: false, error: enrolErr.message })
 
   const result = await Promise.all(enrolments.map(async (enr) => {
-    const { count: totalLessons } = await supabase
-      .from('lessons')
-      .select('*', { count: 'exact', head: true })
-      .in('section_id', supabase
-        .from('sections')
-        .select('id')
-        .eq('course_id', enr.course_id)
-      )
+    const { data: sections } = await supabase
+      .from('sections')
+      .select('id')
+      .eq('course_id', enr.course_id)
 
-    const { count: completedLessons } = await supabase
-      .from('lesson_progress')
-      .select('*', { count: 'exact', head: true })
-      .eq('learner_id', req.user.id)
-      .eq('completed', true)
-      .in('lesson_id', supabase
+    const sectionIds = sections?.map(s => s.id) || []
+
+    let totalLessons = 0
+    let completedLessons = 0
+
+    if (sectionIds.length > 0) {
+      const { data: lessons } = await supabase
         .from('lessons')
         .select('id')
-        .in('section_id', supabase
-          .from('sections')
-          .select('id')
-          .eq('course_id', enr.course_id)
-        )
-      )
+        .in('section_id', sectionIds)
+
+      const lessonIds = lessons?.map(l => l.id) || []
+      totalLessons = lessonIds.length
+
+      if (lessonIds.length > 0) {
+        const { count } = await supabase
+          .from('lesson_progress')
+          .select('*', { count: 'exact', head: true })
+          .eq('learner_id', req.user.id)
+          .eq('completed', true)
+          .in('lesson_id', lessonIds)
+        completedLessons = count || 0
+      }
+    }
 
     return {
       ...enr,
@@ -124,4 +130,123 @@ export async function myEnrolments(req, res) {
   }))
 
   res.json({ success: true, data: result })
+}
+
+export async function getReport(req, res) {
+  const orgId = req.user.organisation_id
+  const { course_id, status } = req.query
+
+  const { data: orgLearners } = await supabase
+    .from('users')
+    .select('id')
+    .eq('organisation_id', orgId)
+  const learnerIds = orgLearners.map(l => l.id)
+
+  let query = supabase
+    .from('enrolments')
+    .select(`
+      *,
+      learner:users!learner_id(id, email, first_name, last_name),
+      course:courses(id, title)
+    `)
+    .in('learner_id', learnerIds)
+    .order('enrolled_at', { ascending: false })
+
+  if (course_id) query = query.eq('course_id', course_id)
+
+  const { data: enrolments, error } = await query
+  if (error) return res.status(500).json({ success: false, error: error.message })
+
+  const result = await Promise.all(enrolments.map(async (enr) => {
+    const { data: sections } = await supabase
+      .from('sections')
+      .select('id')
+      .eq('course_id', enr.course_id)
+
+    const sectionIds = sections?.map(s => s.id) || []
+    let totalLessons = 0
+    let completedLessons = 0
+
+    if (sectionIds.length > 0) {
+      const { data: lessons } = await supabase
+        .from('lessons')
+        .select('id')
+        .in('section_id', sectionIds)
+
+      const lessonIds = lessons?.map(l => l.id) || []
+      totalLessons = lessonIds.length
+
+      if (lessonIds.length > 0) {
+        const { count } = await supabase
+          .from('lesson_progress')
+          .select('*', { count: 'exact', head: true })
+          .eq('learner_id', enr.learner_id)
+          .eq('completed', true)
+          .in('lesson_id', lessonIds)
+        completedLessons = count || 0
+      }
+    }
+
+    const progress = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0
+
+    const { data: cert } = await supabase
+      .from('certificates')
+      .select('id, issued_at')
+      .eq('learner_id', enr.learner_id)
+      .eq('course_id', enr.course_id)
+      .maybeSingle()
+
+    return {
+      learner_name: `${enr.learner.first_name} ${enr.learner.last_name}`,
+      learner_email: enr.learner.email,
+      course_title: enr.course.title,
+      progress,
+      total_lessons: totalLessons,
+      completed_lessons: completedLessons,
+      certificate_issued: !!cert,
+      certificate_date: cert?.issued_at || null,
+      enrolled_at: enr.enrolled_at,
+    }
+  }))
+
+  const filtered = status
+    ? result.filter(r => {
+        if (status === 'completed') return r.progress === 100
+        if (status === 'in_progress') return r.progress > 0 && r.progress < 100
+        if (status === 'not_started') return r.progress === 0
+        return true
+      })
+    : result
+
+  res.json({ success: true, data: filtered })
+}
+
+export async function getEnrolledCourse(req, res) {
+  const userId = req.user.id
+  const courseId = req.params.courseId
+
+  const { data: enrolment } = await supabase
+    .from('enrolments')
+    .select('id')
+    .eq('learner_id', userId)
+    .eq('course_id', courseId)
+    .single()
+
+  if (!enrolment) return res.status(403).json({ success: false, error: 'Not enrolled in this course' })
+
+  const { data, error } = await supabase
+    .from('courses')
+    .select(`
+      id, title, description, category, thumbnail_url,
+      sections (
+        id, title, sort_order,
+        lessons (id, title, type, video_url, content, sort_order)
+      )
+    `)
+    .eq('id', courseId)
+    .eq('status', 'published')
+    .single()
+
+  if (error) return res.status(404).json({ success: false, error: 'Course not found' })
+  res.json({ success: true, data })
 }

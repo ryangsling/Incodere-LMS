@@ -8,6 +8,8 @@ import {
   createEnrolment,
   deleteEnrolment,
   myEnrolments,
+  getEnrolledCourse,
+  getReport,
 } from '../controllers/enrolments.js'
 
 const router = Router()
@@ -32,9 +34,19 @@ router.delete('/:id',
   deleteEnrolment
 )
 
+router.get('/report',
+  requireRole('company_admin'),
+  getReport
+)
+
 router.get('/me',
   requireRole('learner'),
   myEnrolments
+)
+
+router.get('/me/:courseId',
+  requireRole('learner'),
+  getEnrolledCourse
 )
 
 export default router

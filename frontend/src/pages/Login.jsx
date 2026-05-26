@@ -1,8 +1,10 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
 export default function Login() {
   const { login } = useAuth()
+  const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -14,7 +16,10 @@ export default function Login() {
     setSubmitting(true)
 
     try {
-      await login(email, password)
+      const user = await login(email, password)
+      if (user.role === 'super_admin') navigate('/super-admin', { replace: true })
+      else if (user.role === 'company_admin') navigate('/admin', { replace: true })
+      else navigate('/dashboard', { replace: true })
     } catch (err) {
       setError(err.message === 'Invalid login credentials'
         ? 'Invalid email or password'

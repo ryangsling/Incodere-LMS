@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom'
 const links = [
   { to: '/super-admin/courses', label: 'Courses' },
   { to: '/super-admin/organisations', label: 'Organisations' },
+  { to: '/super-admin/stats', label: 'Stats' },
 ]
 
 export default function SuperAdminSidebar() {

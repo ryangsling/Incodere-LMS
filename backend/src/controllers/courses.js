@@ -1,4 +1,4 @@
-import { supabase } from '../index.js'
+import supabase from '../db/supabase.js'
 
 export async function listCourses(req, res) {
   const { data, error } = await supabase

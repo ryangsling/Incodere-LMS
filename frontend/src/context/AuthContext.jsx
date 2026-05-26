@@ -52,11 +52,14 @@ export function AuthProvider({ children }) {
       .single()
 
     dispatch({ type: 'SET_USER', payload: user || null })
+    return user
   }
 
   async function login(email, password) {
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password })
     if (error) throw error
+    const user = await loadUser(data.user.id)
+    return user
   }
 
   async function logout() {

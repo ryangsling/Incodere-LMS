@@ -50,10 +50,22 @@ export const api = {
     create: (data) => request('/api/enrolments', { method: 'POST', body: JSON.stringify(data) }),
     delete: (id) => request(`/api/enrolments/${id}`, { method: 'DELETE' }),
     myEnrolments: () => request('/api/enrolments/me'),
+    getEnrolledCourse: (courseId) => request(`/api/enrolments/me/${courseId}`),
+    report: (params = {}) => {
+      const qs = new URLSearchParams(params).toString()
+      return request(`/api/enrolments/report${qs ? `?${qs}` : ''}`)
+    },
   },
   progress: {
     markComplete: (data) => request('/api/progress', { method: 'POST', body: JSON.stringify(data) }),
     getCourseProgress: (courseId) => request(`/api/progress/${courseId}`),
-    getEnrolledCourse: (courseId) => request(`/api/enrolments/me/${courseId}`),
+  },
+  certificates: {
+    generate: (data) => request('/api/certificates', { method: 'POST', body: JSON.stringify(data) }),
+    mine: () => request('/api/certificates/mine'),
+    list: () => request('/api/certificates'),
+  },
+  stats: {
+    platform: () => request('/api/stats'),
   },
 }

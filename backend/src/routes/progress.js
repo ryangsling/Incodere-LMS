@@ -3,16 +3,11 @@ import { body } from 'express-validator'
 import { verifyAuth } from '../middleware/verifyAuth.js'
 import { requireRole } from '../middleware/requireRole.js'
 import { handleValidation } from '../middleware/validate.js'
-import { markComplete, getCourseProgress, getEnrolledCourse } from '../controllers/progress.js'
+import { markComplete, getCourseProgress } from '../controllers/progress.js'
 
 const router = Router()
 
 router.use(verifyAuth)
-
-router.get('/me/:courseId',
-  requireRole('learner'),
-  getEnrolledCourse
-)
 
 router.post('/',
   requireRole('learner'),

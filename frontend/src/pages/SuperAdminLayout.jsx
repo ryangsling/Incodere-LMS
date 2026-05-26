@@ -6,6 +6,7 @@ import CourseForm from './CourseForm'
 import CourseDetail from './CourseDetail'
 import OrganisationList from './OrganisationList'
 import OrganisationDetail from './OrganisationDetail'
+import PlatformStats from './PlatformStats'
 
 export default function SuperAdminLayout() {
   const { user, logout } = useAuth()
@@ -30,6 +31,7 @@ export default function SuperAdminLayout() {
             <Route path="courses/:id" element={<CourseDetail />} />
             <Route path="organisations" element={<OrganisationList />} />
             <Route path="organisations/:orgId" element={<OrganisationDetail />} />
+            <Route path="stats" element={<PlatformStats />} />
           </Routes>
         </main>
       </div>

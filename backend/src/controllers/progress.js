@@ -1,4 +1,4 @@
-import { supabase } from '../index.js'
+import supabase from '../db/supabase.js'
 
 export async function markComplete(req, res) {
   const { lesson_id } = req.body
@@ -44,51 +44,30 @@ export async function markComplete(req, res) {
 
 export async function getCourseProgress(req, res) {
   const userId = req.user.id
+  const courseId = req.params.courseId
+
+  const { data: sections } = await supabase
+    .from('sections')
+    .select('id')
+    .eq('course_id', courseId)
+
+  const sectionIds = sections?.map(s => s.id) || []
+
+  let lessonIds = []
+  if (sectionIds.length > 0) {
+    const { data: lessons } = await supabase
+      .from('lessons')
+      .select('id')
+      .in('section_id', sectionIds)
+    lessonIds = lessons?.map(l => l.id) || []
+  }
 
   const { data, error } = await supabase
     .from('lesson_progress')
     .select('lesson_id, completed, completed_at')
     .eq('learner_id', userId)
-    .in('lesson_id', supabase
-      .from('lessons')
-      .select('id')
-      .in('section_id', supabase
-        .from('sections')
-        .select('id')
-        .eq('course_id', req.params.courseId)
-      )
-    )
+    .in('lesson_id', lessonIds.length > 0 ? lessonIds : ['00000000-0000-0000-0000-000000000000'])
 
   if (error) return res.status(500).json({ success: false, error: error.message })
-  res.json({ success: true, data })
-}
-
-export async function getEnrolledCourse(req, res) {
-  const userId = req.user.id
-  const courseId = req.params.courseId
-
-  const { data: enrolment } = await supabase
-    .from('enrolments')
-    .select('id')
-    .eq('learner_id', userId)
-    .eq('course_id', courseId)
-    .single()
-
-  if (!enrolment) return res.status(403).json({ success: false, error: 'Not enrolled in this course' })
-
-  const { data, error } = await supabase
-    .from('courses')
-    .select(`
-      id, title, description, category, thumbnail_url,
-      sections (
-        id, title, sort_order,
-        lessons (id, title, type, video_url, content, sort_order)
-      )
-    `)
-    .eq('id', courseId)
-    .eq('status', 'published')
-    .single()
-
-  if (error) return res.status(404).json({ success: false, error: 'Course not found' })
   res.json({ success: true, data })
 }

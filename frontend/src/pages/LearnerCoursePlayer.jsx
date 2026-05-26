@@ -13,11 +13,12 @@ export default function LearnerCoursePlayer() {
   const [activeLesson, setActiveLesson] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [sidebarOpen, setSidebarOpen] = useState(false)
 
   const loadData = useCallback(async () => {
     try {
       const [courseData, progressData] = await Promise.all([
-        api.progress.getEnrolledCourse(courseId),
+        api.enrolments.getEnrolledCourse(courseId),
         api.progress.getCourseProgress(courseId),
       ])
       setCourse(courseData)
@@ -44,8 +45,21 @@ export default function LearnerCoursePlayer() {
 
   async function handleMarkComplete() {
     if (!activeLesson) return
-    await api.progress.markComplete({ lesson_id: activeLesson.id })
-    loadData()
+    try {
+      await api.progress.markComplete({ lesson_id: activeLesson.id })
+      loadData()
+    } catch (e) {
+      setError(e.message)
+    }
+  }
+
+  async function handleGetCertificate() {
+    try {
+      await api.certificates.generate({ course_id: courseId })
+      navigate('/dashboard')
+    } catch (e) {
+      setError(e.message)
+    }
   }
 
   function allLessons() {
@@ -75,20 +89,23 @@ export default function LearnerCoursePlayer() {
 
   return (
     <div className="min-h-screen bg-[#f7f6f2] flex flex-col">
-      <header className="bg-[#01696f] text-white px-6 py-3 flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <button onClick={() => navigate('/dashboard')} className="text-sm hover:underline">&larr; Back</button>
-          <h1 className="font-bold text-sm">{course.title}</h1>
+      <header className="bg-[#01696f] text-white px-4 sm:px-6 py-3 flex items-center justify-between">
+        <div className="flex items-center gap-2 sm:gap-4">
+          <button onClick={() => navigate('/dashboard')} className="text-xs sm:text-sm hover:underline">&larr; Back</button>
+          <h1 className="font-bold text-xs sm:text-sm truncate max-w-[120px] sm:max-w-[200px]">{course.title}</h1>
         </div>
-        <div className="flex items-center gap-4">
-          <span className="text-xs">{completedCount}/{totalLessons}</span>
-          <span className="text-sm">{user?.first_name}</span>
-          <button onClick={logout} className="text-sm bg-white text-[#01696f] px-2 py-0.5 rounded">Sign Out</button>
+        <div className="flex items-center gap-2 sm:gap-4">
+          <button onClick={() => setSidebarOpen(!sidebarOpen)} className="sm:hidden text-sm px-2 py-1 bg-white/20 rounded">
+            {sidebarOpen ? 'Close' : 'Menu'}
+          </button>
+          <span className="text-xs hidden sm:inline">{completedCount}/{totalLessons}</span>
+          <span className="text-xs sm:text-sm truncate max-w-[80px] sm:max-w-none">{user?.first_name}</span>
+          <button onClick={logout} className="text-xs sm:text-sm bg-white text-[#01696f] px-2 py-0.5 rounded">Sign Out</button>
         </div>
       </header>
 
-      <div className="flex flex-1">
-        <aside className="w-64 bg-white border-r border-gray-200 overflow-y-auto p-4">
+      <div className="flex flex-1 relative">
+        <aside className={`${sidebarOpen ? 'block' : 'hidden'} sm:block w-full sm:w-64 bg-white border-r border-gray-200 overflow-y-auto p-4 absolute sm:relative z-10 sm:z-auto min-h-full shadow-lg sm:shadow-none`}>
           <div className="mb-4">
             <div className="w-full bg-gray-200 rounded-full h-2">
               <div className="bg-[#01696f] h-2 rounded-full" style={{ width: `${pct}%` }} />
@@ -105,7 +122,7 @@ export default function LearnerCoursePlayer() {
                   return (
                     <button
                       key={lesson.id}
-                      onClick={() => setActiveLesson(lesson)}
+                      onClick={() => { setActiveLesson(lesson); setSidebarOpen(false) }}
                       className={`w-full text-left px-2 py-1.5 rounded text-sm flex items-center gap-2 ${
                         activeLesson?.id === lesson.id
                           ? 'bg-[#01696f] text-white'
@@ -122,15 +139,15 @@ export default function LearnerCoursePlayer() {
           ))}
         </aside>
 
-        <main className="flex-1 p-6 overflow-y-auto">
+        <main className="flex-1 p-4 sm:p-6 overflow-y-auto">
           {activeLesson ? (
             <div className="max-w-3xl mx-auto">
-              <h2 className="text-xl font-bold text-[#032147] mb-4">{activeLesson.title}</h2>
+              <h2 className="text-lg sm:text-xl font-bold text-[#032147] mb-4">{activeLesson.title}</h2>
 
               {activeLesson.type === 'video' && activeLesson.video_url && (
                 <div className="aspect-video mb-6">
                   <iframe
-                    src={activeLesson.video_url.replace('watch?v=', 'embed/')}
+                    src={activeLesson.video_url.replace('watch?v=', 'embed/').replace('youtu.be/', 'www.youtube.com/embed/')}
                     className="w-full h-full rounded"
                     allowFullScreen
                     allow="autoplay; encrypted-media"
@@ -183,6 +200,17 @@ export default function LearnerCoursePlayer() {
             </div>
           ) : (
             <p className="text-[#888888] text-center mt-20">No lessons in this course.</p>
+          )}
+
+          {totalLessons > 0 && pct === 100 && (
+            <div className="max-w-3xl mx-auto mt-6 text-center">
+              <button
+                onClick={handleGetCertificate}
+                className="bg-[#437a22] text-white px-6 py-3 rounded text-sm hover:bg-[#3a6b1d] font-medium"
+              >
+                Get Certificate
+              </button>
+            </div>
           )}
         </main>
       </div>
