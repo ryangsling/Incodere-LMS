@@ -8,10 +8,10 @@ const ToastContext = createContext(null)
 let idCounter = 0
 
 const variantClasses = {
-  success: 'bg-accent-700 text-white',
-  error: 'bg-red-700 text-white',
-  info: 'bg-[#032147] text-white',
-  warning: 'bg-amber-700 text-white',
+  success: 'bg-emerald-800 text-white ring-1 ring-emerald-900',
+  error: 'bg-red-800 text-white ring-1 ring-red-900',
+  info: 'bg-[#032147] text-white ring-1 ring-black/30',
+  warning: 'bg-amber-800 text-white ring-1 ring-amber-900',
 }
 
 const variantIcons = {
@@ -61,7 +61,7 @@ export function ToastProvider({ children }) {
   }, [])
 
   const show = useCallback(
-    (message, { variant = 'info', duration = 6000, action } = {}) => {
+    (message, { variant = 'info', duration = 8000, action } = {}) => {
       const id = ++idCounter
       setToasts((prev) => [...prev, { id, message, variant, action }])
       if (duration > 0) {
@@ -84,28 +84,28 @@ export function ToastProvider({ children }) {
   return (
     <ToastContext.Provider value={value}>
       {children}
-      <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[100] flex flex-col gap-2 pointer-events-none">
+      <div className="fixed top-6 left-1/2 -translate-x-1/2 z-[100] flex flex-col gap-3 pointer-events-none">
         {toasts.map((t) => (
           <Transition
             key={t.id}
             appear
             show
-            enter="transform transition duration-200 ease-out"
-            enterFrom="translate-y-2 opacity-0"
-            enterTo="translate-y-0 opacity-100"
-            leave="transform transition duration-150 ease-in"
-            leaveFrom="translate-y-0 opacity-100"
-            leaveTo="translate-y-2 opacity-0"
+            enter="transform transition duration-300 ease-out"
+            enterFrom="-translate-y-8 opacity-0 scale-95"
+            enterTo="translate-y-0 opacity-100 scale-100"
+            leave="transform transition duration-200 ease-in"
+            leaveFrom="translate-y-0 opacity-100 scale-100"
+            leaveTo="-translate-y-4 opacity-0 scale-95"
           >
             <div
               className={classNames(
-                'pointer-events-auto min-w-[280px] max-w-md rounded-lg shadow-2xl px-4 py-3 flex items-start gap-x-3',
+                'pointer-events-auto min-w-[360px] max-w-lg rounded-xl shadow-2xl px-5 py-4 flex items-start gap-x-3',
                 variantClasses[t.variant],
               )}
               role="alert"
             >
               <div className="shrink-0 mt-0.5">{variantIcons[t.variant]}</div>
-              <div className="flex-1 min-w-0 text-sm font-medium">{t.message}</div>
+              <div className="flex-1 min-w-0 text-base font-semibold leading-snug">{t.message}</div>
               {t.action && (
                 <button
                   type="button"

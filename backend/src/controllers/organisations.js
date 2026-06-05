@@ -1,7 +1,8 @@
 import supabase from '../db/supabase.js'
 import { sendWelcomeEmail, sendInviteEmail } from '../services/email.js'
-import { buildAuthLink } from '../utils/authLinks.js'
 import { parsePagination } from '../utils/listQuery.js'
+
+const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173'
 
 export async function listOrganisations(req, res) {
   const { q } = req.query
@@ -143,13 +144,14 @@ export async function createLearner(req, res) {
   const { data: linkData, error: linkErr } = await supabase.auth.admin.generateLink({
     type: 'invite',
     email,
+    options: { redirectTo: `${FRONTEND_URL}/accept-invite` },
   })
   if (linkErr || !linkData?.properties?.action_link) {
     console.error('createLearner: generateLink failed', linkErr)
     return res.status(500).json({ success: false, error: 'Failed to generate invite link' })
   }
 
-  const inviteLink = buildAuthLink({ actionLink: linkData.properties.action_link, redirectTo: '/accept-invite' })
+  const inviteLink = linkData.properties.action_link
   const { error: emailErr } = await sendInviteEmail({
     to: email,
     firstName: first_name,
@@ -249,13 +251,14 @@ export async function resendInvite(req, res) {
   const { data: linkData, error: linkErr } = await supabase.auth.admin.generateLink({
     type: 'invite',
     email: user.email,
+    options: { redirectTo: `${FRONTEND_URL}/accept-invite` },
   })
   if (linkErr || !linkData?.properties?.action_link) {
     console.error('resendInvite: generateLink failed', linkErr)
     return res.status(500).json({ success: false, error: 'Failed to generate invite link' })
   }
 
-  const inviteLink = buildAuthLink({ actionLink: linkData.properties.action_link, redirectTo: '/accept-invite' })
+  const inviteLink = linkData.properties.action_link
   const { error: emailErr } = await sendInviteEmail({
     to: user.email,
     firstName: user.first_name || 'there',
