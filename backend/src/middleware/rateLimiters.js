@@ -26,3 +26,12 @@ export const expensiveLimiter = rateLimit({
   legacyHeaders: false,
   message: { success: false, error: 'Rate limit exceeded for this action' },
 })
+
+// Auth-public bucket: password reset endpoint (prevent abuse)
+export const forgotPasswordLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { success: false, error: 'Too many password-reset requests, please try again in 15 minutes' },
+})
