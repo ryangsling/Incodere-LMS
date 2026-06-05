@@ -8,10 +8,10 @@ const ToastContext = createContext(null)
 let idCounter = 0
 
 const variantClasses = {
-  success: 'bg-accent-600 text-white',
-  error: 'bg-red-600 text-white',
-  info: 'bg-primary-600 text-white',
-  warning: 'bg-yellow-500 text-white',
+  success: 'bg-accent-700 text-white',
+  error: 'bg-red-700 text-white',
+  info: 'bg-[#032147] text-white',
+  warning: 'bg-amber-700 text-white',
 }
 
 const variantIcons = {
@@ -61,7 +61,7 @@ export function ToastProvider({ children }) {
   }, [])
 
   const show = useCallback(
-    (message, { variant = 'info', duration = 4000, action } = {}) => {
+    (message, { variant = 'info', duration = 6000, action } = {}) => {
       const id = ++idCounter
       setToasts((prev) => [...prev, { id, message, variant, action }])
       if (duration > 0) {
@@ -84,7 +84,7 @@ export function ToastProvider({ children }) {
   return (
     <ToastContext.Provider value={value}>
       {children}
-      <div className="fixed top-4 right-4 z-[100] flex flex-col gap-2 pointer-events-none">
+      <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[100] flex flex-col gap-2 pointer-events-none">
         {toasts.map((t) => (
           <Transition
             key={t.id}
@@ -99,7 +99,7 @@ export function ToastProvider({ children }) {
           >
             <div
               className={classNames(
-                'pointer-events-auto min-w-[280px] max-w-md rounded-lg shadow-lg px-4 py-3 flex items-start gap-x-3',
+                'pointer-events-auto min-w-[280px] max-w-md rounded-lg shadow-2xl px-4 py-3 flex items-start gap-x-3',
                 variantClasses[t.variant],
               )}
               role="alert"
