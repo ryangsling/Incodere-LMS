@@ -46,20 +46,18 @@ export function AuthProvider({ children }) {
      
   }, [])
 
-  // Routes the lookup through the backend, which uses service_role
-  // (bypasses RLS). The frontend must not query public.users directly
-  // via supabase-js: the policies' EXISTS subqueries on public.users
-  // recurse and the query returns null, after which any code that
-  // touches user.role throws "Cannot read properties of null".
   async function loadUser() {
     try {
       const user = await api.auth.me()
-      dispatch({ type: 'SET_USER', payload: user || null })
+      if (!user) {
+        throw new Error('User profile not found. Ask an admin to create your account.')
+      }
+      dispatch({ type: 'SET_USER', payload: user })
       return user
     } catch (err) {
       console.error('loadUser error:', err)
       dispatch({ type: 'SET_USER', payload: null })
-      return null
+      throw err
     }
   }
 
