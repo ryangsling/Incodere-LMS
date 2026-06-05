@@ -24,8 +24,8 @@ const FROM = `${FROM_NAME} <${FROM_EMAIL}>`
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
-function render(layout, body) {
-  return layout
+function wrapInLayout(body) {
+  return LAYOUT
     .replace('{{TITLE}}', '')
     .replace('{{CONTENT}}', body)
 }
@@ -39,7 +39,7 @@ export async function sendEmail({ to, subject, html }) {
     from: FROM,
     to,
     subject,
-    html: render(LAYOUT, html),
+    html,
   })
   return { data, error }
 }
@@ -47,17 +47,17 @@ export async function sendEmail({ to, subject, html }) {
 export async function sendInviteEmail({ to, firstName, inviteLink, companyName }) {
   const subject = `You're invited to join ${companyName} on ILMS`
   const body = replaceVars(TEMPLATES.invite, { firstName, inviteLink, companyName })
-  return sendEmail({ to, subject, html: body })
+  return sendEmail({ to, subject, html: wrapInLayout(body) })
 }
 
 export async function sendPasswordResetEmail({ to, firstName, resetLink }) {
   const subject = 'Reset your ILMS password'
   const body = replaceVars(TEMPLATES['password-reset'], { firstName, resetLink })
-  return sendEmail({ to, subject, html: body })
+  return sendEmail({ to, subject, html: wrapInLayout(body) })
 }
 
 export async function sendWelcomeEmail({ to, firstName, loginUrl }) {
   const subject = 'Welcome to ILMS'
   const body = replaceVars(TEMPLATES.welcome, { firstName, loginUrl })
-  return sendEmail({ to, subject, html: body })
+  return sendEmail({ to, subject, html: wrapInLayout(body) })
 }
