@@ -4,6 +4,9 @@ import { useAuth } from './context/AuthContext'
 import { ToastProvider, Skeleton } from './components/ui'
 import Landing from './pages/Landing'
 import Login from './pages/Login'
+import ForgotPassword from './pages/ForgotPassword'
+import ResetPassword from './pages/ResetPassword'
+import AcceptInvite from './pages/AcceptInvite'
 import VerifyCertificate from './pages/VerifyCertificate'
 import LearnerDashboard from './pages/LearnerDashboard'
 import LearnerCoursePlayer from './pages/LearnerCoursePlayer'
@@ -67,6 +70,9 @@ function App() {
         <Routes location={location} key={location.pathname}>
           <Route path="/" element={<HomeRedirect />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/accept-invite" element={<AcceptInvite />} />
           <Route path="/verify/:certificateId" element={<VerifyCertificate />} />
           <Route
             path="/dashboard"
