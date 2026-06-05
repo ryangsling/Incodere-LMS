@@ -133,6 +133,13 @@ export async function createLearner(req, res) {
 
   if (dbErr) return res.status(400).json({ success: false, error: dbErr.message })
 
+  const { data: orgData, error: orgErr } = await supabase
+    .from('organisations')
+    .select('name')
+    .eq('id', organisation_id)
+    .single()
+  const orgName = (!orgErr && orgData?.name) ? orgData.name : 'your company'
+
   const { data: linkData, error: linkErr } = await supabase.auth.admin.generateLink({
     type: 'invite',
     email,
@@ -147,7 +154,7 @@ export async function createLearner(req, res) {
     to: email,
     firstName: first_name,
     inviteLink,
-    companyName: req.user.organisation_name || 'your company',
+    companyName: orgName,
   })
   if (emailErr) console.error('Failed to send invite email:', emailErr)
 
