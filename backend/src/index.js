@@ -14,6 +14,7 @@ import certificateRoutes from './routes/certificates.js'
 import statsRoutes from './routes/stats.js'
 import verifyRoutes from './routes/verify.js'
 import authRoutes from './routes/auth.js'
+import authPublicRoutes from './routes/authPublic.js'
 
 const app = express()
 const PORT = process.env.PORT || 3000
@@ -74,6 +75,7 @@ app.get('/', (_req, res) => {
 app.use(generalLimiter)
 
 app.use('/api/auth', authRoutes)
+app.use('/api/auth', authPublicRoutes)
 app.use('/api/verify', verifyRoutes)
 
 app.use('/api/courses', courseRoutes)
