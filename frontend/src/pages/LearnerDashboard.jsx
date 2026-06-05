@@ -64,6 +64,7 @@ export default function LearnerDashboard() {
     const isReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
     const targets = gsap.utils.toArray('.display-title, .body-copy, .bento-card', container.current)
+    if (!targets.length) return
 
     if (isReduced) {
       gsap.set(targets, { opacity: 0 })
