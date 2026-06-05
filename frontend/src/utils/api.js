@@ -106,6 +106,10 @@ export const api = {
   },
   auth: {
     me: () => request('/api/auth/me'),
+    forgotPassword: (email) => request('/api/auth/forgot-password', { method: 'POST', body: { email } }),
+    resetPassword: (data) => request('/api/auth/reset-password', { method: 'POST', body: data }),
+    acceptInvite: (data) => request('/api/auth/accept-invite', { method: 'POST', body: data }),
+    acceptInviteInfo: (data) => request('/api/auth/accept-invite-info', { method: 'POST', body: data }),
   },
   stats: {
     platform: () => request('/api/stats'),
