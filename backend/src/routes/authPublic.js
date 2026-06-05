@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { body } from 'express-validator'
 import { forgotPasswordLimiter } from '../middleware/rateLimiters.js'
-import { validate } from '../middleware/validate.js'
+import { handleValidation as validate } from '../middleware/validate.js'
 import {
   forgotPassword,
   resetPassword,
