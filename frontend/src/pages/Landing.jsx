@@ -3,7 +3,6 @@ import {
   AcademicCapIcon,
   ChartBarIcon,
   DocumentCheckIcon,
-  CheckIcon,
 } from '@heroicons/react/24/outline'
 import { useAuth } from '../context/AuthContext'
 import { Button } from '../components/ui'
@@ -77,6 +76,9 @@ export default function Landing() {
                 Learn more
               </Button>
             </div>
+            <p className="mt-4 text-sm text-muted">
+              Don't have an account? Ask your training manager to send you an invite.
+            </p>
           </div>
         </div>
       </section>
