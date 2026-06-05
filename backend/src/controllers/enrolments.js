@@ -74,14 +74,23 @@ export async function listEnrolments(req, res) {
       .select('id')
       .eq('organisation_id', req.user.organisation_id)
     const learnerIds = orgLearners.map((l) => l.id)
-    if (learnerIds.length === 0) return res.json({ success: true, data: [] })
+    if (learnerIds.length === 0) {
+      return res.json({
+        success: true,
+        data: { rows: [], total: 0, page: 1, pageSize: 0 },
+      })
+    }
     query = query.in('learner_id', learnerIds)
   }
 
   const { data, error } = await query.order('enrolled_at', { ascending: false })
 
   if (error) return res.status(500).json({ success: false, error: error.message })
-  res.json({ success: true, data })
+  const rows = data || []
+  res.json({
+    success: true,
+    data: { rows, total: rows.length, page: 1, pageSize: rows.length },
+  })
 }
 
 export async function createEnrolment(req, res) {
