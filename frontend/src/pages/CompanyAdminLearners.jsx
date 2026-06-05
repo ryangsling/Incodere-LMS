@@ -53,6 +53,36 @@ export default function CompanyAdminLearners() {
     }
   }
 
+  async function handleActivate(id, email) {
+    try {
+      await api.organisations.activateUser(id)
+      toast.success(`${email} activated`)
+      load()
+    } catch (e) {
+      toast.error(e.message)
+    }
+  }
+
+  async function handleResend(id, email) {
+    try {
+      await api.organisations.resendInvite(id)
+      toast.success(`Invite re-sent to ${email}`)
+    } catch (e) {
+      toast.error(e.message)
+    }
+  }
+
+  async function handleDelete(id, email) {
+    if (!confirm(`Permanently delete ${email}? This cannot be undone.`)) return
+    try {
+      await api.organisations.deleteUser(id)
+      toast.success(`${email} deleted`)
+      load()
+    } catch (e) {
+      toast.error(e.message)
+    }
+  }
+
   const columns = [
     {
       key: 'first_name',
@@ -68,12 +98,27 @@ export default function CompanyAdminLearners() {
     {
       key: 'id',
       label: '',
-      render: (l) =>
-        l.is_active ? (
-          <button onClick={() => handleDeactivate(l.id, l.email)} className="text-xs text-red-600 hover:underline">
-            Deactivate
+      render: (l) => (
+        <div className="flex gap-3 justify-end text-xs">
+          {l.is_active ? (
+            <button onClick={() => handleDeactivate(l.id, l.email)} className="text-red-600 hover:underline">
+              Deactivate
+            </button>
+          ) : (
+            <button onClick={() => handleActivate(l.id, l.email)} className="text-green-700 hover:underline">
+              Activate
+            </button>
+          )}
+          <button onClick={() => handleResend(l.id, l.email)} className="text-navy-600 hover:underline">
+            Resend invite
           </button>
-        ) : null,
+          {l.id !== user.id && (
+            <button onClick={() => handleDelete(l.id, l.email)} className="text-red-600 hover:underline">
+              Delete
+            </button>
+          )}
+        </div>
+      ),
     },
   ]
 

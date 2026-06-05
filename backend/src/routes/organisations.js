@@ -11,6 +11,9 @@ import {
   listUsersByOrganisation,
   createLearner,
   deactivateUser,
+  activateUser,
+  deleteUser,
+  resendInvite,
 } from '../controllers/organisations.js'
 
 const router = Router()
@@ -54,5 +57,8 @@ router.post(
 )
 
 router.put('/users/:id/deactivate', requireRole('super_admin', 'company_admin'), writeLimiter, deactivateUser)
+router.put('/users/:id/activate', requireRole('super_admin', 'company_admin'), writeLimiter, activateUser)
+router.delete('/users/:id', requireRole('super_admin', 'company_admin'), writeLimiter, deleteUser)
+router.post('/users/:id/resend-invite', requireRole('super_admin', 'company_admin'), writeLimiter, resendInvite)
 
 export default router

@@ -82,6 +82,9 @@ export const api = {
     listUsers: (orgId, params) => request(`/api/organisations/${orgId}/users`, { params }),
     createLearner: (orgId, data) => request(`/api/organisations/${orgId}/learners`, { method: 'POST', body: data }),
     deactivateUser: (userId) => request(`/api/organisations/users/${userId}/deactivate`, { method: 'PUT' }),
+    activateUser: (userId) => request(`/api/organisations/users/${userId}/activate`, { method: 'PUT' }),
+    deleteUser: (userId) => request(`/api/organisations/users/${userId}`, { method: 'DELETE' }),
+    resendInvite: (userId) => request(`/api/organisations/users/${userId}/resend-invite`, { method: 'POST' }),
   },
   enrolments: {
     list: (params) => request('/api/enrolments', { params }),
