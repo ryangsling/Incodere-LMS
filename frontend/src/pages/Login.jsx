@@ -2,9 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { Button, Input, useToast } from '../components/ui'
-import { AcademicCapIcon } from '@heroicons/react/24/outline'
 
-// Adapted from twp-components/Application UI/Forms/Sign-in and Registration/Split screen/v4
 export default function Login() {
   const { login } = useAuth()
   const navigate = useNavigate()
@@ -36,119 +34,102 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen flex bg-canvas">
-      {/* Form side */}
-      <div className="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
-        <div className="mx-auto w-full max-w-sm lg:w-96">
-          <Link to="/" className="inline-block">
-            <img src="/logo.svg" alt="ILMS by incodet" className="h-10 w-auto" />
-          </Link>
-          <h2 className="mt-8 text-2xl font-bold tracking-tight text-navy-700">
-            Sign in to your account
-          </h2>
-          <p className="mt-2 text-sm text-muted">
-            Don't have an account?{' '}
-            <a href="mailto:hello@incodet.com" className="font-semibold text-primary-600 hover:text-primary-700">
-              Contact your administrator
-            </a>
-          </p>
+    <div className="min-h-screen flex bg-gradient-to-r from-typography to-canvas">
 
-          <form onSubmit={handleSubmit} className="mt-8 space-y-6">
-            <Input
-              label="Email address"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              autoComplete="email"
-              required
-              placeholder="you@company.com"
-            />
-            <Input
-              label="Password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              autoComplete="current-password"
-              required
-              placeholder="••••••••"
-            />
+      {/* Marketing side (Left) */}
+      <div className="relative hidden lg:flex lg:w-1/2 flex-col justify-between p-12">
 
-            <div className="flex items-center justify-between">
-              <label className="flex items-center gap-x-2 text-sm text-navy-700">
-                <input
-                  type="checkbox"
-                  className="size-4 rounded border-gray-300 text-primary-600 focus:ring-primary-600"
-                />
-                Remember me
-              </label>
-              <a
-                href="mailto:hello@incodet.com"
-                className="text-sm font-semibold text-primary-600 hover:text-primary-700"
-              >
-                Forgot password?
-              </a>
+          {/* Top Logo */}
+          <div className="flex items-center gap-2">
+            <div className="size-8 rounded bg-gradient-to-br from-[#312E81] to-[#06B6D4] flex items-center justify-center p-1.5">
+              <div className="w-full h-full bg-white rounded-sm"></div>
+            </div>
+            <span className="text-white font-bold text-xl tracking-tight">ILMS</span>
+          </div>
+
+          {/* Center Content */}
+          <div className="relative flex flex-col items-center justify-center text-center">
+            {/* Subtle Bento Background Elements */}
+            <div className="absolute inset-0 -z-10 flex items-center justify-center">
+               <div className="w-96 h-96 border border-white/5 rounded-[3rem] flex items-center justify-center">
+                 <div className="w-64 h-64 border border-white/5 rounded-[2rem]"></div>
+               </div>
             </div>
 
-            <Button type="submit" loading={submitting} fullWidth size="lg">
-              Sign in
+            <h2 className="text-4xl font-display font-bold text-white mb-4 tracking-tight leading-tight">
+              Corporate learning,<br />made simple.
+            </h2>
+            <p className="text-lg text-white/60 max-w-sm">
+              Manage your organisation's training, track progress, and issue certificates.
+            </p>
+          </div>
+
+          {/* Bottom Footer */}
+          <div className="text-white/40 text-xs tracking-wider uppercase font-semibold">
+            © 2026 INCODET LMS PLATFORM
+          </div>
+
+      </div>
+
+      {/* Form side (Right) */}
+      <div className="flex w-full lg:w-1/2 flex-col justify-center px-4 py-12 sm:px-6 lg:px-24 xl:px-32">
+        <div className="mx-auto w-full max-w-sm">
+
+          {/* Mobile Logo */}
+          <div className="lg:hidden mb-12">
+             <div className="flex items-center gap-2">
+                <div className="size-8 rounded bg-gradient-to-br from-[#312E81] to-[#06B6D4] flex items-center justify-center p-1.5">
+                  <div className="w-full h-full bg-white rounded-sm"></div>
+                </div>
+                <span className="text-typography font-bold text-xl tracking-tight">ILMS</span>
+              </div>
+          </div>
+
+          <h2 className="text-3xl font-display font-bold tracking-tight text-typography">
+            Sign in
+          </h2>
+          <p className="mt-2 text-sm text-typography/60 mb-8">
+            Enter your credentials to access the platform
+          </p>
+
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-typography/60 mb-2">
+                Email Address
+              </label>
+              <Input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                autoComplete="email"
+                required
+                placeholder="admin@company.com"
+                className="w-full"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-typography/60 mb-2">
+                Password
+              </label>
+              <Input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                autoComplete="current-password"
+                required
+                placeholder="••••••••"
+                className="w-full"
+              />
+            </div>
+
+            <Button type="submit" loading={submitting} fullWidth size="lg" className="mt-4">
+              Sign in &rarr;
             </Button>
           </form>
         </div>
       </div>
 
-      {/* Marketing side */}
-      <div className="relative hidden w-0 flex-1 lg:block">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary-600 via-primary-700 to-navy-700 flex items-center justify-center p-12">
-          <div className="max-w-md text-white">
-            <AcademicCapIcon className="size-12 mb-6 text-primary-200" />
-            <h2 className="text-3xl font-bold mb-4">
-              Corporate learning, made simple
-            </h2>
-            <p className="text-lg text-primary-100 mb-8">
-              Sign in to manage your organisation's training, track learner
-              progress, and issue certificates of completion.
-            </p>
-            <ul className="space-y-3 text-primary-50">
-              <li className="flex items-start gap-x-3">
-                <span className="shrink-0 mt-1 size-5 rounded-full bg-primary-500/30 flex items-center justify-center">
-                  <svg className="size-3" viewBox="0 0 20 20" fill="currentColor">
-                    <path
-                      fillRule="evenodd"
-                      d="M16.707 5.293a1 1 0 0 1 0 1.414l-8 8a1 1 0 0 1-1.414 0l-4-4a1 1 0 0 1 1.414-1.414L8 12.586l7.293-7.293a1 1 0 0 1 1.414 0z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </span>
-                Multi-tenant organisation isolation
-              </li>
-              <li className="flex items-start gap-x-3">
-                <span className="shrink-0 mt-1 size-5 rounded-full bg-primary-500/30 flex items-center justify-center">
-                  <svg className="size-3" viewBox="0 0 20 20" fill="currentColor">
-                    <path
-                      fillRule="evenodd"
-                      d="M16.707 5.293a1 1 0 0 1 0 1.414l-8 8a1 1 0 0 1-1.414 0l-4-4a1 1 0 0 1 1.414-1.414L8 12.586l7.293-7.293a1 1 0 0 1 1.414 0z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </span>
-                Per-lesson progress tracking
-              </li>
-              <li className="flex items-start gap-x-3">
-                <span className="shrink-0 mt-1 size-5 rounded-full bg-primary-500/30 flex items-center justify-center">
-                  <svg className="size-3" viewBox="0 0 20 20" fill="currentColor">
-                    <path
-                      fillRule="evenodd"
-                      d="M16.707 5.293a1 1 0 0 1 0 1.414l-8 8a1 1 0 0 1-1.414 0l-4-4a1 1 0 0 1 1.414-1.414L8 12.586l7.293-7.293a1 1 0 0 1 1.414 0z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </span>
-                Auto-generated PDF certificates
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
     </div>
   )
 }

@@ -80,44 +80,44 @@ export default function CourseForm() {
 
   return (
     <div className="max-w-xl">
-      <h2 className="text-xl font-bold text-navy-700 mb-6">
+      <h2 className="text-xl font-bold text-typography mb-6">
         {isEdit ? 'Edit Course' : 'New Course'}
       </h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-sm text-muted mb-1">Title</label>
+          <label className="block text-sm text-typography/60 mb-1">Title</label>
           <input
             type="text"
             value={form.title}
             onChange={e => setForm({ ...form, title: e.target.value })}
             required
-            className="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:outline-none focus:border-primary-600"
+            className="w-full px-3 py-2 border border-border-hairline bg-canvas text-typography rounded text-sm focus:outline-none focus:border-accent"
           />
         </div>
 
         <div>
-          <label className="block text-sm text-muted mb-1">Description</label>
+          <label className="block text-sm text-typography/60 mb-1">Description</label>
           <textarea
             value={form.description}
             onChange={e => setForm({ ...form, description: e.target.value })}
             rows={4}
-            className="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:outline-none focus:border-primary-600"
+            className="w-full px-3 py-2 border border-border-hairline bg-canvas text-typography rounded text-sm focus:outline-none focus:border-accent"
           />
         </div>
 
         <div>
-          <label className="block text-sm text-muted mb-1">Category</label>
+          <label className="block text-sm text-typography/60 mb-1">Category</label>
           <input
             type="text"
             value={form.category}
             onChange={e => setForm({ ...form, category: e.target.value })}
-            className="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:outline-none focus:border-primary-600"
+            className="w-full px-3 py-2 border border-border-hairline bg-canvas text-typography rounded text-sm focus:outline-none focus:border-accent"
           />
         </div>
 
         <div>
-          <label className="block text-sm text-muted mb-1">Thumbnail</label>
+          <label className="block text-sm text-typography/60 mb-1">Thumbnail</label>
           <input
             type="file"
             accept="image/*"
@@ -133,11 +133,11 @@ export default function CourseForm() {
         </div>
 
         <div>
-          <label className="block text-sm text-muted mb-1">Status</label>
+          <label className="block text-sm text-typography/60 mb-1">Status</label>
           <select
             value={form.status}
             onChange={e => setForm({ ...form, status: e.target.value })}
-            className="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:outline-none focus:border-primary-600"
+            className="w-full px-3 py-2 border border-border-hairline bg-canvas text-typography rounded text-sm focus:outline-none focus:border-accent"
           >
             <option value="draft">Draft</option>
             <option value="published">Published</option>
@@ -150,14 +150,14 @@ export default function CourseForm() {
           <button
             type="submit"
             disabled={submitting}
-            className="bg-primary-600 text-white px-4 py-2 rounded text-sm hover:bg-primary-700 disabled:opacity-50"
+            className="bg-accent text-white px-4 py-2 rounded text-sm hover:bg-accent-soft disabled:opacity-50"
           >
             {submitting ? 'Saving...' : isEdit ? 'Update Course' : 'Create Course'}
           </button>
           <button
             type="button"
             onClick={() => navigate('/super-admin/courses')}
-            className="px-4 py-2 rounded text-sm border border-gray-300 text-muted hover:bg-gray-50"
+            className="px-4 py-2 rounded text-sm border border-border-hairline text-typography/60 hover:bg-black/5"
           >
             Cancel
           </button>

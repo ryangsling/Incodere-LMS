@@ -28,7 +28,7 @@ export async function getPlatformStats(req, res) {
       total_organisations: orgCount || 0,
       total_learners: learnerCount || 0,
       total_certificates: certCount || 0,
-      total_courses,
+      total_courses: totalCourses,
       published_courses: publishedCourses,
     },
   })

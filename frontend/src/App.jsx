@@ -1,4 +1,5 @@
-import { Navigate, Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
+import { AnimatePresence } from 'motion/react'
 import { useAuth } from './context/AuthContext'
 import { ToastProvider, Skeleton } from './components/ui'
 import Landing from './pages/Landing'
@@ -58,46 +59,50 @@ function HomeRedirect() {
 }
 
 function App() {
+  const location = useLocation()
+
   return (
     <ToastProvider>
-      <Routes>
-        <Route path="/" element={<HomeRedirect />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/verify/:certificateId" element={<VerifyCertificate />} />
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute roles={['learner']}>
-              <LearnerDashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/dashboard/courses/:courseId"
-          element={
-            <ProtectedRoute roles={['learner']}>
-              <LearnerCoursePlayer />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/admin/*"
-          element={
-            <ProtectedRoute roles={['company_admin']}>
-              <CompanyAdminLayout />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/super-admin/*"
-          element={
-            <ProtectedRoute roles={['super_admin']}>
-              <SuperAdminLayout />
-            </ProtectedRoute>
-          }
-        />
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+      <AnimatePresence mode="wait" initial={false}>
+        <Routes location={location} key={location.pathname}>
+          <Route path="/" element={<HomeRedirect />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/verify/:certificateId" element={<VerifyCertificate />} />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute roles={['learner']}>
+                <LearnerDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard/courses/:courseId"
+            element={
+              <ProtectedRoute roles={['learner']}>
+                <LearnerCoursePlayer />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/*"
+            element={
+              <ProtectedRoute roles={['company_admin']}>
+                <CompanyAdminLayout />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/super-admin/*"
+            element={
+              <ProtectedRoute roles={['super_admin']}>
+                <SuperAdminLayout />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </AnimatePresence>
     </ToastProvider>
   )
 }

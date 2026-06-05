@@ -34,7 +34,7 @@ export default function Landing() {
       <header className="bg-surface border-b border-gray-200">
         <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <Link to="/">
-            <img src="/logo.svg" alt="ILMS by incodet" className="h-8 w-auto" />
+            <div className="flex items-center gap-2"><div className="size-8 rounded bg-gradient-to-br from-[#312E81] to-[#06B6D4] flex items-center justify-center p-1.5"><div className="w-full h-full bg-white rounded-sm"></div></div><span className="text-white font-bold text-xl tracking-tight">ILMS</span></div>
           </Link>
           <div className="flex items-center gap-x-3">
             <Link
@@ -246,7 +246,7 @@ export default function Landing() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             <div>
-              <img src="/logo-dark.svg" alt="ILMS by incodet" className="h-8 w-auto mb-4" />
+              <div className="flex items-center gap-2 mb-4"><div className="size-8 rounded bg-gradient-to-br from-[#312E81] to-[#06B6D4] flex items-center justify-center p-1.5"><div className="w-full h-full bg-white rounded-sm"></div></div><span className="text-typography font-bold text-xl tracking-tight">ILMS</span></div>
               <p className="text-sm text-navy-100">
                 Corporate learning, made simple.
               </p>

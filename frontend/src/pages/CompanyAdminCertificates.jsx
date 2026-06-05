@@ -18,7 +18,7 @@ export default function CompanyAdminCertificates() {
     {
       key: 'learner',
       label: 'Learner',
-      render: (c) => <span className="font-medium text-navy-700">{c.learner?.first_name} {c.learner?.last_name}</span>,
+      render: (c) => <span className="font-medium text-typography">{c.learner?.first_name} {c.learner?.last_name}</span>,
     },
     {
       key: 'course',
@@ -34,7 +34,7 @@ export default function CompanyAdminCertificates() {
       key: 'id',
       label: 'Verify',
       render: (c) => (
-        <a href={`/verify/${c.id}`} target="_blank" rel="noopener noreferrer" className="text-xs text-primary-600 hover:underline">
+        <a href={`/verify/${c.id}`} target="_blank" rel="noopener noreferrer" className="text-xs text-accent hover:underline">
           Link
         </a>
       ),

@@ -1,6 +1,10 @@
 import { useState, useEffect } from 'react'
 import { api } from '../utils/api'
 
+import { Skeleton, SkeletonList } from '../components/ui/Skeleton'
+
+import EmptyState from '../components/ui/EmptyState'
+
 export default function CompanyAdminReports() {
   const [rows, setRows] = useState([])
   const [courses, setCourses] = useState([])
@@ -65,30 +69,36 @@ export default function CompanyAdminReports() {
     URL.revokeObjectURL(url)
   }
 
-  if (loading && rows.length === 0) return <p className="text-muted">Loading report...</p>
+  if (loading && rows.length === 0) return (
+    <div className="font-sans space-y-8">
+      <Skeleton variant="title" className="h-8 w-1/4" />
+      <Skeleton variant="card" className="h-20" />
+      <SkeletonList rows={5} />
+    </div>
+  )
   if (error) return <p className="text-red-600">{error}</p>
 
   return (
-    <div>
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-bold text-navy-700">Compliance Report</h2>
+    <div className="font-sans">
+      <div className="flex items-center justify-between mb-8">
+        <h2 className="display-title !text-2xl text-typography">Compliance Report</h2>
         {rows.length > 0 && (
           <button
             onClick={exportCSV}
-            className="bg-primary-600 text-white px-4 py-2 rounded text-sm hover:bg-primary-700"
+            className="bg-accent text-canvas px-4 py-2 rounded text-sm hover:bg-accent-soft transition-colors duration-300 ease-[var(--ease-expo)]"
           >
             Export CSV
           </button>
         )}
       </div>
 
-      <div className="bg-white rounded shadow-sm p-4 mb-6 flex gap-4 items-end">
+      <div className="bg-canvas border border-border-hairline rounded p-4 mb-8 flex flex-wrap gap-4 items-end bento-card">
         <div>
-          <label className="block text-xs text-muted mb-1">Course</label>
+          <label className="block text-xs text-typography opacity-80 mb-1 font-medium">Course</label>
           <select
             value={courseFilter}
             onChange={e => setCourseFilter(e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded text-sm"
+            className="px-3 py-2 border border-border-hairline bg-canvas rounded text-sm text-typography min-w-[200px] focus:outline-none focus-visible:border-accent"
           >
             <option value="">All Courses</option>
             {courses.map(c => (
@@ -97,11 +107,11 @@ export default function CompanyAdminReports() {
           </select>
         </div>
         <div>
-          <label className="block text-xs text-muted mb-1">Status</label>
+          <label className="block text-xs text-typography opacity-80 mb-1 font-medium">Status</label>
           <select
             value={statusFilter}
             onChange={e => setStatusFilter(e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded text-sm"
+            className="px-3 py-2 border border-border-hairline bg-canvas rounded text-sm text-typography min-w-[150px] focus:outline-none focus-visible:border-accent"
           >
             <option value="">All</option>
             <option value="completed">Completed</option>
@@ -111,55 +121,60 @@ export default function CompanyAdminReports() {
         </div>
         <button
           onClick={applyFilters}
-          className="bg-primary-600 text-white px-4 py-2 rounded text-sm hover:bg-primary-700"
+          className="bg-structural border border-border-hairline text-typography px-4 py-2 rounded text-sm hover:border-accent transition-colors duration-300 ease-[var(--ease-expo)]"
         >
           Filter
         </button>
       </div>
 
-      {rows.length === 0 && (
-        <p className="text-muted text-sm">No data matches the selected filters.</p>
+      {rows.length === 0 && !loading && (
+        <EmptyState
+          title="No reports found"
+          description="No data matches the selected filters."
+        />
       )}
 
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="bg-gray-100 text-left">
-              <th className="px-3 py-2 font-medium text-navy-700">Learner</th>
-              <th className="px-3 py-2 font-medium text-navy-700">Email</th>
-              <th className="px-3 py-2 font-medium text-navy-700">Course</th>
-              <th className="px-3 py-2 font-medium text-navy-700">Progress</th>
-              <th className="px-3 py-2 font-medium text-navy-700">Lessons</th>
-              <th className="px-3 py-2 font-medium text-navy-700">Certificate</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((r, i) => (
-              <tr key={i} className="border-b border-gray-100 hover:bg-gray-50">
-                <td className="px-3 py-2 text-navy-700">{r.learner_name}</td>
-                <td className="px-3 py-2 text-muted">{r.learner_email}</td>
-                <td className="px-3 py-2 text-navy-700">{r.course_title}</td>
-                <td className="px-3 py-2">
-                  <div className="flex items-center gap-2">
-                    <div className="w-20 bg-gray-200 rounded-full h-2">
-                      <div className="bg-primary-600 h-2 rounded-full" style={{ width: `${r.progress}%` }} />
-                    </div>
-                    <span className="text-xs">{r.progress}%</span>
-                  </div>
-                </td>
-                <td className="px-3 py-2 text-xs text-muted">{r.completed_lessons}/{r.total_lessons}</td>
-                <td className="px-3 py-2">
-                  {r.certificate_issued ? (
-                    <span className="text-accent-600 text-xs">Issued</span>
-                  ) : (
-                    <span className="text-muted text-xs">--</span>
-                  )}
-                </td>
+      {rows.length > 0 && (
+        <div className="overflow-x-auto border border-border-hairline rounded bento-card">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="bg-structural border-b border-border-hairline text-left">
+                <th className="px-4 py-3 font-medium text-typography">Learner</th>
+                <th className="px-4 py-3 font-medium text-typography">Email</th>
+                <th className="px-4 py-3 font-medium text-typography">Course</th>
+                <th className="px-4 py-3 font-medium text-typography">Progress</th>
+                <th className="px-4 py-3 font-medium text-typography">Lessons</th>
+                <th className="px-4 py-3 font-medium text-typography">Certificate</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {rows.map((r, i) => (
+                <tr key={i} className="border-b border-border-hairline last:border-0 hover:bg-structural transition-colors duration-300 ease-[var(--ease-expo)]">
+                  <td className="px-4 py-3 text-typography font-medium">{r.learner_name}</td>
+                  <td className="px-4 py-3 text-typography opacity-70">{r.learner_email}</td>
+                  <td className="px-4 py-3 text-typography">{r.course_title}</td>
+                  <td className="px-4 py-3">
+                    <div className="flex items-center gap-2">
+                      <div className="w-24 bg-border-hairline rounded-full h-2 overflow-hidden">
+                        <div className="bg-accent h-full rounded-full" style={{ width: `${r.progress}%` }} />
+                      </div>
+                      <span className="text-xs text-typography opacity-80">{r.progress}%</span>
+                    </div>
+                  </td>
+                  <td className="px-4 py-3 text-xs text-typography opacity-70">{r.completed_lessons} / {r.total_lessons}</td>
+                  <td className="px-4 py-3">
+                    {r.certificate_issued ? (
+                      <span className="text-accent font-medium text-xs bg-accent/10 px-2 py-1 rounded">Issued</span>
+                    ) : (
+                      <span className="text-typography opacity-50 text-xs">--</span>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   )
 }

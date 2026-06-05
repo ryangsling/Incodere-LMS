@@ -19,7 +19,7 @@ export default function AdminShell({ navItems, brand, headerTitle, children }) {
   const SidebarContent = ({ mobile = false }) => (
     <>
       <div className="flex h-16 shrink-0 items-center px-6">
-        {brand || <Link to="/"><img src="/logo-dark.svg" alt="ILMS" className="h-8 w-auto" /></Link>}
+        {brand || <Link to="/"><div className="flex items-center gap-2"><div className="size-8 rounded bg-gradient-to-br from-[#312E81] to-[#06B6D4] flex items-center justify-center p-1.5"><div className="w-full h-full bg-white rounded-sm"></div></div><span className="text-typography font-bold text-xl tracking-tight">ILMS</span></div></Link>}
       </div>
       <nav className="flex flex-1 flex-col px-3 pb-4">
         <ul role="list" className="flex flex-1 flex-col gap-y-1">
@@ -33,8 +33,8 @@ export default function AdminShell({ navItems, brand, headerTitle, children }) {
                   classNames(
                     'group flex gap-x-3 rounded-md p-2 text-sm font-semibold transition-colors',
                     isActive
-                      ? 'bg-primary-600 text-white'
-                      : 'text-navy-100 hover:bg-white/10 hover:text-white',
+                      ? 'bg-accent text-white'
+                      : 'text-typography/80 hover:bg-black/5 hover:text-typography',
                   )
                 }
               >
@@ -52,7 +52,7 @@ export default function AdminShell({ navItems, brand, headerTitle, children }) {
             <button
               type="button"
               onClick={handleLogout}
-              className="group -mx-2 flex w-full gap-x-3 rounded-md p-2 text-sm font-semibold text-navy-100 hover:bg-white/10 hover:text-white"
+              className="group -mx-2 flex w-full gap-x-3 rounded-md p-2 text-sm font-semibold text-typography/80 hover:bg-black/5 hover:text-typography"
             >
               <ArrowRightOnRectangleIcon aria-hidden="true" className="size-5 shrink-0" />
               Sign out
@@ -69,7 +69,7 @@ export default function AdminShell({ navItems, brand, headerTitle, children }) {
       <Dialog open={sidebarOpen} onClose={setSidebarOpen} className="relative z-50 lg:hidden">
         <DialogBackdrop
           transition
-          className="fixed inset-0 bg-navy-900/60 transition-opacity duration-300 data-closed:opacity-0"
+          className="fixed inset-0 bg-black/60 transition-opacity duration-300 data-closed:opacity-0"
         />
         <div className="fixed inset-0 flex">
           <DialogPanel
@@ -84,11 +84,11 @@ export default function AdminShell({ navItems, brand, headerTitle, children }) {
                   className="-m-2.5 p-2.5"
                   aria-label="Close sidebar"
                 >
-                  <XMarkIcon aria-hidden="true" className="size-6 text-white" />
+                  <XMarkIcon aria-hidden="true" className="size-6 text-typography" />
                 </button>
               </div>
             </TransitionChild>
-            <div className="relative flex grow flex-col gap-y-5 overflow-y-auto bg-navy-600 text-white">
+            <div className="relative flex grow flex-col gap-y-5 overflow-y-auto bg-structural border-r border-border-hairline text-typography">
               <SidebarContent mobile />
             </div>
           </DialogPanel>
@@ -97,14 +97,14 @@ export default function AdminShell({ navItems, brand, headerTitle, children }) {
 
       {/* Static desktop sidebar */}
       <div className="hidden lg:fixed lg:inset-y-0 lg:z-40 lg:flex lg:w-64 lg:flex-col">
-        <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-navy-600 text-white">
+        <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-structural border-r border-border-hairline text-typography">
           <SidebarContent />
         </div>
       </div>
 
       {/* Main content area */}
       <div className="lg:pl-64">
-        <div className="sticky top-0 z-30 flex h-16 items-center gap-x-4 border-b border-gray-200 bg-surface px-4 shadow-xs sm:gap-x-6 sm:px-6 lg:px-8">
+        <div className="sticky top-0 z-30 flex h-16 items-center gap-x-4 border-b border-gray-200 bg-canvas px-4 shadow-xs sm:gap-x-6 sm:px-6 lg:px-8">
           <button
             type="button"
             onClick={() => setSidebarOpen(true)}
@@ -131,7 +131,7 @@ export default function AdminShell({ navItems, brand, headerTitle, children }) {
               </MenuButton>
               <MenuItems
                 transition
-                className="absolute right-0 z-10 mt-2.5 w-48 origin-top-right rounded-md bg-surface py-2 shadow-lg outline-1 outline-gray-900/5 transition data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-leave:duration-75"
+                className="absolute right-0 z-10 mt-2.5 w-48 origin-top-right rounded-md bg-canvas py-2 shadow-lg outline-1 outline-gray-900/5 transition data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-leave:duration-75"
               >
                 <div className="px-3 py-2 border-b border-gray-200">
                   <p className="text-xs text-muted">Signed in as</p>

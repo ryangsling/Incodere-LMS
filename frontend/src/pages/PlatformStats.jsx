@@ -18,21 +18,19 @@ export default function PlatformStats() {
   if (!stats) return <p className="text-muted">No stats available.</p>
 
   const cards = [
-    { label: 'Organisations', value: stats.total_organisations, color: 'bg-blue-100 text-blue-600' },
-    { label: 'Active Learners', value: stats.total_learners, color: 'bg-green-100 text-accent-600' },
-    { label: 'Total Courses', value: stats.total_courses, color: 'bg-purple-100 text-purple-600' },
-    { label: 'Published Courses', value: stats.published_courses, color: 'bg-teal-100 text-primary-600' },
-    { label: 'Certificates Issued', value: stats.total_certificates, color: 'bg-orange-100 text-orange-600' },
+    { label: 'Total Organisations', value: stats.total_organisations },
+    { label: 'Total Learners', value: stats.total_learners },
+    { label: 'Total Completions', value: stats.total_certificates },
   ]
 
   return (
-    <div>
-      <h2 className="text-xl font-bold text-navy-700 mb-6">Platform Statistics</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div className="max-w-5xl mx-auto py-8">
+      <h2 className="text-2xl font-bold text-typography mb-6">Platform Statistics</h2>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {cards.map(card => (
-          <div key={card.label} className="bg-white rounded shadow-sm p-6">
-            <p className="text-sm text-muted mb-1">{card.label}</p>
-            <p className={`text-3xl font-bold ${card.color.split(' ')[1]}`}>{card.value}</p>
+          <div key={card.label} className="bg-canvas border border-border-hairline p-6 flex flex-col items-start justify-center">
+            <p className="text-sm font-medium text-typography/60 mb-2 uppercase tracking-wider">{card.label}</p>
+            <p className="text-4xl font-light text-typography">{card.value}</p>
           </div>
         ))}
       </div>

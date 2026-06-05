@@ -1,3 +1,5 @@
+import { useState, useEffect } from 'react'
+import { Proximity } from 'z-proximity-engine'
 import { classNames } from '../../utils/classNames'
 
 // Adapted from twp-components/Application UI/Elements/Buttons (multiple variants) and Heroicons
@@ -14,15 +16,24 @@ export default function Button({
   className = '',
   ...rest
 }) {
+  const [isFinePointer, setIsFinePointer] = useState(() => window.matchMedia('(pointer: fine)').matches)
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(pointer: fine)')
+    const handler = (e) => setIsFinePointer(e.matches)
+    mediaQuery.addEventListener('change', handler)
+    return () => mediaQuery.removeEventListener('change', handler)
+  }, [])
+
   const base =
-    'inline-flex items-center justify-center gap-x-2 font-semibold rounded-md transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 disabled:opacity-50 disabled:cursor-not-allowed'
+    'inline-flex items-center justify-center gap-x-2 font-semibold rounded-md transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:opacity-50 disabled:cursor-not-allowed'
 
   const variantClasses = {
-    primary: 'bg-primary-600 text-white hover:bg-primary-700 active:bg-primary-800 shadow-xs',
-    secondary: 'bg-white text-navy-700 border border-gray-300 hover:bg-gray-50 shadow-xs',
-    ghost: 'bg-transparent text-navy-700 hover:bg-gray-100',
+    primary: 'bg-accent text-white hover:bg-accent-soft active:opacity-90 shadow-xs',
+    secondary: 'bg-canvas text-typography border border-border-hairline hover:bg-structural shadow-xs',
+    ghost: 'bg-transparent text-typography hover:bg-structural',
     danger: 'bg-red-600 text-white hover:bg-red-700 shadow-xs',
-    accent: 'bg-accent-600 text-white hover:bg-accent-700 shadow-xs',
+    accent: 'bg-accent text-white hover:bg-accent-soft shadow-xs',
   }
 
   const sizeClasses = {
@@ -32,7 +43,7 @@ export default function Button({
     lg: 'px-4 py-2.5 text-base',
   }
 
-  return (
+  const content = (
     <button
       type={type}
       disabled={disabled || loading}
@@ -55,4 +66,14 @@ export default function Button({
       {!loading && rightIcon}
     </button>
   )
+
+  if (isFinePointer && variant === 'primary' && !disabled && !loading) {
+    return (
+      <Proximity magnetic={0.2} tilt={0.1} distance={50}>
+        {content}
+      </Proximity>
+    )
+  }
+
+  return content
 }

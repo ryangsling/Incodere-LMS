@@ -88,7 +88,7 @@ export default function CompanyAdminEnrolments() {
     {
       key: 'learner',
       label: 'Learner',
-      render: (e) => <span className="font-medium text-navy-700">{e.learner?.first_name} {e.learner?.last_name}</span>,
+      render: (e) => <span className="font-medium text-typography">{e.learner?.first_name} {e.learner?.last_name}</span>,
     },
     { key: 'course', label: 'Course', render: (e) => e.course?.title },
     {

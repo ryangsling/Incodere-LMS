@@ -43,7 +43,7 @@ export function AuthProvider({ children }) {
     })
 
     return () => listener?.subscription?.unsubscribe()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [])
 
   // Routes the lookup through the backend, which uses service_role

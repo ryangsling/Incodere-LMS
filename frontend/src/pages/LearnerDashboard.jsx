@@ -1,10 +1,14 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { motion } from 'motion/react'
 import { gsap } from 'gsap'
 import { useGSAP } from '@gsap/react'
+import { Proximity } from 'z-proximity-engine'
 import { useAuth } from '../context/AuthContext'
 import { api } from '../utils/api'
 import CourseCard from '../components/CourseCard'
+
+import { Skeleton, SkeletonGrid } from '../components/ui/Skeleton'
 
 export default function LearnerDashboard() {
   const { user, logout } = useAuth()
@@ -13,12 +17,43 @@ export default function LearnerDashboard() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const container = useRef(null)
+  const [isFinePointer, setIsFinePointer] = useState(() => window.matchMedia('(pointer: fine)').matches)
 
   useEffect(() => {
-    setError('')
-    setLoading(true)
+    const mediaQuery = window.matchMedia('(pointer: fine)')
+    const handler = (e) => setIsFinePointer(e.matches)
+    mediaQuery.addEventListener('change', handler)
+    return () => mediaQuery.removeEventListener('change', handler)
+  }, [])
+
+  const [upcomingModules, setUpcomingModules] = useState([])
+
+  useEffect(() => {
     api.enrolments.myEnrolments()
-      .then((rows) => setEnrolments(Array.isArray(rows) ? rows : rows.rows || []))
+      .then(async (rows) => {
+        const enrolmentsData = Array.isArray(rows) ? rows : rows.rows || []
+        setEnrolments(enrolmentsData)
+
+        // Find primary course
+        const active = enrolmentsData.find(e => e.progress > 0 && e.progress < 100) || enrolmentsData[0]
+        
+        if (active?.course_id) {
+          try {
+            const courseData = await api.enrolments.getEnrolledCourse(active.course_id)
+            const progressData = await api.progress.getCourseProgress(active.course_id)
+            
+            const progressMap = {}
+            progressData.forEach(p => { progressMap[p.lesson_id] = p })
+
+            const allLessons = courseData.sections?.flatMap(s => s.lessons || []) || []
+            const incomplete = allLessons.filter(l => !progressMap[l.id]?.completed)
+            
+            setUpcomingModules(incomplete.slice(0, 3))
+          } catch (e) {
+            console.error("Failed to load upcoming modules", e)
+          }
+        }
+      })
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false))
   }, [])
@@ -66,11 +101,25 @@ export default function LearnerDashboard() {
   // Identify primary course (in progress, highest progress, or first)
   const activeCourse = enrolments.find(e => e.progress > 0 && e.progress < 100) || enrolments[0]
 
+  const resumeCta = (
+    <button
+      onClick={() => navigate(`/dashboard/courses/${activeCourse?.course_id}`)}
+      className="w-full sm:w-auto px-10 py-4 bg-typography text-canvas font-bold rounded-xl hover:bg-accent hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+    >
+      Resume Learning
+    </button>
+  )
+
   return (
     <div className="min-h-screen bg-structural">
       {/* Structural Header */}
       <header className="bg-canvas border-b border-border-hairline px-6 py-4 flex items-center justify-between sticky top-0 z-10">
-        <h1 className="font-display text-xl font-bold tracking-tight text-typography">ILMS</h1>
+        <div className="flex items-center gap-2">
+          <div className="size-8 rounded bg-gradient-to-br from-[#312E81] to-[#06B6D4] flex items-center justify-center p-1.5">
+            <div className="w-full h-full bg-white rounded-sm"></div>
+          </div>
+          <span className="text-typography font-bold text-xl tracking-tight">ILMS</span>
+        </div>
         <div className="flex items-center gap-6">
           <span className="text-sm font-medium text-typography opacity-80 hidden sm:block">
             {user?.first_name} {user?.last_name}
@@ -106,11 +155,15 @@ export default function LearnerDashboard() {
           {/* Main Hero Card: Course Progress */}
           <div className="lg:col-span-8">
             {loading ? (
-              <div className="bento-card rounded-3xl p-8 min-h-[400px] flex items-center justify-center">
-                <span className="text-typography opacity-40 font-medium animate-pulse">Loading context...</span>
+              <div className="space-y-4">
+                <Skeleton variant="block" className="h-[480px] rounded-3xl" />
               </div>
             ) : activeCourse ? (
-              <div className="bento-card rounded-3xl p-8 sm:p-12 min-h-[480px] flex flex-col justify-between relative overflow-hidden group">
+              <motion.div
+                layoutId={`course-card-${activeCourse.course_id}`}
+                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                className="bento-card rounded-3xl p-8 sm:p-12 min-h-[480px] flex flex-col justify-between relative overflow-hidden group"
+              >
                 {/* Decorative element - subtle, structural, no slop */}
                 <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity duration-700 pointer-events-none">
                    <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1">
@@ -123,9 +176,12 @@ export default function LearnerDashboard() {
                   <div className="inline-flex items-center gap-2 mb-8 px-4 py-1.5 bg-typography text-canvas rounded-full text-xs font-bold uppercase tracking-widest">
                     <span>Active Focus</span>
                   </div>
-                  <h3 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-typography leading-[1.05] tracking-tight mb-6 max-w-2xl">
+                  <motion.h3
+                    layoutId={`course-title-${activeCourse.course_id}`}
+                    className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-typography leading-[1.05] tracking-tight mb-6 max-w-2xl"
+                  >
                     {activeCourse.course?.title || 'Untitled Course'}
-                  </h3>
+                  </motion.h3>
                   <p className="body-copy opacity-70 max-w-xl text-lg">
                     {activeCourse.course?.description || 'Your next module is ready. Continue building your expertise.'}
                   </p>
@@ -150,14 +206,13 @@ export default function LearnerDashboard() {
                     />
                   </div>
 
-                  <button
-                    onClick={() => navigate(`/dashboard/courses/${activeCourse.course_id}`)}
-                    className="w-full sm:w-auto px-10 py-4 bg-typography text-canvas font-bold rounded-xl hover:bg-accent hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-                  >
-                    Resume Learning
-                  </button>
+                  {isFinePointer ? (
+                    <Proximity magnetic={0.2} tilt={0.1} distance={50}>
+                      {resumeCta}
+                    </Proximity>
+                  ) : resumeCta}
                 </div>
-              </div>
+              </motion.div>
             ) : (
               <div className="bento-card rounded-3xl p-8 sm:p-12 min-h-[400px] flex flex-col items-center justify-center text-center">
                 <h3 className="font-display text-2xl font-bold mb-3">No Active Courses</h3>
@@ -173,18 +228,27 @@ export default function LearnerDashboard() {
             <div className="bento-card rounded-3xl p-8 flex-1 flex flex-col">
               <h4 className="font-display text-xl font-bold mb-6 tracking-tight">Upcoming Modules</h4>
               <div className="flex-1 flex flex-col gap-4">
-                {/* Static placeholders for visual structure as per design mandate */}
-                {[1, 2, 3].map((i) => (
-                  <div key={i} className="group flex gap-4 items-start p-3 -mx-3 rounded-xl hover:bg-structural transition-colors duration-300 cursor-pointer">
-                    <div className="w-10 h-10 rounded-lg bg-canvas border border-border-hairline flex items-center justify-center flex-shrink-0 group-hover:border-accent transition-colors duration-300">
-                      <span className="text-sm font-bold opacity-50">{i}</span>
+                {upcomingModules.length > 0 ? (
+                  upcomingModules.map((module, idx) => (
+                    <div 
+                      key={module.id} 
+                      onClick={() => navigate(`/dashboard/courses/${activeCourse?.course_id}`)}
+                      className="group flex gap-4 items-start p-3 -mx-3 rounded-xl hover:bg-structural transition-colors duration-300 cursor-pointer"
+                    >
+                      <div className="w-10 h-10 rounded-lg bg-canvas border border-border-hairline flex items-center justify-center flex-shrink-0 group-hover:border-accent transition-colors duration-300">
+                        <span className="text-sm font-bold opacity-50">{idx + 1}</span>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h5 className="font-bold text-sm tracking-tight mb-1 group-hover:text-accent transition-colors duration-300 truncate">{module.title}</h5>
+                        <span className="text-xs font-medium opacity-50 uppercase tracking-wider">{module.type}</span>
+                      </div>
                     </div>
-                    <div>
-                      <h5 className="font-bold text-sm tracking-tight mb-1 group-hover:text-accent transition-colors duration-300">Advanced Principles {i}</h5>
-                      <span className="text-xs font-medium opacity-50 uppercase tracking-wider">12 Mins</span>
-                    </div>
+                  ))
+                ) : (
+                  <div className="flex items-center justify-center h-full text-typography opacity-50 text-sm font-medium">
+                    No upcoming modules.
                   </div>
-                ))}
+                )}
               </div>
             </div>
 
@@ -208,18 +272,26 @@ export default function LearnerDashboard() {
           <div className="flex items-end justify-between mb-8">
             <h3 className="font-display text-2xl font-bold tracking-tight">Your Library</h3>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {enrolments.map(enrolment => (
-              <CourseCard
-                key={enrolment.id || enrolment.course_id}
-                course={enrolment.course}
-                progress={enrolment.progress}
-                completedLessons={enrolment.completed_lessons}
-                totalLessons={enrolment.total_lessons}
-                onContinue={() => navigate(`/dashboard/courses/${enrolment.course_id}`)}
-              />
-            ))}
-          </div>
+          {loading ? (
+            <SkeletonGrid count={3} />
+          ) : enrolments.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {enrolments.map(enrolment => (
+                <CourseCard
+                  key={enrolment.id || enrolment.course_id}
+                  course={enrolment.course}
+                  progress={enrolment.progress}
+                  completedLessons={enrolment.completed_lessons}
+                  totalLessons={enrolment.total_lessons}
+                  onContinue={() => navigate(`/dashboard/courses/${enrolment.course_id}`)}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="bento-card rounded-3xl p-8 text-center text-typography opacity-60">
+              No courses found in your library.
+            </div>
+          )}
         </div>
 
       </main>

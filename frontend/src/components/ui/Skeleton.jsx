@@ -1,6 +1,6 @@
 import { classNames } from '../../utils/classNames'
 
-export default function Skeleton({ variant = 'text', className = '', ...rest }) {
+export function Skeleton({ variant = 'text', className = '', ...rest }) {
   const variantClasses = {
     text: 'h-3 w-full',
     title: 'h-5 w-2/3',
@@ -16,7 +16,7 @@ export default function Skeleton({ variant = 'text', className = '', ...rest }) 
         'animate-pulse bg-gray-200',
         variantClasses[variant],
         variant !== 'avatar' && variant !== 'card' && variant !== 'block' && 'rounded',
-        className,
+        className
       )}
       {...rest}
     />
