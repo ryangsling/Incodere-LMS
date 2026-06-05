@@ -25,18 +25,18 @@ export async function forgotPassword(req, res) {
 }
 
 export async function resetPassword(req, res) {
-  const { access_token, refresh_token, password } = req.body
+  const { access_token, password } = req.body
 
   if (!password || password.length < PASSWORD_MIN) {
     return res.status(400).json({ success: false, error: `Password must be at least ${PASSWORD_MIN} characters` })
   }
 
-  const { data: sessionData, error: sessionErr } = await supabase.auth.setSession({ access_token, refresh_token })
-  if (sessionErr || !sessionData?.user) {
+  const { data, error } = await supabase.auth.getUser(access_token)
+  if (error || !data?.user) {
     return res.status(401).json({ success: false, error: 'Invalid or expired link' })
   }
 
-  const { error: updateErr } = await supabase.auth.updateUser({ password })
+  const { error: updateErr } = await supabase.auth.admin.updateUserById(data.user.id, { password })
   if (updateErr) {
     return res.status(400).json({ success: false, error: updateErr.message })
   }
@@ -45,32 +45,36 @@ export async function resetPassword(req, res) {
 }
 
 export async function acceptInviteInfo(req, res) {
-  const { access_token, refresh_token } = req.body
-  const { data: sessionData, error: sessionErr } = await supabase.auth.setSession({ access_token, refresh_token })
-  if (sessionErr || !sessionData?.user) {
+  const { access_token } = req.body
+
+  const { data, error } = await supabase.auth.getUser(access_token)
+  if (error || !data?.user) {
     return res.status(401).json({ success: false, error: 'Invalid or expired link' })
   }
-  const user = sessionData.user
+  const user = data.user
+
   const { data: profile, error: profileErr } = await supabase
     .from('users')
-    .select('first_name,last_name')
+    .select('first_name,last_name,is_active')
     .eq('id', user.id)
     .single()
   if (profileErr) {
     return res.status(500).json({ success: false, error: 'Failed to load profile' })
   }
+
   return res.json({
     success: true,
     data: {
       email: user.email,
       first_name: profile?.first_name || '',
       last_name: profile?.last_name || '',
+      is_active: profile?.is_active ?? false,
     },
   })
 }
 
 export async function acceptInvite(req, res) {
-  const { access_token, refresh_token, password, first_name, last_name } = req.body
+  const { access_token, password, first_name, last_name } = req.body
 
   if (!password || password.length < PASSWORD_MIN) {
     return res.status(400).json({ success: false, error: `Password must be at least ${PASSWORD_MIN} characters` })
@@ -79,13 +83,13 @@ export async function acceptInvite(req, res) {
     return res.status(400).json({ success: false, error: 'First and last name are required' })
   }
 
-  const { data: sessionData, error: sessionErr } = await supabase.auth.setSession({ access_token, refresh_token })
-  if (sessionErr || !sessionData?.user) {
+  const { data, error } = await supabase.auth.getUser(access_token)
+  if (error || !data?.user) {
     return res.status(401).json({ success: false, error: 'Invalid or expired link' })
   }
-  const userId = sessionData.user.id
+  const userId = data.user.id
 
-  const { error: updateErr } = await supabase.auth.updateUser({
+  const { error: updateErr } = await supabase.auth.admin.updateUserById(userId, {
     password,
     email_confirm: true,
     user_metadata: { first_name, last_name },
@@ -96,7 +100,7 @@ export async function acceptInvite(req, res) {
 
   const { error: dbErr } = await supabase
     .from('users')
-    .update({ first_name, last_name })
+    .update({ first_name, last_name, is_active: true })
     .eq('id', userId)
   if (dbErr) {
     return res.status(400).json({ success: false, error: dbErr.message })
