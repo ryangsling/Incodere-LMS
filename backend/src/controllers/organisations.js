@@ -1,8 +1,7 @@
 import supabase from '../db/supabase.js'
-import { Resend } from 'resend'
+import { sendWelcomeEmail, sendInviteEmail } from '../services/email.js'
+import { buildAuthLink } from '../utils/authLinks.js'
 import { parsePagination } from '../utils/listQuery.js'
-
-const resend = new Resend(process.env.RESEND_API_KEY)
 
 export async function listOrganisations(req, res) {
   const { q } = req.query
@@ -63,13 +62,12 @@ export async function createCompanyAdmin(req, res) {
 
   if (dbErr) return res.status(400).json({ success: false, error: dbErr.message })
 
-  const { error: emailErr } = await resend.emails.send({
-    from: 'ILMS <onboarding@resend.dev>',
+  const loginUrl = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/login`
+  const { error: emailErr } = await sendWelcomeEmail({
     to: email,
-    subject: 'Welcome to ILMS - Your Admin Account',
-    html: `<p>Hi ${first_name},</p><p>Your ILMS admin account has been created.</p><p>Sign in at <a href="${process.env.FRONTEND_URL || 'http://localhost:5173'}">ILMS</a> with:</p><p>Email: ${email}<br/>Password: ${password}</p>`,
+    firstName: first_name,
+    loginUrl,
   })
-
   if (emailErr) console.error('Failed to send welcome email:', emailErr)
 
   res.status(201).json({ success: true, data: user })
@@ -112,12 +110,10 @@ export async function listUsersByOrganisation(req, res) {
 export async function createLearner(req, res) {
   const { email, first_name, last_name } = req.body
   const organisation_id = req.user.organisation_id
-  const password = generatePassword()
 
   const { data: authUser, error: authErr } = await supabase.auth.admin.createUser({
     email,
-    password,
-    email_confirm: true,
+    email_confirm: false,
   })
 
   if (authErr) return res.status(400).json({ success: false, error: authErr.message })
@@ -137,14 +133,23 @@ export async function createLearner(req, res) {
 
   if (dbErr) return res.status(400).json({ success: false, error: dbErr.message })
 
-  const { error: emailErr } = await resend.emails.send({
-    from: 'ILMS <onboarding@resend.dev>',
-    to: email,
-    subject: 'Welcome to ILMS - Your Account',
-    html: `<p>Hi ${first_name},</p><p>Your ILMS learner account has been created by your organisation.</p><p>Sign in at <a href="${process.env.FRONTEND_URL || 'http://localhost:5173'}">ILMS</a> with:</p><p>Email: ${email}<br/>Password: ${password}</p>`,
+  const { data: linkData, error: linkErr } = await supabase.auth.admin.generateLink({
+    type: 'invite',
+    email,
   })
+  if (linkErr || !linkData?.properties?.action_link) {
+    console.error('createLearner: generateLink failed', linkErr)
+    return res.status(500).json({ success: false, error: 'Failed to generate invite link' })
+  }
 
-  if (emailErr) console.error('Failed to send welcome email:', emailErr)
+  const inviteLink = buildAuthLink({ actionLink: linkData.properties.action_link, redirectTo: '/accept-invite' })
+  const { error: emailErr } = await sendInviteEmail({
+    to: email,
+    firstName: first_name,
+    inviteLink,
+    companyName: req.user.organisation_name || 'your company',
+  })
+  if (emailErr) console.error('Failed to send invite email:', emailErr)
 
   res.status(201).json({ success: true, data: user })
 }
