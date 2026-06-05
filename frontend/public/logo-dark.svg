@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 40" fill="none">
+  <rect x="0" y="4" width="32" height="32" rx="6" fill="white"/>
+  <path d="M9 26V14h2.4l5.2 7.2V14H19v12h-2.4l-5.2-7.2V26H9z" fill="#01696f"/>
+  <text x="42" y="20" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700" fill="white">ILMS</text>
+  <text x="42" y="34" font-family="Inter, system-ui, sans-serif" font-size="9" font-weight="500" fill="#cce8ea" letter-spacing="1">INCODET</text>
+</svg>
