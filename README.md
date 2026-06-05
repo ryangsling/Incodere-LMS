@@ -73,6 +73,18 @@ cd backend && npm run dev
 cd frontend && npm run dev
 ```
 
+## Deployment prep (auth-specific)
+
+Before going live, complete these manual steps in addition to the PAUSE 5 steps in `AGENTS.md`:
+
+1. **Resend** — verify your sender domain (e.g., `incodet.com`) at https://resend.com/domains. Set `RESEND_FROM_EMAIL` and `RESEND_FROM_NAME` in backend `.env` and in Railway's environment variables.
+2. **Supabase Auth** — in Supabase dashboard → Authentication → URL Configuration:
+   - Set **Site URL** to your production frontend URL.
+   - Add the following to **Additional Redirect URLs**:
+     - `https://<your-frontend>/reset-password`
+     - `https://<your-frontend>/accept-invite`
+3. **After deploy** — create a test organisation + test company admin via the existing dashboard, then invite a personal email address and confirm the invite email arrives and the link works end-to-end on the live URL.
+
 ## Roles
 
 | Role | Access | Default redirect |
