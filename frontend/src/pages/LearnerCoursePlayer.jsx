@@ -68,7 +68,7 @@ export default function LearnerCoursePlayer() {
   async function handleGetCertificate() {
     try {
       await api.certificates.generate({ course_id: courseId })
-      navigate('/dashboard')
+      navigate('/dashboard/certificates')
     } catch (e) {
       setError(e.message)
     }
@@ -134,15 +134,15 @@ export default function LearnerCoursePlayer() {
            <p className="body-copy opacity-70 text-typography">
              {isCertError ? 'You have already completed this course and your certificate is ready.' : error}
            </p>
-           <div className="flex gap-3 mt-6">
-             <button onClick={() => navigate('/dashboard')} className="px-4 py-2 bg-typography text-canvas rounded-lg text-sm font-bold">
-               Back to Dashboard
-             </button>
-             {isCertError && (
-               <button onClick={handleDownloadExistingCertificate} disabled={isDownloading} className="px-4 py-2 bg-accent text-white rounded-lg text-sm font-bold hover:opacity-90 flex items-center justify-center disabled:opacity-50">
-                 {isDownloading ? 'Downloading...' : 'Download Certificate'}
-               </button>
-             )}
+            <div className="flex gap-3 mt-6">
+              <button onClick={() => navigate('/dashboard/certificates')} className="px-4 py-2 bg-typography text-canvas rounded-lg text-sm font-bold">
+                View Certificates
+              </button>
+              {isCertError && (
+                <button onClick={handleDownloadExistingCertificate} disabled={isDownloading} className="px-4 py-2 bg-accent text-white rounded-lg text-sm font-bold hover:opacity-90 flex items-center justify-center disabled:opacity-50">
+                  {isDownloading ? 'Downloading...' : 'Download Certificate'}
+                </button>
+              )}
            </div>
         </div>
       </div>

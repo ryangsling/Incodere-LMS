@@ -4,6 +4,7 @@ import { verifyAuth } from '../middleware/verifyAuth.js'
 import { requireRole } from '../middleware/requireRole.js'
 import { handleValidation } from '../middleware/validate.js'
 import { writeLimiter } from '../middleware/rateLimiters.js'
+import { isBusinessEmail } from '../controllers/organisations.js'
 import {
   listOrganisations,
   createOrganisation,
@@ -27,7 +28,17 @@ router.post(
   requireRole('super_admin'),
   writeLimiter,
   body('name').notEmpty().isLength({ max: 200 }).withMessage('Organisation name is required (max 200 chars)'),
-  body('contact_email').isEmail().withMessage('Valid contact email is required'),
+  body('contact_email')
+    .isEmail()
+    .withMessage('Valid contact email is required')
+    .custom((value) => {
+      if (!isBusinessEmail(value)) {
+        throw new Error('Please use a business email address (no Gmail, Yahoo, etc.)')
+      }
+      return true
+    }),
+  body('first_name').optional().notEmpty().isLength({ max: 100 }).withMessage('First name is required (max 100 chars)'),
+  body('last_name').optional().notEmpty().isLength({ max: 100 }).withMessage('Last name is required (max 100 chars)'),
   handleValidation,
   createOrganisation,
 )

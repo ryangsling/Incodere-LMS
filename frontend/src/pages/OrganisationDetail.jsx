@@ -12,6 +12,7 @@ export default function OrganisationDetail() {
   const [form, setForm] = useState({ email: '', first_name: '', last_name: '' })
   const [submitting, setSubmitting] = useState(false)
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { load() }, [orgId])
 
   async function load() {

@@ -4,6 +4,25 @@ import { parsePagination } from '../utils/listQuery.js'
 
 const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173'
 
+const FREE_EMAIL_PROVIDERS = [
+  'gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 'aol.com',
+  'icloud.com', 'mail.com', 'protonmail.com', 'proton.me', 'zoho.com',
+  'yandex.com', 'gmx.com', 'fastmail.com', 'tutanota.com', 'inbox.com',
+  'live.com', 'msn.com', 'ymail.com', 'rocketmail.com', 'me.com',
+  'comcast.net', 'att.net', 'verizon.net', 'cox.net', 'charter.net',
+  'sbcglobal.net', 'bellsouth.net', 'earthlink.net', 'juno.com',
+  'netzero.com', 'aim.com', 'windowslive.com', 'hotmail.co.uk',
+  'yahoo.co.uk', 'yahoo.co.in', 'rediffmail.com', 'laposte.net',
+  'web.de', 't-online.de', 'baidu.com', 'qq.com', '163.com', '126.com',
+]
+
+export function isBusinessEmail(email) {
+  if (!email || !email.includes('@')) return false
+  const domain = email.split('@')[1]?.toLowerCase()
+  if (!domain) return false
+  return !FREE_EMAIL_PROVIDERS.includes(domain)
+}
+
 export async function listOrganisations(req, res) {
   const { q } = req.query
   const { page, pageSize } = parsePagination(req.query)
@@ -13,27 +32,89 @@ export async function listOrganisations(req, res) {
     .select('*', { count: 'exact' })
   if (q) query = query.or(`name.ilike.%${q}%,contact_email.ilike.%${q}%`)
 
-  const { data, error } = await query
+  const { data: orgs, error } = await query
     .order('created_at', { ascending: false })
     .range((page - 1) * pageSize, page * pageSize - 1)
 
   if (error) return res.status(500).json({ success: false, error: error.message })
+
+  const rows = await Promise.all((orgs || []).map(async (org) => {
+    const { data: admin } = await supabase
+      .from('users')
+      .select('id, email, first_name, last_name, is_active, role')
+      .eq('organisation_id', org.id)
+      .eq('role', 'company_admin')
+      .limit(1)
+      .maybeSingle()
+    return { ...org, admin: admin || null }
+  }))
+
   res.json({
     success: true,
-    data: { rows: data || [], total: data ? data.length : 0, page, pageSize },
+    data: { rows, total: orgs ? orgs.length : 0, page, pageSize },
   })
 }
 
 export async function createOrganisation(req, res) {
-  const { name, contact_email } = req.body
-  const { data, error } = await supabase
+  const { name, contact_email, first_name, last_name } = req.body
+
+  const { data: org, error: orgErr } = await supabase
     .from('organisations')
     .insert({ name, contact_email })
     .select()
     .single()
 
-  if (error) return res.status(400).json({ success: false, error: error.message })
-  res.status(201).json({ success: true, data })
+  if (orgErr) return res.status(400).json({ success: false, error: orgErr.message })
+
+  if (first_name && last_name) {
+    const { data: authUser, error: authErr } = await supabase.auth.admin.createUser({
+      email: contact_email,
+      email_confirm: false,
+    })
+
+    if (authErr) {
+      console.error('createOrganisation: createUser failed', authErr)
+      return res.status(201).json({ success: true, data: org, warning: 'Organisation created but admin invite failed: ' + authErr.message })
+    }
+
+    const { error: dbErr } = await supabase
+      .from('users')
+      .insert({
+        id: authUser.user.id,
+        email: contact_email,
+        role: 'company_admin',
+        organisation_id: org.id,
+        first_name,
+        last_name,
+      })
+
+    if (dbErr) {
+      console.error('createOrganisation: insert user failed', dbErr)
+      return res.status(201).json({ success: true, data: org, warning: 'Organisation created but admin user could not be saved' })
+    }
+
+    const { data: linkData, error: linkErr } = await supabase.auth.admin.generateLink({
+      type: 'invite',
+      email: contact_email,
+      options: { redirectTo: `${FRONTEND_URL}/accept-invite` },
+    })
+
+    if (linkErr || !linkData?.properties?.action_link) {
+      console.error('createOrganisation: generateLink failed', linkErr)
+      return res.status(201).json({ success: true, data: org, warning: 'Organisation created but invite email could not be sent' })
+    }
+
+    const inviteLink = linkData.properties.action_link
+    const { error: emailErr } = await sendInviteEmail({
+      to: contact_email,
+      firstName: first_name,
+      inviteLink,
+      companyName: name,
+    })
+    if (emailErr) console.error('createOrganisation: email send failed', emailErr)
+  }
+
+  res.status(201).json({ success: true, data: org })
 }
 
 export async function createCompanyAdmin(req, res) {

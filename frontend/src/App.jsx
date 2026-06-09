@@ -10,6 +10,7 @@ import AcceptInvite from './pages/AcceptInvite'
 import VerifyCertificate from './pages/VerifyCertificate'
 import LearnerDashboard from './pages/LearnerDashboard'
 import LearnerCoursePlayer from './pages/LearnerCoursePlayer'
+import LearnerCertificates from './pages/LearnerCertificates'
 import CompanyAdminLayout from './pages/CompanyAdminLayout'
 import SuperAdminLayout from './pages/SuperAdminLayout'
 
@@ -87,6 +88,14 @@ function App() {
             element={
               <ProtectedRoute roles={['learner']}>
                 <LearnerCoursePlayer />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard/certificates"
+            element={
+              <ProtectedRoute roles={['learner']}>
+                <LearnerCertificates />
               </ProtectedRoute>
             }
           />

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { api } from '../utils/api'
 import { useAuth } from '../context/AuthContext'
-import { Card, CardBody, Badge, Button } from '../components/ui'
+import { Card, CardBody, Badge } from '../components/ui'
 import { Skeleton } from '../components/ui/Skeleton'
 import { CheckBadgeIcon, ExclamationTriangleIcon, ArrowDownTrayIcon } from '@heroicons/react/24/outline'
 
