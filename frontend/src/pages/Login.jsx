@@ -27,7 +27,9 @@ export default function Login() {
       const message =
         err.message === 'Invalid login credentials'
           ? 'Invalid email or password'
-          : err.message
+          : err.message.includes('Network error')
+            ? 'Could not reach the server. Please try again.'
+            : err.message
       toast.error(message)
     } finally {
       setSubmitting(false)

@@ -47,16 +47,27 @@ function buildUrl(path, params) {
 async function request(path, { method = 'GET', body, params } = {}) {
   const token = await getToken()
 
-  const res = await fetch(`${API}${buildUrl(path, params)}`, {
-    method,
-    headers: {
-      'Content-Type': 'application/json',
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    },
-    ...(body ? { body: JSON.stringify(body) } : {}),
-  })
+  let res
+  try {
+    res = await fetch(`${API}${buildUrl(path, params)}`, {
+      method,
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+      ...(body ? { body: JSON.stringify(body) } : {}),
+    })
+  } catch (err) {
+    throw new Error('Network error — please check your connection and try again', { cause: err })
+  }
 
-  const json = await res.json()
+  let json
+  try {
+    json = await res.json()
+  } catch {
+    throw new Error(`Server error (${res.status}) — please try again later`)
+  }
+
   if (!json.success) throw new Error(json.error || 'Request failed')
   return json.data
 }

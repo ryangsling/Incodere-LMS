@@ -56,7 +56,7 @@ export function AuthProvider({ children }) {
       return user
     } catch (err) {
       console.error('loadUser error:', err)
-      dispatch({ type: 'SET_USER', payload: null })
+      dispatch({ type: 'LOADING_DONE' })
       throw err
     }
   }
