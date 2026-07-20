@@ -1,8 +1,8 @@
 import supabase from '../db/supabase.js'
-import { sendPasswordResetEmail, sendInviteEmail } from '../services/email.js'
+import { sendPasswordResetEmail } from '../services/email.js'
+import { buildAuthLink, LINK_EXPIRY_SECONDS } from '../utils/authLinks.js'
 
 const PASSWORD_MIN = 8
-const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173'
 
 export async function forgotPassword(req, res) {
   const { email } = req.body
@@ -10,12 +10,16 @@ export async function forgotPassword(req, res) {
     const { data, error } = await supabase.auth.admin.generateLink({
       type: 'recovery',
       email,
-      options: { redirectTo: `${FRONTEND_URL}/reset-password` },
+      options: { redirectTo: '/reset-password' },
+      data: { expires_in: LINK_EXPIRY_SECONDS },
     })
     if (error || !data?.properties?.action_link) {
       return res.status(200).json({ success: true })
     }
-    const resetLink = data.properties.action_link
+    const resetLink = buildAuthLink({
+      actionLink: data.properties.action_link,
+      redirectTo: '/reset-password',
+    })
     const { error: emailErr } = await sendPasswordResetEmail({ to: email, firstName: 'there', resetLink })
     if (emailErr) console.error('forgotPassword: email send failed', emailErr)
   } catch (err) {

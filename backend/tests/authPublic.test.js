@@ -70,7 +70,8 @@ describe('forgotPassword', () => {
     expect(generateLink).toHaveBeenCalledWith({
       type: 'recovery',
       email: 'user@example.com',
-      options: { redirectTo: expect.stringContaining('/reset-password') },
+      options: { redirectTo: '/reset-password' },
+      data: { expires_in: 86400 },
     })
     expect(sendPasswordResetEmail).toHaveBeenCalledTimes(1)
     const sent = sendPasswordResetEmail.mock.calls[0][0]

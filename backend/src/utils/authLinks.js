@@ -6,7 +6,7 @@ const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173'
  * Supabase's /auth/v1/verify endpoint.
  *
  * Example: buildAuthLink({ actionLink, redirectTo: '/accept-invite' })
- *   -> 'http://localhost:5173/accept-invite#access_token=...&refresh_token=...&type=invite'
+ *   -> 'https://ilms-incodet.vercel.app/accept-invite#access_token=...&refresh_token=...&type=invite'
  */
 export function buildAuthLink({ actionLink, redirectTo }) {
   if (!actionLink) throw new Error('buildAuthLink: actionLink is required')
@@ -14,3 +14,8 @@ export function buildAuthLink({ actionLink, redirectTo }) {
   const fragment = hashIndex >= 0 ? actionLink.slice(hashIndex) : ''
   return `${FRONTEND_URL}${redirectTo}${fragment}`
 }
+
+/**
+ * Default link expiry: 24 hours (86400 seconds).
+ */
+export const LINK_EXPIRY_SECONDS = 24 * 60 * 60
