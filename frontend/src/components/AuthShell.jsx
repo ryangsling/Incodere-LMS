@@ -8,7 +8,7 @@ export default function AuthShell({ children, title, subtitle }) {
           product does is more honest and reads better than a pretend UI. */}
       <div className="relative hidden w-1/2 flex-col justify-between bg-ink p-12 lg:flex">
         <Link to="/" className="flex items-center gap-2.5 no-underline">
-          <img src="/logo-mark.svg" alt="" width="28" height="28" />
+          <img src="/logo-mark-white.svg" alt="" width="28" height="28" />
           <span className="text-lg font-semibold tracking-tight text-white">ILMS</span>
         </Link>
 
