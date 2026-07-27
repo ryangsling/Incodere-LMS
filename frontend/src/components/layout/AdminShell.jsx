@@ -64,7 +64,7 @@ export default function AdminShell({ navItems, brand, headerTitle, children }) {
       <Dialog open={sidebarOpen} onClose={setSidebarOpen} className="relative z-50 lg:hidden">
         <DialogBackdrop
           transition
-          className="fixed inset-0 bg-ink/40 transition-opacity duration-200 data-closed:opacity-0"
+          className="fixed inset-0 bg-black/40 transition-opacity duration-200 data-closed:opacity-0"
         />
         <div className="fixed inset-0 flex">
           <DialogPanel

@@ -6,7 +6,7 @@ export default function AuthShell({ children, title, subtitle }) {
       {/* Marketing panel. The previous version rendered a fake product
           dashboard out of six styled div bars; a plain statement of what the
           product does is more honest and reads better than a pretend UI. */}
-      <div className="relative hidden w-1/2 flex-col justify-between bg-ink p-12 lg:flex">
+      <div className="relative hidden w-1/2 flex-col justify-between bg-panel-dark p-12 lg:flex">
         <Link to="/" className="flex items-center gap-2.5 no-underline">
           <img src="/logo-mark-white.svg" alt="" width="28" height="28" />
           <span className="text-lg font-semibold tracking-tight text-white">ILMS</span>
@@ -24,7 +24,9 @@ export default function AuthShell({ children, title, subtitle }) {
           </p>
         </div>
 
-        <p className="text-sm text-white/40">
+        {/* /40 measured 3.82:1 on this panel, below the 4.5:1 small-text
+            minimum; /60 clears it with margin. */}
+        <p className="text-sm text-white/60">
           &copy; {new Date().getFullYear()} incodet
         </p>
       </div>

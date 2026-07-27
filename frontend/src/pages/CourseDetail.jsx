@@ -123,7 +123,7 @@ export default function CourseDetail() {
           )}
 
           {course.sections?.map(section => (
-            <div key={section.id} className="bg-white rounded shadow-sm mb-4 p-4">
+            <div key={section.id} className="bg-surface border border-border rounded-[var(--radius-control)] shadow-sm mb-4 p-4">
               <div className="flex items-center justify-between mb-3">
                 <h4 className="font-medium text-ink">{section.title}</h4>
                 <button

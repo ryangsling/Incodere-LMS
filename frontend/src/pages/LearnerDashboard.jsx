@@ -84,7 +84,7 @@ export default function LearnerDashboard() {
         ) : focus ? (
           <section
             aria-labelledby="focus-heading"
-            className="mb-14 rounded-[var(--radius-surface)] bg-ink p-8 sm:p-10"
+            className="mb-14 rounded-[var(--radius-surface)] bg-panel-dark p-8 sm:p-10"
           >
             <p className="text-sm text-white/60">
               {focus.progress > 0 ? 'Continue where you left off' : 'Ready to start'}
@@ -129,7 +129,7 @@ export default function LearnerDashboard() {
 
             <button
               onClick={() => navigate(`/dashboard/courses/${focus.course_id}`)}
-              className="btn mt-8 !border-transparent !bg-white !px-6 !py-3 !text-ink hover:!bg-white/90"
+              className="btn mt-8 !border-transparent !bg-white !px-6 !py-3 !text-panel-dark hover:!bg-white/90"
             >
               {focus.progress > 0 ? 'Resume course' : 'Start course'}
             </button>

@@ -61,7 +61,7 @@ export default function Login() {
             </label>
             <Link
               to="/forgot-password"
-              className="text-xs text-ink/60 hover:text-ink transition-colors"
+              className="text-xs text-muted hover:text-ink transition-colors"
             >
               Forgot password?
             </Link>

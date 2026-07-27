@@ -153,7 +153,7 @@ export default function AcceptInvite() {
             placeholder="••••••••"
             className="w-full"
           />
-          <p className="mt-1 text-xs text-ink/60">At least 8 characters.</p>
+          <p className="mt-1 text-xs text-muted">At least 8 characters.</p>
         </div>
 
         <div>

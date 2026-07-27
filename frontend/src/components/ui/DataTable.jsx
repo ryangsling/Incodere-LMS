@@ -79,7 +79,7 @@ export default function DataTable({
               type="button"
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               disabled={safePage === 1}
-              className="size-8 inline-flex items-center justify-center rounded-[var(--radius-control)] border border-border-strong bg-white text-muted hover:bg-structural disabled:opacity-50 disabled:cursor-not-allowed"
+              className="size-8 inline-flex items-center justify-center rounded-[var(--radius-control)] border border-border-strong bg-surface text-muted hover:bg-structural disabled:opacity-50 disabled:cursor-not-allowed"
               aria-label="Previous"
             >
               <ChevronLeftIcon className="size-4" />
@@ -91,7 +91,7 @@ export default function DataTable({
               type="button"
               onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
               disabled={safePage === totalPages}
-              className="size-8 inline-flex items-center justify-center rounded-[var(--radius-control)] border border-border-strong bg-white text-muted hover:bg-structural disabled:opacity-50 disabled:cursor-not-allowed"
+              className="size-8 inline-flex items-center justify-center rounded-[var(--radius-control)] border border-border-strong bg-surface text-muted hover:bg-structural disabled:opacity-50 disabled:cursor-not-allowed"
               aria-label="Next"
             >
               <ChevronRightIcon className="size-4" />

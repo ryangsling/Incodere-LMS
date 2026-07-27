@@ -35,7 +35,7 @@ export default function Modal({
     <Dialog open={open} onClose={onClose} className="relative z-50">
       <DialogBackdrop
         transition
-        className="fixed inset-0 bg-ink/50 transition-opacity data-closed:opacity-0 data-enter:duration-200 data-leave:duration-150"
+        className="fixed inset-0 bg-black/50 transition-opacity data-closed:opacity-0 data-enter:duration-200 data-leave:duration-150"
       />
       <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
         <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">

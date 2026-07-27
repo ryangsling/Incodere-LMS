@@ -115,7 +115,7 @@ export default function CompanyAdminEnrolments() {
       />
 
       {showForm && (
-        <form onSubmit={handleEnrol} className="bg-white rounded-[var(--radius-control)] shadow-sm p-4 mb-6">
+        <form onSubmit={handleEnrol} className="bg-surface border border-border rounded-[var(--radius-control)] shadow-sm p-4 mb-6">
           <div className="mb-4">
             <label className="block text-sm text-muted mb-2">Select Learners</label>
             <div className="max-h-40 overflow-y-auto space-y-1 border border-border rounded-[var(--radius-control)] p-2">

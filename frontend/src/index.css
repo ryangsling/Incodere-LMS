@@ -43,6 +43,15 @@
   --color-accent-soft: var(--color-accent-50);
   --color-accent-on-soft: var(--color-accent-800);
 
+  /* Accent used as TEXT on a plain background (links, "verified" copy) is a
+     separate token from --color-accent. --color-accent must stay exactly
+     #0f766e in both themes because it is also a background paired with white
+     text (buttons, the avatar chip, badge fills), and #0f766e only clears
+     4.5:1 there against white, against a dark surface it drops to ~3.1:1.
+     --color-link starts equal to --color-accent in light mode and is the only
+     one of the pair that moves in the dark override below. */
+  --color-link: var(--color-accent);
+
   /* ── Status. Reserved for status only, never decoration. ── */
   --color-warning: #b45309;
   --color-warning-soft: #fffbeb;
@@ -89,6 +98,61 @@
   --color-pure-white: var(--color-surface);
   --color-border-hairline: var(--color-border);
   --color-primary-indigo-hover: var(--color-accent-hover);
+
+  /* Fixed dark panel. Used for the handful of sections that are deliberately
+     dark regardless of page theme (auth marketing panel, dashboard focus
+     card, landing CTA band), see Section 4.11: a page may have section-level
+     tint variation, but semantic --color-ink inverts with theme (see the dark
+     override below) and would go light-on-light there if reused. This token
+     intentionally does NOT change under prefers-color-scheme, so those panels
+     keep the same fixed identity in both themes. */
+  --color-panel-dark: #1c1917;
+}
+
+/* ── Dark mode ──
+   Respects system preference; no manual toggle exists yet. Every value below
+   overrides a token declared above, so anything built from these tokens
+   (bg-canvas, text-ink, .card, .field, .btn-*, .badge, focus rings) repaints
+   automatically. Nothing else needs touching except the fixed dark panels
+   above, which stay put on purpose, and a couple of literal white/black
+   utilities on those same panels (unaffected either way, since they were
+   never theme-reactive to begin with).
+
+   Foreground/background pairs re-verified at this palette, all >= 4.5:1:
+   ink/canvas 16.9, body/canvas 10.6, muted/canvas 7.1, muted/structural 5.9,
+   accent-text/canvas 12.5, danger/canvas 9.8, warning/canvas 12.9,
+   accent-on-soft/accent-soft 9.8. Button backgrounds (white text on
+   --color-accent) are untouched by theme and stay 5.47:1 in both. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-canvas: #18120f;
+    --color-surface: #211a17;
+    --color-structural: #2b221e;
+    --color-ink: #f7f4f2;
+    --color-body: #cbc2bd;
+    --color-muted: #a89e98;
+    --color-border: rgba(255, 255, 255, 0.09);
+    --color-border-strong: rgba(255, 255, 255, 0.16);
+
+    /* --color-accent is deliberately absent from this list: buttons, the
+       avatar chip and badge fills all pair it with white text, and that only
+       clears WCAG AA against white, not against a dark surface. Only the
+       text-role token moves. */
+    --color-link: var(--color-accent-300);
+    --color-accent-soft: #0f2e2b;
+    --color-accent-on-soft: var(--color-accent-300);
+
+    --color-warning: #fcd34d;
+    --color-warning-soft: #3a2a0a;
+    --color-danger: #fca5a5;
+    --color-danger-soft: #3b1219;
+    --color-danger-border: #5c1f27;
+
+    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.45), 0 2px 4px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 12px 28px rgba(0, 0, 0, 0.5), 0 4px 8px rgba(0, 0, 0, 0.3);
+  }
 }
 
 /* ── Base ── */

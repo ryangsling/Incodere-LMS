@@ -31,7 +31,7 @@ export default function Drawer({
     <Dialog open={open} onClose={onClose} className="relative z-50">
       <DialogBackdrop
         transition
-        className="fixed inset-0 bg-ink/40 transition-opacity data-closed:opacity-0 data-enter:duration-200 data-leave:duration-150"
+        className="fixed inset-0 bg-black/40 transition-opacity data-closed:opacity-0 data-enter:duration-200 data-leave:duration-150"
       />
       <div className="fixed inset-0 overflow-hidden">
         <div className="absolute inset-0 overflow-hidden">

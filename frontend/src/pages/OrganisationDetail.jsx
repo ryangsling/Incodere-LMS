@@ -67,7 +67,7 @@ export default function OrganisationDetail() {
       />
 
       {showForm && (
-        <form onSubmit={handleCreateAdmin} className="bg-white rounded-[var(--radius-control)] shadow-sm p-4 mb-6 flex flex-wrap gap-3 items-end">
+        <form onSubmit={handleCreateAdmin} className="bg-surface border border-border rounded-[var(--radius-control)] shadow-sm p-4 mb-6 flex flex-wrap gap-3 items-end">
           <div className="flex-1 min-w-[180px]">
             <label className="block text-xs text-muted mb-1">Email</label>
             <Input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required />

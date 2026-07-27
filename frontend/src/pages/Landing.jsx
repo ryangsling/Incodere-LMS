@@ -347,7 +347,7 @@ export default function Landing() {
       </section>
 
       {/* ── CTA band ── */}
-      <section className="border-t border-border bg-ink">
+      <section className="border-t border-border bg-panel-dark">
         <div className="mx-auto flex max-w-6xl flex-col items-start gap-8 px-5 py-16 sm:px-6 sm:py-20 lg:flex-row lg:items-center lg:justify-between">
           <div>
             <h2 className="max-w-md text-3xl text-white sm:text-4xl">
@@ -361,7 +361,7 @@ export default function Landing() {
           <div className="flex shrink-0 flex-wrap gap-3">
             <Link
               to="/login"
-              className="btn !border-transparent !bg-white !px-6 !py-3.5 !text-base !text-ink hover:!bg-white/90"
+              className="btn !border-transparent !bg-white !px-6 !py-3.5 !text-base !text-panel-dark hover:!bg-white/90"
             >
               Sign in
               <ArrowRightIcon className="size-4" aria-hidden="true" />

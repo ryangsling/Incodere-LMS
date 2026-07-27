@@ -32,7 +32,7 @@ export default function PageHeader({
             <span key={idx}>
               {idx > 0 && <span className="mx-2 text-muted" aria-hidden="true">/</span>}
               {item.to ? (
-                <Link to={item.to} className="hover:text-accent">
+                <Link to={item.to} className="hover:text-link">
                   {item.label}
                 </Link>
               ) : (

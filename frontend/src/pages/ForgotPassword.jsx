@@ -34,7 +34,7 @@ export default function ForgotPassword() {
           <p>If an account exists for that address, a password reset link is on its way. The link expires in 1 hour.</p>
           <Link
             to="/login"
-            className="inline-block mt-4 text-ink/80 hover:text-ink underline"
+            className="inline-block mt-4 text-muted hover:text-ink underline"
           >
             Back to sign in
           </Link>
@@ -60,9 +60,9 @@ export default function ForgotPassword() {
             Send reset link &rarr;
           </Button>
 
-          <p className="text-center text-sm text-ink/60">
+          <p className="text-center text-sm text-muted">
             Remembered it?{' '}
-            <Link to="/login" className="text-ink underline hover:text-ink/80">
+            <Link to="/login" className="text-ink underline hover:text-link">
               Back to sign in
             </Link>
           </p>

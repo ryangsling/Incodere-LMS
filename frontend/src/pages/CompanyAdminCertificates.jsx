@@ -34,7 +34,7 @@ export default function CompanyAdminCertificates() {
       key: 'id',
       label: 'Verify',
       render: (c) => (
-        <a href={`/verify/${c.id}`} target="_blank" rel="noopener noreferrer" className="text-xs text-accent hover:underline">
+        <a href={`/verify/${c.id}`} target="_blank" rel="noopener noreferrer" className="text-xs text-link hover:underline">
           Link
         </a>
       ),

@@ -176,7 +176,7 @@ export default function OrganisationList() {
           </button>
         </div>
       ) : (
-        <Link to={`/super-admin/organisations/${o.id}`} className="text-xs text-accent hover:underline">
+        <Link to={`/super-admin/organisations/${o.id}`} className="text-xs text-link hover:underline">
           Add admin
         </Link>
       ),
@@ -191,7 +191,7 @@ export default function OrganisationList() {
       />
 
       {showForm && (
-        <form onSubmit={handleCreate} className="bg-white rounded-[var(--radius-control)] shadow-sm p-4 mb-6">
+        <form onSubmit={handleCreate} className="bg-surface border border-border rounded-[var(--radius-control)] shadow-sm p-4 mb-6">
           <div className="flex flex-wrap gap-3 items-end">
             <div className="flex-1 min-w-[200px]">
               <label className="block text-xs text-muted mb-1">Company Name</label>
