@@ -25,9 +25,9 @@ export default function CourseList() {
     {
       key: 'title',
       label: 'Title',
-      render: (c) => <span className="font-medium text-navy-700">{c.title}</span>,
+      render: (c) => <span className="font-medium text-ink">{c.title}</span>,
     },
-    { key: 'category', label: 'Category', render: (c) => c.category || '—' },
+    { key: 'category', label: 'Category', render: (c) => c.category || 'Uncategorised' },
     {
       key: 'status',
       label: 'Status',
@@ -46,7 +46,7 @@ export default function CourseList() {
         title="Courses"
         action={{ to: '/super-admin/courses/new', label: 'New Course' }}
       />
-      {error && <p className="text-red-600 text-sm mb-4">{error}</p>}
+      {error && <p className="text-danger text-sm mb-4">{error}</p>}
       <DataTable
         columns={columns}
         rows={rows}

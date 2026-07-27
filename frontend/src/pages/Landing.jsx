@@ -1,48 +1,65 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { ArrowRightIcon } from '@heroicons/react/24/outline'
+import {
+  ArrowRightIcon,
+  Bars3Icon,
+  XMarkIcon,
+  CheckIcon,
+} from '@heroicons/react/24/outline'
 import { useAuth } from '../context/AuthContext'
 
-gsap.registerPlugin(ScrollTrigger)
+const NAV = [
+  { href: '#platform', label: 'Platform' },
+  { href: '#how-it-works', label: 'How it works' },
+  { href: '#faq', label: 'FAQ' },
+]
 
-const FEATURES = [
+const CAPABILITIES = [
   {
-    title: 'Course Builder',
-    description:
-      'Create structured courses with YouTube video lessons and rich-text reading material. Organise by sections, publish when ready.',
-    color: '#0d9488',
-    bg: '#e6f7f5',
+    title: 'Course builder',
+    body: 'Organise a curriculum into sections, then fill them with YouTube video lessons and rich-text reading material. Publish when it is ready.',
   },
   {
-    title: 'Progress Tracking',
-    description:
-      'See exactly where each learner stands. Completion rates, lesson-by-lesson progress, all in real time.',
-    color: '#4865FF',
-    bg: '#eef2ff',
+    title: 'Progress tracking',
+    body: 'See where every learner stands, lesson by lesson, with completion rates that update as people work.',
   },
   {
-    title: 'Auto Certificates',
-    description:
-      'Branded PDF certificates generated and emailed the moment a learner finishes a course.',
-    color: '#d946ef',
-    bg: '#fdf4ff',
+    title: 'Automatic certificates',
+    body: 'A branded PDF certificate is generated and emailed the moment a learner finishes the last lesson.',
+  },
+  {
+    title: 'Tenant isolation',
+    body: 'Each organisation sees only its own learners, enrolments and certificates. Nothing leaks between companies.',
   },
 ]
 
 const STEPS = [
   {
-    title: 'Create a course',
-    body: 'Add sections, embed YouTube videos, write lesson notes. Your curriculum, your way.',
+    verb: 'Build',
+    body: 'Add sections, embed videos, write lesson notes. Your curriculum, structured your way.',
   },
   {
-    title: 'Enrol learners',
-    body: 'Bulk-add employees or invite them one at a time. Assign courses with a single click.',
+    verb: 'Assign',
+    body: 'Invite employees individually or bulk-enrol existing ones into a course in a single action.',
   },
   {
-    title: 'Track and certify',
-    body: 'Watch progress in real time. Certificates are issued automatically on completion.',
+    verb: 'Certify',
+    body: 'Watch progress in real time. Certificates issue themselves on completion, and stay verifiable.',
+  },
+]
+
+const ROLES = [
+  {
+    role: 'Super admin',
+    body: 'Owns the course catalogue and the organisations on the platform. Sees cross-tenant statistics.',
+  },
+  {
+    role: 'Company admin',
+    body: 'Manages their own learners, assigns courses, and pulls compliance reports for their organisation.',
+  },
+  {
+    role: 'Learner',
+    body: 'Works through assigned courses, tracks their own progress, and collects certificates.',
   },
 ]
 
@@ -65,17 +82,74 @@ const FAQS = [
   },
 ]
 
-const TRUSTED = [
-  'Acme Corp', 'Globex', 'Initech', 'Umbrella', 'Hooli', 'Pied Piper',
-  'Acme Corp', 'Globex', 'Initech', 'Umbrella', 'Hooli', 'Pied Piper',
-]
+/**
+ * A real progress card, the same composition the learner dashboard renders,
+ * shown with sample values. This is a live component rather than a screenshot
+ * mock built from styled divs, so it cannot drift away from the real product.
+ */
+function ProgressPreview() {
+  const modules = [
+    { title: 'Data handling basics', done: true },
+    { title: 'Recognising phishing', done: true },
+    { title: 'Reporting an incident', done: false },
+  ]
+
+  return (
+    <div className="card p-6 sm:p-7" aria-hidden="true">
+      <div className="flex items-start justify-between gap-4">
+        <div className="min-w-0">
+          <p className="text-sm text-muted">Assigned course</p>
+          <p className="mt-0.5 truncate font-semibold text-ink">
+            Information security, 2026
+          </p>
+        </div>
+        <p className="badge border-accent-200 bg-accent-soft text-accent-on-soft">
+          In progress
+        </p>
+      </div>
+
+      <div className="mt-6 flex items-baseline justify-between">
+        <span className="text-sm text-muted">Progress</span>
+        <span data-numeric className="text-2xl font-semibold text-ink">
+          67%
+        </span>
+      </div>
+      <div className="mt-2 h-1.5 w-full overflow-hidden rounded-[var(--radius-pill)] bg-structural">
+        <div
+          className="h-full rounded-[var(--radius-pill)] bg-accent"
+          style={{ width: '67%' }}
+        />
+      </div>
+
+      <ul className="mt-6 space-y-3 border-t border-border pt-5">
+        {modules.map((m) => (
+          <li key={m.title} className="flex items-center gap-3">
+            <span
+              className={[
+                'flex size-5 shrink-0 items-center justify-center rounded-[var(--radius-pill)] border',
+                m.done
+                  ? 'border-accent bg-accent text-white'
+                  : 'border-border-strong',
+              ].join(' ')}
+            >
+              {m.done && <CheckIcon className="size-3" strokeWidth={3} />}
+            </span>
+            <span
+              className={m.done ? 'text-sm text-muted line-through' : 'text-sm text-ink'}
+            >
+              {m.title}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
 
 export default function Landing() {
   const { user } = useAuth()
   const navigate = useNavigate()
-  const containerRef = useRef(null)
-  const heroRef = useRef(null)
-  const navRef = useRef(null)
+  const [menuOpen, setMenuOpen] = useState(false)
 
   useEffect(() => {
     if (user) {
@@ -88,498 +162,277 @@ export default function Landing() {
     }
   }, [user, navigate])
 
-  useEffect(() => {
-    if (user) return
-    const ctx = gsap.context(() => {
-      gsap.from(navRef.current, {
-        y: -20,
-        autoAlpha: 0,
-        duration: 0.6,
-        ease: 'power3.out',
-        delay: 0.1,
-      })
-
-      const heroEls = heroRef.current?.querySelectorAll('[data-hero]')
-      if (heroEls) {
-        gsap.from(heroEls, {
-          y: 40,
-          autoAlpha: 0,
-          duration: 0.9,
-          stagger: 0.12,
-          ease: 'power3.out',
-          delay: 0.3,
-        })
-      }
-
-      // ponytail: removed scroll-triggered animations — they hid content when triggers didn't fire
-    }, containerRef)
-
-    return () => ctx.revert()
-  }, [user])
-
   if (user) return null
 
   return (
-    <div ref={containerRef} className="min-h-screen" style={{ backgroundColor: '#F8F3EB' }}>
-
-      {/* ═══ NAVBAR ═══ */}
-      <header
-        ref={navRef}
-        className="fixed top-0 left-0 right-0 z-50"
-        style={{
-          backgroundColor: 'rgba(248, 243, 235, 0.92)',
-          backdropFilter: 'blur(12px)',
-        }}
-      >
-        <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2.5 no-underline">
-            <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#0f172a' }}>
-              <div className="w-3 h-3 bg-white rounded-sm" />
-            </div>
-            <span
-              className="text-base font-semibold tracking-tight"
-              style={{ fontFamily: 'var(--font-sans)', color: '#0f172a' }}
-            >
-              ILMS
-            </span>
+    <div className="bg-canvas">
+      {/* ── Nav: single line at desktop, 64px, real disclosure on mobile ── */}
+      <header className="sticky top-0 z-50 border-b border-border bg-canvas/85 backdrop-blur-md">
+        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-6 px-5 sm:px-6">
+          <Link to="/" className="flex shrink-0 items-center gap-2.5 no-underline">
+            <img src="/logo-mark.svg" alt="" width="28" height="28" />
+            <span className="text-lg font-semibold tracking-tight text-ink">ILMS</span>
           </Link>
 
-          <nav className="hidden md:flex items-center gap-8">
-            <a href="#features" className="text-sm font-medium no-underline transition-opacity hover:opacity-60" style={{ color: '#0f172a' }}>Platform</a>
-            <a href="#how-it-works" className="text-sm font-medium no-underline transition-opacity hover:opacity-60" style={{ color: '#0f172a' }}>How it works</a>
-            <a href="#faq" className="text-sm font-medium no-underline transition-opacity hover:opacity-60" style={{ color: '#0f172a' }}>FAQ</a>
+          <nav aria-label="Main" className="hidden md:flex md:items-center md:gap-8">
+            {NAV.map((item) => (
+              <a
+                key={item.href}
+                href={item.href}
+                className="text-sm font-medium text-body no-underline transition-colors hover:text-ink"
+              >
+                {item.label}
+              </a>
+            ))}
           </nav>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            <Link to="/login" className="btn btn-primary hidden !py-2 !text-sm sm:inline-flex">
+              Sign in
+            </Link>
             <button
-              onClick={() => navigate('/login')}
-              className="hidden sm:inline-flex text-sm font-medium cursor-pointer bg-transparent border-none transition-opacity hover:opacity-60"
-              style={{ fontFamily: 'var(--font-sans)', color: '#0f172a' }}
+              type="button"
+              onClick={() => setMenuOpen((v) => !v)}
+              className="-mr-2 flex size-10 items-center justify-center rounded-[var(--radius-control)] text-ink md:hidden"
+              aria-expanded={menuOpen}
+              aria-controls="mobile-nav"
+              aria-label={menuOpen ? 'Close menu' : 'Open menu'}
             >
-              Log in
-            </button>
-            <button
-              onClick={() => navigate('/login')}
-              className="inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-medium cursor-pointer border-none transition-all duration-200"
-              style={{
-                backgroundColor: '#0f172a',
-                color: 'white',
-                fontFamily: 'var(--font-sans)',
-              }}
-            >
-              Request demo
+              {menuOpen ? (
+                <XMarkIcon className="size-6" aria-hidden="true" />
+              ) : (
+                <Bars3Icon className="size-6" aria-hidden="true" />
+              )}
             </button>
           </div>
         </div>
+
+        {/* The previous nav hid every link below md with no replacement, so
+            mobile visitors had no navigation at all. */}
+        {menuOpen && (
+          <nav
+            id="mobile-nav"
+            aria-label="Main"
+            className="border-t border-border bg-canvas px-5 py-4 md:hidden"
+          >
+            <ul className="space-y-1">
+              {NAV.map((item) => (
+                <li key={item.href}>
+                  <a
+                    href={item.href}
+                    onClick={() => setMenuOpen(false)}
+                    className="block rounded-[var(--radius-control)] px-3 py-2.5 text-base font-medium text-ink no-underline transition-colors hover:bg-structural"
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              ))}
+              <li className="pt-2">
+                <Link to="/login" className="btn btn-primary w-full" onClick={() => setMenuOpen(false)}>
+                  Sign in
+                </Link>
+              </li>
+            </ul>
+          </nav>
+        )}
       </header>
 
-      {/* ═══ HERO ═══ */}
-      <section className="relative pt-28 pb-8 sm:pt-36 sm:pb-12 overflow-hidden" ref={heroRef}>
-        {/* Decorative concentric circles — August Health style */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none" aria-hidden="true">
-          <div className="hero-circle" style={{ width: 960, height: 960 }} />
-          <div className="hero-circle hero-circle--inner" style={{ width: 680, height: 680 }} />
-          <div className="hero-circle hero-circle--core" style={{ width: 400, height: 400 }} />
-        </div>
-
-        <div className="mx-auto max-w-4xl px-6 text-center relative z-10">
-          <h1
-            data-hero
-            className="mb-6"
-            style={{
-              fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(2.75rem, 6vw, 5rem)',
-              lineHeight: 1.02,
-              color: '#0f172a',
-              fontWeight: 400,
-              letterSpacing: '-0.02em',
-              textWrap: 'balance',
-            }}
-          >
-            The LMS platform<br />teams actually use
-          </h1>
-
-          <p
-            data-hero
-            className="mb-10 mx-auto"
-            style={{
-              fontFamily: 'var(--font-sans)',
-              fontSize: 'clamp(1rem, 1.8vw, 1.25rem)',
-              lineHeight: 1.6,
-              color: '#64748b',
-              maxWidth: '38ch',
-            }}
-          >
-            Manage your organisation's training, track progress, and issue certificates — all in one place.
-          </p>
-
-          <div data-hero className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <button
-              onClick={() => navigate('/login')}
-              className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full text-sm font-medium cursor-pointer border-none transition-all duration-200 hover:shadow-lg"
-              style={{
-                backgroundColor: '#0d9488',
-                color: 'white',
-                fontFamily: 'var(--font-sans)',
-                boxShadow: '0 1px 3px rgba(13, 148, 136, 0.3)',
-              }}
-            >
-              Request demo
-              <ArrowRightIcon className="w-4 h-4" />
-            </button>
-            <button
-              onClick={() => navigate('/login')}
-              className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full text-sm font-medium cursor-pointer border transition-all duration-200 bg-transparent hover:bg-white/50"
-              style={{
-                borderColor: '#0f172a',
-                color: '#0f172a',
-                fontFamily: 'var(--font-sans)',
-              }}
-            >
-              Log in
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* ═══ LOGO TICKER ═══ */}
-      <section className="py-14 sm:py-20">
-        <div className="mx-auto max-w-6xl px-6">
-          <p
-            className="text-center text-xs font-semibold uppercase tracking-widest mb-10"
-            style={{ color: '#94a3b8', fontFamily: 'var(--font-sans)' }}
-          >
-            Trusted by forward-thinking organisations
-          </p>
-          <div className="logo-ticker" aria-hidden="true">
-            <div className="logo-ticker__track">
-              {TRUSTED.map((name, i) => (
-                <span
-                  key={`${name}-${i}`}
-                  className="logo-ticker__item"
-                >
-                  {name}
-                </span>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ═══ FEATURES ═══ */}
-      <section id="features" className="py-24 sm:py-32">
-        <div className="mx-auto max-w-6xl px-6">
-          <div className="text-center mb-20">
-            <h2
-              className="mb-4"
-              style={{
-                fontFamily: 'var(--font-display)',
-                fontSize: 'clamp(1.75rem, 4vw, 3rem)',
-                lineHeight: 1.1,
-                color: '#0f172a',
-                fontWeight: 400,
-                textWrap: 'balance',
-              }}
-            >
-              Everything you need to run training
-            </h2>
-            <p
-              className="mx-auto"
-              style={{
-                fontFamily: 'var(--font-sans)',
-                fontSize: '1.0625rem',
-                lineHeight: 1.6,
-                color: '#64748b',
-                maxWidth: '40ch',
-              }}
-            >
-              From course creation to certificate issuance, all in one place.
+      <main id="main">
+      {/* ── Hero: asymmetric split. 4 text elements max, no eyebrow. ── */}
+      <section className="mx-auto max-w-6xl px-5 pt-16 pb-20 sm:px-6 sm:pt-24 sm:pb-28">
+        <div className="grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
+          <div>
+            <h1 className=" text-4xl leading-[1.08] tracking-[-0.028em] sm:text-5xl lg:text-[3.5rem]">
+              Corporate training
+              <br />
+              that runs itself.
+            </h1>
+            <p className=" mt-6 max-w-md text-lg leading-relaxed text-body">
+              Assign courses, watch progress, issue certificates. One place for
+              your whole organisation.
             </p>
-          </div>
-
-          <div data-feature-grid className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {FEATURES.map((f) => (
-              <div
-                key={f.title}
-                data-feature
-                className="group relative rounded-2xl p-8 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 cursor-default"
-                style={{
-                  backgroundColor: f.bg,
-                  minHeight: '340px',
-                }}
-              >
-                <div>
-                  <div
-                    className="w-12 h-12 rounded-xl flex items-center justify-center mb-6"
-                    style={{ backgroundColor: f.color }}
-                  >
-                    <div className="w-5 h-5 bg-white rounded-sm" />
-                  </div>
-                  <h3
-                    className="text-xl mb-3"
-                    style={{ fontFamily: 'var(--font-display)', color: '#0f172a', fontWeight: 400 }}
-                  >
-                    {f.title}
-                  </h3>
-                  <p
-                    className="text-sm leading-relaxed"
-                    style={{ fontFamily: 'var(--font-sans)', color: '#475569' }}
-                  >
-                    {f.description}
-                  </p>
-                </div>
-
-                <div
-                  className="mt-8 flex items-center gap-2 text-sm font-medium transition-all duration-300 group-hover:gap-3"
-                  style={{ color: f.color, fontFamily: 'var(--font-sans)' }}
-                >
-                  Learn more
-                  <ArrowRightIcon className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ═══ HOW IT WORKS — Dark section ═══ */}
-      <section id="how-it-works" className="py-24 sm:py-32" style={{ backgroundColor: '#0f172a' }}>
-        <div className="mx-auto max-w-5xl px-6">
-          <div className="text-center mb-20">
-            <h2
-              className="mb-4"
-              style={{
-                fontFamily: 'var(--font-display)',
-                fontSize: 'clamp(1.75rem, 4vw, 3rem)',
-                lineHeight: 1.1,
-                color: 'white',
-                fontWeight: 400,
-                textWrap: 'balance',
-              }}
-            >
-              Three steps to better training
-            </h2>
-            <p
-              className="mx-auto"
-              style={{
-                fontFamily: 'var(--font-sans)',
-                fontSize: '1.0625rem',
-                lineHeight: 1.6,
-                color: 'rgba(255,255,255,0.5)',
-                maxWidth: '36ch',
-              }}
-            >
-              Get your team learning in minutes, not months.
-            </p>
-          </div>
-
-          <div data-step-grid className="relative">
-            <div
-              className="hidden md:block absolute top-14 left-[calc(16.67%+1rem)] right-[calc(16.67%+1rem)] h-px"
-              style={{ backgroundColor: 'rgba(255,255,255,0.08)' }}
-            />
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-              {STEPS.map((s, i) => (
-                <div data-step key={s.title} className="text-center relative">
-                  <div
-                    className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-6 text-base font-semibold relative z-10"
-                    style={{
-                      backgroundColor: '#0d9488',
-                      color: 'white',
-                      fontFamily: 'var(--font-sans)',
-                    }}
-                  >
-                    {i + 1}
-                  </div>
-                  <h3
-                    className="text-lg mb-2"
-                    style={{ fontFamily: 'var(--font-display)', color: 'white', fontWeight: 400 }}
-                  >
-                    {s.title}
-                  </h3>
-                  <p
-                    className="text-sm leading-relaxed max-w-xs mx-auto"
-                    style={{ fontFamily: 'var(--font-sans)', color: 'rgba(255,255,255,0.45)' }}
-                  >
-                    {s.body}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ═══ CTA ═══ */}
-      <section className="py-24 sm:py-32 relative overflow-hidden">
-        {/* Decorative circles — same as hero */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none" aria-hidden="true">
-          <div className="hero-circle" style={{ width: 800, height: 800 }} />
-          <div className="hero-circle hero-circle--inner" style={{ width: 560, height: 560 }} />
-        </div>
-
-        <div className="mx-auto max-w-4xl px-6 text-center relative z-10">
-          <div data-cta>
-            <h2
-              className="mb-4"
-              style={{
-                fontFamily: 'var(--font-display)',
-                fontSize: 'clamp(1.75rem, 4vw, 3rem)',
-                lineHeight: 1.1,
-                color: '#0f172a',
-                fontWeight: 400,
-                textWrap: 'balance',
-              }}
-            >
-              Ready to train your team?
-            </h2>
-            <p
-              className="mb-10 mx-auto"
-              style={{
-                fontFamily: 'var(--font-sans)',
-                fontSize: '1.0625rem',
-                lineHeight: 1.6,
-                color: '#64748b',
-                maxWidth: '36ch',
-              }}
-            >
-              Sign in to get started. New here? Contact us to set up your organisation.
-            </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <button
-                onClick={() => navigate('/login')}
-                className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full text-sm font-medium cursor-pointer border-none transition-all duration-200 hover:shadow-lg"
-                style={{
-                  backgroundColor: '#0d9488',
-                  color: 'white',
-                  fontFamily: 'var(--font-sans)',
-                  boxShadow: '0 1px 3px rgba(13, 148, 136, 0.3)',
-                }}
-              >
+            <div className=" mt-9 flex flex-wrap items-center gap-3">
+              <Link to="/login" className="btn btn-primary !px-6 !py-3.5 !text-base">
                 Sign in
-                <ArrowRightIcon className="w-4 h-4" />
-              </button>
+                <ArrowRightIcon className="size-4" aria-hidden="true" />
+              </Link>
               <a
                 href="mailto:hello@incodet.com"
-                className="inline-flex items-center gap-1.5 text-sm font-medium no-underline transition-opacity hover:opacity-70"
-                style={{ color: '#64748b', fontFamily: 'var(--font-sans)' }}
+                className="btn btn-secondary !px-6 !py-3.5 !text-base"
               >
-                Contact us <span aria-hidden="true">→</span>
+                Contact us
               </a>
             </div>
           </div>
+
+          <div className=" lg:pl-4">
+            <ProgressPreview />
+          </div>
         </div>
       </section>
 
-      {/* ═══ FAQ ═══ */}
-      <section id="faq" className="py-24 sm:py-32" style={{ backgroundColor: 'white' }}>
-        <div className="mx-auto max-w-3xl px-6">
-          <div className="text-center mb-14">
-            <h2
-              className="mb-4"
-              style={{
-                fontFamily: 'var(--font-display)',
-                fontSize: 'clamp(1.75rem, 4vw, 3rem)',
-                lineHeight: 1.1,
-                color: '#0f172a',
-                fontWeight: 400,
-              }}
-            >
-              Frequently asked questions
-            </h2>
+      {/* ── Platform: asymmetric 2-col with a tinted lead cell ── */}
+      <section id="platform" className="border-t border-border bg-surface">
+        <div className="mx-auto max-w-6xl px-5 py-20 sm:px-6 sm:py-28">
+          <h2 className="section-title max-w-xl">
+            Everything you need to run training, and nothing you do not.
+          </h2>
+
+          {/* Exactly as many cells as there is content for: one full-width
+              lead cell plus a three-up row. A 2-column grid left a hole. */}
+          <div className="mt-14 rounded-[var(--radius-surface)] bg-accent-soft p-7 sm:flex sm:items-baseline sm:gap-10 sm:p-9">
+            <h3 className="shrink-0 text-xl text-accent-on-soft sm:w-56">
+              {CAPABILITIES[0].title}
+            </h3>
+            <p className="mt-3 max-w-xl leading-relaxed text-accent-on-soft/85 sm:mt-0">
+              {CAPABILITIES[0].body}
+            </p>
           </div>
 
-          <div data-faq-grid className="space-y-3">
-            {FAQS.map((item) => (
-              <div
-                data-faq
-                key={item.q}
-                className="rounded-xl p-6 transition-all duration-200 hover:shadow-sm"
-                style={{
-                  backgroundColor: '#F8F3EB',
-                  border: '1px solid rgba(15, 23, 42, 0.05)',
-                }}
-              >
-                <dt
-                  className="text-sm font-semibold mb-1.5"
-                  style={{ fontFamily: 'var(--font-sans)', color: '#0f172a' }}
-                >
-                  {item.q}
-                </dt>
-                <dd
-                  className="text-sm leading-relaxed m-0"
-                  style={{ fontFamily: 'var(--font-sans)', color: '#64748b' }}
-                >
-                  {item.a}
-                </dd>
+          <div className="mt-12 grid gap-x-10 gap-y-10 sm:grid-cols-3">
+            {CAPABILITIES.slice(1).map((c) => (
+              <div key={c.title}>
+                <h3 className="text-lg">{c.title}</h3>
+                <p className="mt-2.5 leading-relaxed text-body">{c.body}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ═══ FOOTER ═══ */}
-      <footer style={{ backgroundColor: '#0f172a' }}>
-        <div className="mx-auto max-w-6xl px-6 py-12">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div>
-              <div className="flex items-center gap-2.5 mb-3">
-                <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#0d9488' }}>
-                  <div className="w-3 h-3 bg-white rounded-sm" />
-                </div>
-                <span
-                  className="text-base font-semibold"
-                  style={{ fontFamily: 'var(--font-sans)', color: 'white' }}
-                >
-                  ILMS
-                </span>
+      {/* ── How it works: horizontal flow, verbs as labels ── */}
+      <section id="how-it-works" className="border-t border-border">
+        <div className="mx-auto max-w-6xl px-5 py-20 sm:px-6 sm:py-28">
+          <h2 className="section-title max-w-lg">Three moves, start to certificate.</h2>
+
+          <ol className="mt-14 grid gap-10 sm:grid-cols-3 sm:gap-8">
+            {STEPS.map((s) => (
+              <li key={s.verb} className="border-t-2 border-accent pt-5">
+                <h3 className="text-xl">{s.verb}</h3>
+                <p className="mt-2 max-w-xs leading-relaxed text-body">{s.body}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      {/* ── Roles: divided vertical list, a different family again ── */}
+      <section className="border-t border-border bg-surface">
+        <div className="mx-auto max-w-4xl px-5 py-20 sm:px-6 sm:py-28">
+          <h2 className="section-title">Built around three kinds of user.</h2>
+          <dl className="mt-12 divide-y divide-border">
+            {ROLES.map((r) => (
+              <div key={r.role} className="py-6 sm:flex sm:items-baseline sm:gap-10">
+                <dt className="shrink-0 font-semibold text-ink sm:w-48">{r.role}</dt>
+                <dd className="mt-1.5 leading-relaxed text-body sm:mt-0">{r.body}</dd>
               </div>
-              <p className="text-sm" style={{ color: 'rgba(255,255,255,0.45)' }}>
-                Corporate learning, made simple.
-              </p>
+            ))}
+          </dl>
+        </div>
+      </section>
+
+      {/* ── FAQ ── */}
+      <section id="faq" className="border-t border-border">
+        <div className="mx-auto max-w-3xl px-5 py-20 sm:px-6 sm:py-28">
+          <h2 className="section-title">Questions</h2>
+          <dl className="mt-10 space-y-4">
+            {FAQS.map((item) => (
+              <div key={item.q} className="card p-6">
+                <dt className="font-semibold text-ink">{item.q}</dt>
+                <dd className="mt-2 leading-relaxed text-body">{item.a}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      </section>
+
+      {/* ── CTA band ── */}
+      <section className="border-t border-border bg-ink">
+        <div className="mx-auto flex max-w-6xl flex-col items-start gap-8 px-5 py-16 sm:px-6 sm:py-20 lg:flex-row lg:items-center lg:justify-between">
+          <div>
+            <h2 className="max-w-md text-3xl text-white sm:text-4xl">
+              Ready to train your team?
+            </h2>
+            <p className="mt-3 max-w-md text-white/70">
+              Sign in to get started. New to ILMS? Get in touch and we will set
+              up your organisation.
+            </p>
+          </div>
+          <div className="flex shrink-0 flex-wrap gap-3">
+            <Link
+              to="/login"
+              className="btn !border-transparent !bg-white !px-6 !py-3.5 !text-base !text-ink hover:!bg-white/90"
+            >
+              Sign in
+              <ArrowRightIcon className="size-4" aria-hidden="true" />
+            </Link>
+            <a
+              href="mailto:hello@incodet.com"
+              className="btn !border-white/25 !px-6 !py-3.5 !text-base !text-white hover:!bg-white/10"
+            >
+              Contact us
+            </a>
+          </div>
+        </div>
+      </section>
+
+      </main>
+
+      {/* ── Footer ── */}
+      <footer className="border-t border-border bg-surface">
+        <div className="mx-auto max-w-6xl px-5 py-12 sm:px-6">
+          <div className="flex flex-col gap-10 sm:flex-row sm:justify-between">
+            <div>
+              <div className="flex items-center gap-2.5">
+                <img src="/logo-mark.svg" alt="" width="24" height="24" />
+                <span className="font-semibold tracking-tight text-ink">ILMS</span>
+              </div>
+              <p className="mt-3 text-sm text-muted">Corporate learning, made simple.</p>
             </div>
 
-            <div>
-              <h3 className="text-xs uppercase tracking-wider font-semibold mb-4" style={{ color: 'rgba(255,255,255,0.3)' }}>
-                Product
-              </h3>
-              <ul className="space-y-2 list-none p-0 m-0">
-                <li>
-                  <Link to="/login" className="text-sm no-underline transition-opacity hover:opacity-80" style={{ color: 'rgba(255,255,255,0.55)' }}>
-                    Sign in
-                  </Link>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <h3 className="text-xs uppercase tracking-wider font-semibold mb-4" style={{ color: 'rgba(255,255,255,0.3)' }}>
-                Company
-              </h3>
-              <ul className="space-y-2 list-none p-0 m-0">
-                <li>
-                  <a href="https://incodet.com" className="text-sm no-underline transition-opacity hover:opacity-80" style={{ color: 'rgba(255,255,255,0.55)' }}>
-                    incodet.com
-                  </a>
-                </li>
-                <li>
-                  <a href="mailto:hello@incodet.com" className="text-sm no-underline transition-opacity hover:opacity-80" style={{ color: 'rgba(255,255,255,0.55)' }}>
-                    Contact
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <h3 className="text-xs uppercase tracking-wider font-semibold mb-4" style={{ color: 'rgba(255,255,255,0.3)' }}>
-                Legal
-              </h3>
-              <p className="text-sm" style={{ color: 'rgba(255,255,255,0.35)' }}>
-                &copy; {new Date().getFullYear()} incodet. All rights reserved.
-              </p>
+            <div className="flex gap-12 sm:gap-16">
+              <div>
+                <h2 className="text-sm font-semibold text-ink">Product</h2>
+                <ul className="mt-3 space-y-2">
+                  <li>
+                    <Link to="/login" className="text-sm text-body no-underline hover:text-ink">
+                      Sign in
+                    </Link>
+                  </li>
+                  <li>
+                    <a href="#platform" className="text-sm text-body no-underline hover:text-ink">
+                      Platform
+                    </a>
+                  </li>
+                </ul>
+              </div>
+              <div>
+                <h2 className="text-sm font-semibold text-ink">Company</h2>
+                <ul className="mt-3 space-y-2">
+                  <li>
+                    <a
+                      href="https://incodet.com"
+                      className="text-sm text-body no-underline hover:text-ink"
+                    >
+                      incodet.com
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="mailto:hello@incodet.com"
+                      className="text-sm text-body no-underline hover:text-ink"
+                    >
+                      Contact us
+                    </a>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
+
+          <p className="mt-12 border-t border-border pt-6 text-sm text-muted">
+            &copy; {new Date().getFullYear()} incodet. All rights reserved.
+          </p>
         </div>
       </footer>
     </div>

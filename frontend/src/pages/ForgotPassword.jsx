@@ -29,12 +29,12 @@ export default function ForgotPassword() {
       subtitle="Enter your email and we'll send you a reset link"
     >
       {submitted ? (
-        <div className="rounded-lg border border-green-200 bg-green-50 p-4 text-sm text-green-800">
+        <div className="rounded-[var(--radius-control)] border border-green-200 bg-green-50 p-4 text-sm text-green-800">
           <p className="font-semibold mb-1">Check your email</p>
           <p>If an account exists for that address, a password reset link is on its way. The link expires in 1 hour.</p>
           <Link
             to="/login"
-            className="inline-block mt-4 text-typography/80 hover:text-typography underline"
+            className="inline-block mt-4 text-ink/80 hover:text-ink underline"
           >
             Back to sign in
           </Link>
@@ -42,7 +42,7 @@ export default function ForgotPassword() {
       ) : (
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-typography/60 mb-2">
+            <label className="field-label">
               Email Address
             </label>
             <Input
@@ -60,9 +60,9 @@ export default function ForgotPassword() {
             Send reset link &rarr;
           </Button>
 
-          <p className="text-center text-sm text-typography/60">
+          <p className="text-center text-sm text-ink/60">
             Remembered it?{' '}
-            <Link to="/login" className="text-typography underline hover:text-typography/80">
+            <Link to="/login" className="text-ink underline hover:text-ink/80">
               Back to sign in
             </Link>
           </p>

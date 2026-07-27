@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
 import { api } from '../utils/api'
-
 import { Skeleton, SkeletonList } from '../components/ui/Skeleton'
-
 import EmptyState from '../components/ui/EmptyState'
+import PageHeader from '../components/ui/PageHeader'
+import Button from '../components/ui/Button'
+import Select from '../components/ui/Select'
 
 export default function CompanyAdminReports() {
   const [rows, setRows] = useState([])
@@ -76,56 +77,64 @@ export default function CompanyAdminReports() {
       <SkeletonList rows={5} />
     </div>
   )
-  if (error) return <p className="text-red-600">{error}</p>
+  if (error) return <p className="text-danger">{error}</p>
 
   return (
-    <div className="font-sans">
-      <div className="flex items-center justify-between mb-8">
-        <h2 className="display-title !text-2xl text-typography">Compliance Report</h2>
-        {rows.length > 0 && (
-          <button
-            onClick={exportCSV}
-            className="bg-accent text-canvas px-4 py-2 rounded text-sm hover:bg-accent-soft transition-colors duration-300 ease-[var(--ease-expo)]"
-          >
-            Export CSV
-          </button>
-        )}
-      </div>
+    // This screen previously bypassed PageHeader, Button and the form
+    // components entirely, which is why it was the only admin page with a
+    // different heading treatment and a third button radius.
+    <div>
+      <PageHeader
+        title="Compliance report"
+        description="Progress and certificate status for every enrolment in your organisation."
+        actions={
+          rows.length > 0 ? (
+            <Button variant="secondary" onClick={exportCSV}>
+              Export CSV
+            </Button>
+          ) : undefined
+        }
+      />
 
-      <div className="bg-canvas border border-border-hairline rounded p-4 mb-8 flex flex-wrap gap-4 items-end bento-card">
-        <div>
-          <label className="block text-xs text-typography opacity-80 mb-1 font-medium">Course</label>
-          <select
-            value={courseFilter}
-            onChange={e => setCourseFilter(e.target.value)}
-            className="px-3 py-2 border border-border-hairline bg-canvas rounded text-sm text-typography min-w-[200px] focus:outline-none focus-visible:border-accent"
-          >
-            <option value="">All Courses</option>
-            {courses.map(c => (
-              <option key={c.id} value={c.id}>{c.title}</option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <label className="block text-xs text-typography opacity-80 mb-1 font-medium">Status</label>
-          <select
-            value={statusFilter}
-            onChange={e => setStatusFilter(e.target.value)}
-            className="px-3 py-2 border border-border-hairline bg-canvas rounded text-sm text-typography min-w-[150px] focus:outline-none focus-visible:border-accent"
-          >
-            <option value="">All</option>
-            <option value="completed">Completed</option>
-            <option value="in_progress">In Progress</option>
-            <option value="not_started">Not Started</option>
-          </select>
-        </div>
-        <button
-          onClick={applyFilters}
-          className="bg-structural border border-border-hairline text-typography px-4 py-2 rounded text-sm hover:border-accent transition-colors duration-300 ease-[var(--ease-expo)]"
+      <form
+        className="card mb-8 flex flex-wrap items-end gap-4 p-5"
+        onSubmit={(e) => {
+          e.preventDefault()
+          applyFilters()
+        }}
+      >
+        <Select
+          id="report-course"
+          name="course_id"
+          label="Course"
+          value={courseFilter}
+          onChange={(e) => setCourseFilter(e.target.value)}
+          className="min-w-52"
         >
-          Filter
-        </button>
-      </div>
+          <option value="">All courses</option>
+          {courses.map((c) => (
+            <option key={c.id} value={c.id}>{c.title}</option>
+          ))}
+        </Select>
+
+        <Select
+          id="report-status"
+          name="status"
+          label="Status"
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+          className="min-w-44"
+        >
+          <option value="">All statuses</option>
+          <option value="completed">Completed</option>
+          <option value="in_progress">In progress</option>
+          <option value="not_started">Not started</option>
+        </Select>
+
+        <Button type="submit" variant="secondary" loading={loading}>
+          Apply filters
+        </Button>
+      </form>
 
       {rows.length === 0 && !loading && (
         <EmptyState
@@ -135,38 +144,58 @@ export default function CompanyAdminReports() {
       )}
 
       {rows.length > 0 && (
-        <div className="overflow-x-auto border border-border-hairline rounded bento-card">
+        <div className="card overflow-x-auto">
           <table className="w-full text-sm">
-            <thead>
-              <tr className="bg-structural border-b border-border-hairline text-left">
-                <th className="px-4 py-3 font-medium text-typography">Learner</th>
-                <th className="px-4 py-3 font-medium text-typography">Email</th>
-                <th className="px-4 py-3 font-medium text-typography">Course</th>
-                <th className="px-4 py-3 font-medium text-typography">Progress</th>
-                <th className="px-4 py-3 font-medium text-typography">Lessons</th>
-                <th className="px-4 py-3 font-medium text-typography">Certificate</th>
+            <caption className="sr-only">
+              Compliance report: enrolment progress and certificate status
+            </caption>
+            <thead className="bg-structural">
+              <tr>
+                {['Learner', 'Email', 'Course', 'Progress', 'Lessons', 'Certificate'].map((h) => (
+                  <th
+                    key={h}
+                    scope="col"
+                    className="px-4 py-2.5 text-left text-xs font-semibold text-muted"
+                  >
+                    {h}
+                  </th>
+                ))}
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-border">
               {rows.map((r, i) => (
-                <tr key={i} className="border-b border-border-hairline last:border-0 hover:bg-structural transition-colors duration-300 ease-[var(--ease-expo)]">
-                  <td className="px-4 py-3 text-typography font-medium">{r.learner_name}</td>
-                  <td className="px-4 py-3 text-typography opacity-70">{r.learner_email}</td>
-                  <td className="px-4 py-3 text-typography">{r.course_title}</td>
+                <tr key={i} className="transition-colors hover:bg-structural">
+                  <td className="px-4 py-3 font-medium text-ink">{r.learner_name}</td>
+                  <td className="px-4 py-3 text-body">{r.learner_email}</td>
+                  <td className="px-4 py-3 text-ink">{r.course_title}</td>
                   <td className="px-4 py-3">
-                    <div className="flex items-center gap-2">
-                      <div className="w-24 bg-border-hairline rounded-full h-2 overflow-hidden">
-                        <div className="bg-accent h-full rounded-full" style={{ width: `${r.progress}%` }} />
+                    <div className="flex items-center gap-2.5">
+                      <div
+                        className="h-1.5 w-20 overflow-hidden rounded-[var(--radius-pill)] bg-structural"
+                        role="progressbar"
+                        aria-valuenow={r.progress}
+                        aria-valuemin={0}
+                        aria-valuemax={100}
+                        aria-label={`${r.learner_name} progress`}
+                      >
+                        <div
+                          className="h-full rounded-[var(--radius-pill)] bg-accent"
+                          style={{ width: `${r.progress}%` }}
+                        />
                       </div>
-                      <span className="text-xs text-typography opacity-80">{r.progress}%</span>
+                      <span data-numeric className="text-xs text-body">{r.progress}%</span>
                     </div>
                   </td>
-                  <td className="px-4 py-3 text-xs text-typography opacity-70">{r.completed_lessons} / {r.total_lessons}</td>
+                  <td data-numeric className="px-4 py-3 text-xs text-body">
+                    {r.completed_lessons} / {r.total_lessons}
+                  </td>
                   <td className="px-4 py-3">
                     {r.certificate_issued ? (
-                      <span className="text-accent font-medium text-xs bg-accent/10 px-2 py-1 rounded">Issued</span>
+                      <span className="badge border-accent-200 bg-accent-soft text-accent-on-soft">
+                        Issued
+                      </span>
                     ) : (
-                      <span className="text-typography opacity-50 text-xs">--</span>
+                      <span className="text-xs text-muted">Not issued</span>
                     )}
                   </td>
                 </tr>

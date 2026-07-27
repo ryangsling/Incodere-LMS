@@ -11,7 +11,7 @@ export default function EmptyState({
 }) {
   const defaultIcon = (
     <svg
-      className="mx-auto size-12 text-gray-400"
+      className="mx-auto size-12 text-muted"
       fill="none"
       viewBox="0 0 24 24"
       stroke="currentColor"
@@ -28,14 +28,14 @@ export default function EmptyState({
   return (
     <div
       className={classNames(
-        'text-center py-12 px-4 border-2 border-dashed border-gray-200 rounded-lg bg-canvas/50',
+        'text-center py-12 px-4 border-2 border-dashed border-border rounded-[var(--radius-control)] bg-canvas/50',
         className,
       )}
       {...rest}
     >
       <div className="mb-4">{icon || defaultIcon}</div>
       {title && (
-        <h3 className="text-sm font-semibold text-navy-700 mb-1">{title}</h3>
+        <h3 className="text-sm font-semibold text-ink mb-1">{title}</h3>
       )}
       {description && (
         <p className="text-sm text-muted max-w-sm mx-auto mb-4">{description}</p>

@@ -45,7 +45,7 @@ export default function ResetPassword() {
   if (!tokensValid) {
     return (
       <AuthShell title="Reset password" subtitle="">
-        <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800">
+        <div className="rounded-[var(--radius-control)] border border-danger-border bg-danger-soft p-4 text-sm text-danger">
           <p className="font-semibold mb-1">Invalid or expired link</p>
           <p>Please request a new password reset link.</p>
           <Link to="/forgot-password" className="inline-block mt-4 underline">
@@ -63,7 +63,7 @@ export default function ResetPassword() {
     >
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <label className="block text-xs font-bold uppercase tracking-wider text-typography/60 mb-2">
+          <label className="field-label">
             New Password
           </label>
           <Input
@@ -75,11 +75,11 @@ export default function ResetPassword() {
             placeholder="••••••••"
             className="w-full"
           />
-          <p className="mt-1 text-xs text-typography/60">At least 8 characters.</p>
+          <p className="mt-1 text-xs text-ink/60">At least 8 characters.</p>
         </div>
 
         <div>
-          <label className="block text-xs font-bold uppercase tracking-wider text-typography/60 mb-2">
+          <label className="field-label">
             Confirm Password
           </label>
           <Input
@@ -92,7 +92,7 @@ export default function ResetPassword() {
             className="w-full"
           />
           {confirm && !passwordsMatch && (
-            <p className="mt-1 text-xs text-red-600">Passwords do not match.</p>
+            <p className="mt-1 text-xs text-danger">Passwords do not match.</p>
           )}
         </div>
 

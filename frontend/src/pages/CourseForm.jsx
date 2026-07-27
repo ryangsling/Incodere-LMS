@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { api } from '../utils/api'
 import { supabase } from '../utils/supabase'
+import { Button, Input, Textarea, Select, PageHeader } from '../components/ui'
 
 export default function CourseForm() {
   const { id } = useParams()
@@ -80,87 +81,100 @@ export default function CourseForm() {
 
   return (
     <div className="max-w-xl">
-      <h2 className="text-xl font-bold text-typography mb-6">
-        {isEdit ? 'Edit Course' : 'New Course'}
-      </h2>
+      <PageHeader
+        breadcrumb={[{ to: '/super-admin/courses', label: 'Courses' }, { label: isEdit ? 'Edit' : 'New' }]}
+        title={isEdit ? 'Edit course' : 'New course'}
+      />
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      {/* Every field now carries an id, a name, and a label bound with htmlFor.
+          Previously these were bare inputs with no id, name or association, so
+          screen readers announced five unlabelled fields and autofill had
+          nothing to match on. */}
+      <form onSubmit={handleSubmit} className="space-y-5" noValidate={false}>
+        <Input
+          id="course-title"
+          name="title"
+          label="Title"
+          type="text"
+          value={form.title}
+          onChange={(e) => setForm({ ...form, title: e.target.value })}
+          required
+        />
+
+        <Textarea
+          id="course-description"
+          name="description"
+          label="Description"
+          value={form.description}
+          onChange={(e) => setForm({ ...form, description: e.target.value })}
+          rows={4}
+          helperText="Shown to learners on their dashboard and course card."
+        />
+
+        <Input
+          id="course-category"
+          name="category"
+          label="Category"
+          type="text"
+          value={form.category}
+          onChange={(e) => setForm({ ...form, category: e.target.value })}
+        />
+
         <div>
-          <label className="block text-sm text-typography/60 mb-1">Title</label>
+          <label htmlFor="course-thumbnail" className="field-label">
+            Thumbnail
+          </label>
           <input
-            type="text"
-            value={form.title}
-            onChange={e => setForm({ ...form, title: e.target.value })}
-            required
-            className="w-full px-3 py-2 border border-border-hairline bg-canvas text-typography rounded text-sm focus:outline-none focus:border-accent"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm text-typography/60 mb-1">Description</label>
-          <textarea
-            value={form.description}
-            onChange={e => setForm({ ...form, description: e.target.value })}
-            rows={4}
-            className="w-full px-3 py-2 border border-border-hairline bg-canvas text-typography rounded text-sm focus:outline-none focus:border-accent"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm text-typography/60 mb-1">Category</label>
-          <input
-            type="text"
-            value={form.category}
-            onChange={e => setForm({ ...form, category: e.target.value })}
-            className="w-full px-3 py-2 border border-border-hairline bg-canvas text-typography rounded text-sm focus:outline-none focus:border-accent"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm text-typography/60 mb-1">Thumbnail</label>
-          <input
+            id="course-thumbnail"
+            name="thumbnail"
             type="file"
             accept="image/*"
-            onChange={e => {
+            onChange={(e) => {
               setThumbnail(e.target.files[0])
               setThumbnailUrl('')
             }}
-            className="w-full text-sm"
+            aria-describedby="course-thumbnail-help"
+            className="block w-full text-sm text-body file:mr-3 file:rounded-[var(--radius-control)] file:border file:border-border-strong file:bg-surface file:px-3 file:py-2 file:text-sm file:font-medium file:text-ink hover:file:bg-structural"
           />
-          {thumbnailUrl && !thumbnail && (
-            <p className="text-xs text-muted mt-1">Current thumbnail uploaded</p>
-          )}
+          <p id="course-thumbnail-help" className="mt-1.5 text-xs text-muted">
+            {thumbnailUrl && !thumbnail
+              ? 'A thumbnail is already uploaded. Choosing a file replaces it.'
+              : 'Optional. PNG or JPG.'}
+          </p>
         </div>
 
-        <div>
-          <label className="block text-sm text-typography/60 mb-1">Status</label>
-          <select
-            value={form.status}
-            onChange={e => setForm({ ...form, status: e.target.value })}
-            className="w-full px-3 py-2 border border-border-hairline bg-canvas text-typography rounded text-sm focus:outline-none focus:border-accent"
-          >
-            <option value="draft">Draft</option>
-            <option value="published">Published</option>
-          </select>
-        </div>
+        <Select
+          id="course-status"
+          name="status"
+          label="Status"
+          value={form.status}
+          onChange={(e) => setForm({ ...form, status: e.target.value })}
+          helperText="Drafts are hidden from company admins until published."
+        >
+          <option value="draft">Draft</option>
+          <option value="published">Published</option>
+        </Select>
 
-        {error && <p className="text-red-600 text-sm">{error}</p>}
-
-        <div className="flex gap-3">
-          <button
-            type="submit"
-            disabled={submitting}
-            className="bg-accent text-white px-4 py-2 rounded text-sm hover:bg-accent-soft disabled:opacity-50"
+        {error && (
+          <p
+            role="alert"
+            className="rounded-[var(--radius-control)] border border-danger-border bg-danger-soft px-3 py-2 text-sm text-danger"
           >
-            {submitting ? 'Saving...' : isEdit ? 'Update Course' : 'Create Course'}
-          </button>
-          <button
+            {error}
+          </p>
+        )}
+
+        <div className="flex gap-3 pt-2">
+          <Button type="submit" loading={submitting}>
+            {isEdit ? 'Save changes' : 'Create course'}
+          </Button>
+          <Button
             type="button"
+            variant="ghost"
             onClick={() => navigate('/super-admin/courses')}
-            className="px-4 py-2 rounded text-sm border border-border-hairline text-typography/60 hover:bg-black/5"
           >
             Cancel
-          </button>
+          </Button>
         </div>
       </form>
     </div>

@@ -87,7 +87,7 @@ export default function CompanyAdminLearners() {
     {
       key: 'first_name',
       label: 'Name',
-      render: (l) => <span className="font-medium text-navy-700">{l.first_name} {l.last_name}</span>,
+      render: (l) => <span className="font-medium text-ink">{l.first_name} {l.last_name}</span>,
     },
     { key: 'email', label: 'Email' },
     {
@@ -101,7 +101,7 @@ export default function CompanyAdminLearners() {
       render: (l) => (
         <div className="flex gap-3 justify-end text-xs">
           {l.is_active ? (
-            <button onClick={() => handleDeactivate(l.id, l.email)} className="text-red-600 hover:underline">
+            <button onClick={() => handleDeactivate(l.id, l.email)} className="text-danger hover:underline">
               Deactivate
             </button>
           ) : (
@@ -109,11 +109,11 @@ export default function CompanyAdminLearners() {
               Activate
             </button>
           )}
-          <button onClick={() => handleResend(l.id, l.email)} className="text-navy-600 hover:underline">
+          <button onClick={() => handleResend(l.id, l.email)} className="text-body hover:underline">
             Resend invite
           </button>
           {l.id !== user.id && (
-            <button onClick={() => handleDelete(l.id, l.email)} className="text-red-600 hover:underline">
+            <button onClick={() => handleDelete(l.id, l.email)} className="text-danger hover:underline">
               Delete
             </button>
           )}
@@ -130,7 +130,7 @@ export default function CompanyAdminLearners() {
       />
 
       {showForm && (
-        <form onSubmit={handleCreate} className="bg-white rounded-md shadow-sm p-4 mb-6 flex flex-wrap gap-3 items-end">
+        <form onSubmit={handleCreate} className="bg-white rounded-[var(--radius-control)] shadow-sm p-4 mb-6 flex flex-wrap gap-3 items-end">
           <div className="flex-1 min-w-[180px]">
             <label className="block text-xs text-muted mb-1">Email</label>
             <Input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required />

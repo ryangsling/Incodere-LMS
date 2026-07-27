@@ -34,12 +34,12 @@ export default function LearnerCertificates() {
     {
       key: 'course',
       label: 'Course',
-      render: (c) => <span className="font-medium text-typography">{c.course?.title || '—'}</span>,
+      render: (c) => <span className="font-medium text-ink">{c.course?.title || 'Untitled course'}</span>,
     },
     {
       key: 'issued_at',
       label: 'Issued',
-      render: (c) => c.issued_at ? new Date(c.issued_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '—',
+      render: (c) => c.issued_at ? new Date(c.issued_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Not issued',
     },
     {
       key: 'verify',
@@ -66,27 +66,27 @@ export default function LearnerCertificates() {
   ]
 
   return (
-    <div className="min-h-screen bg-structural">
-      <header className="bg-canvas border-b border-border-hairline px-6 py-4 flex items-center justify-between sticky top-0 z-10">
+    <div className="min-h-dvh bg-structural">
+      <header className="bg-canvas border-b border-border px-6 py-4 flex items-center justify-between sticky top-0 z-10">
         <div className="flex items-center gap-2">
           <div className="size-8 rounded bg-gradient-to-br from-[#312E81] to-[#06B6D4] flex items-center justify-center p-1.5">
-            <div className="w-full h-full bg-white rounded-sm"></div>
+            <div className="w-full h-full bg-white rounded-[var(--radius-control)]"></div>
           </div>
-          <span className="text-typography font-bold text-xl tracking-tight">ILMS</span>
+          <span className="text-ink font-bold text-xl tracking-tight">ILMS</span>
         </div>
         <div className="flex items-center gap-6">
           <button
             onClick={() => navigate('/dashboard')}
-            className="text-sm font-semibold text-typography opacity-60 hover:opacity-100 transition-all duration-300"
+            className="text-sm font-semibold text-ink opacity-60 hover:opacity-100 transition-all duration-300"
           >
             Dashboard
           </button>
-          <span className="text-sm font-medium text-typography opacity-80 hidden sm:block">
+          <span className="text-sm font-medium text-ink opacity-80 hidden sm:block">
             {user?.first_name} {user?.last_name}
           </span>
           <button
             onClick={logout}
-            className="text-sm font-semibold text-typography opacity-60 hover:opacity-100 hover:text-accent transition-all duration-300"
+            className="text-sm font-semibold text-ink opacity-60 hover:opacity-100 hover:text-accent transition-all duration-300"
           >
             Sign Out
           </button>

@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { api } from '../utils/api'
 import CourseCard from '../components/CourseCard'
-import { Skeleton, SkeletonGrid } from '../components/ui/Skeleton'
+import { SkeletonGrid } from '../components/ui/Skeleton'
 
 export default function LearnerDashboard() {
   const { user, logout } = useAuth()
@@ -11,255 +11,160 @@ export default function LearnerDashboard() {
   const [enrolments, setEnrolments] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-  const [upcomingModules, setUpcomingModules] = useState([])
 
   useEffect(() => {
-    api.enrolments.myEnrolments()
-      .then(async (rows) => {
-        const enrolmentsData = Array.isArray(rows) ? rows : rows.rows || []
-        setEnrolments(enrolmentsData)
-
-        const active = enrolmentsData.find(e => e.progress > 0 && e.progress < 100) || enrolmentsData[0]
-        
-        if (active?.course_id) {
-          try {
-            const courseData = await api.enrolments.getEnrolledCourse(active.course_id)
-            const progressData = await api.progress.getCourseProgress(active.course_id)
-            
-            const progressMap = {}
-            progressData.forEach(p => { progressMap[p.lesson_id] = p })
-
-            const allLessons = courseData.sections?.flatMap(s => s.lessons || []) || []
-            const incomplete = allLessons.filter(l => !progressMap[l.id]?.completed)
-            
-            setUpcomingModules(incomplete.slice(0, 3))
-          } catch (e) {
-            console.error("Failed to load upcoming modules", e)
-          }
-        }
-      })
+    api.enrolments
+      .myEnrolments()
+      .then((rows) => setEnrolments(Array.isArray(rows) ? rows : rows.rows || []))
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false))
   }, [])
 
-  const activeCourse = enrolments.find(e => e.progress > 0 && e.progress < 100) || enrolments[0]
+  // Only a genuinely unfinished course is "in progress". Falling back to
+  // enrolments[0] made a fully-completed learner see "Continue learning" and a
+  // "Resume" button on a course they had already finished.
+  const inProgress = enrolments.find((e) => e.progress > 0 && e.progress < 100)
+  const notStarted = enrolments.find((e) => !e.progress)
+  const focus = inProgress || notStarted
+  const allComplete = enrolments.length > 0 && !focus
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: 'var(--color-canvas)' }}>
-      {/* Header */}
-      <header
-        className="sticky top-0 z-10 flex items-center justify-between px-6 py-4 border-b"
-        style={{ backgroundColor: 'var(--color-canvas)', borderColor: 'var(--color-border-hairline)' }}
-      >
-        <div className="flex items-center gap-2.5">
-          <div
-            className="w-8 h-8 rounded-lg flex items-center justify-center"
-            style={{ backgroundColor: 'var(--color-accent)' }}
-          >
-            <div className="w-3.5 h-3.5 bg-white rounded-sm" />
-          </div>
-          <span
-            className="text-lg font-semibold tracking-tight"
-            style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-deep-ink)' }}
-          >
-            ILMS
-          </span>
-        </div>
-        <div className="flex items-center gap-6">
-          <span
-            className="text-sm font-medium hidden sm:block"
-            style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-stone)' }}
-          >
-            {user?.first_name} {user?.last_name}
-          </span>
-          <button
-            onClick={logout}
-            className="text-sm font-medium transition-colors duration-200"
-            style={{ color: 'var(--color-stone)' }}
-            onMouseEnter={e => e.target.style.color = 'var(--color-accent)'}
-            onMouseLeave={e => e.target.style.color = 'var(--color-stone)'}
-          >
-            Sign Out
-          </button>
+    <div className="min-h-dvh bg-canvas">
+      <header className="sticky top-0 z-30 border-b border-border bg-canvas/90 backdrop-blur-sm">
+        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 sm:px-6">
+          <Link to="/dashboard" className="flex items-center gap-2.5 no-underline">
+            <img src="/logo-mark.svg" alt="" width="28" height="28" />
+            <span className="text-lg font-semibold tracking-tight text-ink">ILMS</span>
+          </Link>
+          <nav aria-label="Account" className="flex items-center gap-5">
+            <Link
+              to="/dashboard/certificates"
+              className="text-sm font-medium text-body no-underline transition-colors hover:text-ink"
+            >
+              Certificates
+            </Link>
+            <span aria-hidden="true" className="hidden h-5 w-px bg-border sm:block" />
+            <span className="hidden text-sm text-muted sm:block">
+              {user?.first_name} {user?.last_name}
+            </span>
+            <button
+              onClick={logout}
+              className="text-sm text-muted transition-colors hover:text-ink"
+            >
+              Sign out
+            </button>
+          </nav>
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
-        {/* Welcome */}
+      <main className="mx-auto max-w-6xl px-5 py-12 sm:px-6 sm:py-16">
         <div className="mb-12">
-          <h1
-            className="text-3xl sm:text-4xl mb-3"
-            style={{ fontFamily: 'var(--font-display)', color: 'var(--color-deep-ink)', fontWeight: 400 }}
-          >
-            Welcome back, {user?.first_name || 'Learner'}.
+          <h1 className="text-3xl sm:text-4xl">
+            Welcome back, {user?.first_name || 'there'}.
           </h1>
-          <p className="text-base max-w-xl" style={{ color: 'var(--color-stone)' }}>
-            Pick up where you left off or explore your assigned courses.
+          <p className="mt-3 max-w-lg text-body">
+            {allComplete
+              ? 'You are up to date on everything assigned to you.'
+              : 'Pick up where you left off, or start something new.'}
           </p>
         </div>
 
         {error && (
           <div
-            className="mb-8 p-4 rounded-lg text-sm"
-            style={{ backgroundColor: '#fef2f2', color: '#991b1b', border: '1px solid #fecaca' }}
+            role="alert"
+            className="mb-10 rounded-[var(--radius-control)] border border-danger-border bg-danger-soft px-4 py-3 text-sm text-danger"
           >
             {error}
           </div>
         )}
 
-        {/* Active Course Hero */}
+        {/* Focus panel */}
         {loading ? (
-          <div className="mb-16">
-            <Skeleton variant="block" className="h-[320px] rounded-2xl" />
-          </div>
-        ) : activeCourse ? (
-          <div
-            className="mb-16 rounded-2xl p-8 sm:p-10 flex flex-col sm:flex-row gap-8 items-start"
-            style={{ backgroundColor: 'var(--color-deep-ink)' }}
+          <div className="mb-14 h-56 animate-pulse rounded-[var(--radius-surface)] bg-structural" />
+        ) : focus ? (
+          <section
+            aria-labelledby="focus-heading"
+            className="mb-14 rounded-[var(--radius-surface)] bg-ink p-8 sm:p-10"
           >
-            <div className="flex-1 min-w-0">
-              <div
-                className="inline-flex items-center gap-2 mb-5 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider"
-                style={{ backgroundColor: 'rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.7)' }}
-              >
-                Continue Learning
-              </div>
-              <h2
-                className="text-3xl sm:text-4xl mb-3 leading-tight"
-                style={{ fontFamily: 'var(--font-display)', color: 'white', fontWeight: 400 }}
-              >
-                {activeCourse.course?.title || 'Untitled Course'}
-              </h2>
-              <p className="text-sm mb-6 max-w-lg" style={{ color: 'rgba(255,255,255,0.5)' }}>
-                {activeCourse.course?.description || 'Your next module is ready.'}
-              </p>
-
-              <div className="flex items-center gap-6 mb-6">
-                <div>
-                  <span className="block text-xs font-semibold uppercase tracking-wider mb-1" style={{ color: 'rgba(255,255,255,0.4)' }}>
-                    Progress
-                  </span>
-                  <span className="text-2xl font-semibold" style={{ color: 'white', fontFamily: 'var(--font-sans)' }}>
-                    {activeCourse.progress || 0}%
-                  </span>
-                </div>
-                <div className="w-px h-8" style={{ backgroundColor: 'rgba(255,255,255,0.15)' }} />
-                <div>
-                  <span className="block text-xs font-semibold uppercase tracking-wider mb-1" style={{ color: 'rgba(255,255,255,0.4)' }}>
-                    Modules
-                  </span>
-                  <span className="text-lg font-semibold" style={{ color: 'white', fontFamily: 'var(--font-sans)' }}>
-                    {activeCourse.completed_lessons || 0}/{activeCourse.total_lessons || 0}
-                  </span>
-                </div>
-              </div>
-
-              <div className="w-full h-1.5 rounded-full overflow-hidden mb-6" style={{ backgroundColor: 'rgba(255,255,255,0.1)' }}>
-                <div
-                  className="h-full rounded-full transition-all duration-700"
-                  style={{ width: `${activeCourse.progress || 0}%`, backgroundColor: 'var(--color-accent)' }}
-                />
-              </div>
-
-              <button
-                onClick={() => navigate(`/dashboard/courses/${activeCourse?.course_id}`)}
-                className="px-8 py-3 rounded-lg text-sm font-semibold transition-all duration-200"
-                style={{
-                  backgroundColor: 'var(--color-accent)',
-                  color: 'white',
-                  boxShadow: '0 1px 3px rgba(13, 148, 136, 0.3)',
-                }}
-                onMouseEnter={e => {
-                  e.target.style.backgroundColor = 'var(--color-primary-indigo-hover)'
-                  e.target.style.transform = 'translateY(-1px)'
-                }}
-                onMouseLeave={e => {
-                  e.target.style.backgroundColor = 'var(--color-accent)'
-                  e.target.style.transform = 'translateY(0)'
-                }}
-              >
-                Resume Learning
-              </button>
-            </div>
-          </div>
-        ) : (
-          <div
-            className="mb-16 rounded-2xl p-8 sm:p-12 text-center"
-            style={{ backgroundColor: 'var(--color-pure-white)', border: '1px solid var(--color-border-hairline)' }}
-          >
-            <h3
-              className="text-xl mb-2"
-              style={{ fontFamily: 'var(--font-display)', color: 'var(--color-deep-ink)' }}
-            >
-              No Active Courses
-            </h3>
-            <p className="text-sm" style={{ color: 'var(--color-stone)' }}>
-              Your company admin hasn't assigned you any courses yet.
+            <p className="text-sm text-white/60">
+              {focus.progress > 0 ? 'Continue where you left off' : 'Ready to start'}
             </p>
-          </div>
-        )}
+            <h2 id="focus-heading" className="mt-2 text-2xl text-white sm:text-3xl">
+              {focus.course?.title || 'Untitled course'}
+            </h2>
+            {focus.course?.description && (
+              <p className="mt-3 max-w-xl leading-relaxed text-white/65">
+                {focus.course.description}
+              </p>
+            )}
 
-        {/* Upcoming Modules */}
-        {upcomingModules.length > 0 && (
-          <div className="mb-16">
-            <h3
-              className="text-xl mb-5"
-              style={{ fontFamily: 'var(--font-display)', color: 'var(--color-deep-ink)' }}
-            >
-              Up Next
-            </h3>
-            <div className="space-y-2">
-              {upcomingModules.map((module, idx) => (
-                <div
-                  key={module.id}
-                  onClick={() => navigate(`/dashboard/courses/${activeCourse?.course_id}`)}
-                  className="flex items-center gap-4 p-4 rounded-xl cursor-pointer transition-all duration-200"
-                  style={{ backgroundColor: 'var(--color-pure-white)', border: '1px solid var(--color-border-hairline)' }}
-                  onMouseEnter={e => {
-                    e.currentTarget.style.borderColor = 'rgba(13, 148, 136, 0.3)'
-                    e.currentTarget.style.boxShadow = 'var(--shadow-sm)'
-                  }}
-                  onMouseLeave={e => {
-                    e.currentTarget.style.borderColor = 'var(--color-border-hairline)'
-                    e.currentTarget.style.boxShadow = 'none'
-                  }}
-                >
-                  <div
-                    className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 text-xs font-semibold"
-                    style={{ backgroundColor: 'var(--color-structural)', color: 'var(--color-stone)' }}
-                  >
-                    {idx + 1}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h4
-                      className="text-sm font-medium truncate"
-                      style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-deep-ink)' }}
-                    >
-                      {module.title}
-                    </h4>
-                    <span className="text-xs font-medium uppercase tracking-wider" style={{ color: 'var(--color-stone)' }}>
-                      {module.type}
-                    </span>
-                  </div>
-                </div>
-              ))}
+            <div className="mt-8 flex flex-wrap items-baseline gap-x-10 gap-y-4">
+              <div>
+                <p className="text-sm text-white/50">Progress</p>
+                <p data-numeric className="mt-1 text-2xl font-semibold text-white">
+                  {focus.progress || 0}%
+                </p>
+              </div>
+              <div>
+                <p className="text-sm text-white/50">Lessons</p>
+                <p data-numeric className="mt-1 text-2xl font-semibold text-white">
+                  {focus.completed_lessons || 0}/{focus.total_lessons || 0}
+                </p>
+              </div>
             </div>
-          </div>
+
+            <div
+              className="mt-6 h-1.5 w-full max-w-xl overflow-hidden rounded-[var(--radius-pill)] bg-white/15"
+              role="progressbar"
+              aria-valuenow={focus.progress || 0}
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-label="Course progress"
+            >
+              <div
+                className="h-full rounded-[var(--radius-pill)] bg-accent-400 transition-[width] duration-500"
+                style={{ width: `${focus.progress || 0}%` }}
+              />
+            </div>
+
+            <button
+              onClick={() => navigate(`/dashboard/courses/${focus.course_id}`)}
+              className="btn mt-8 !border-transparent !bg-white !px-6 !py-3 !text-ink hover:!bg-white/90"
+            >
+              {focus.progress > 0 ? 'Resume course' : 'Start course'}
+            </button>
+          </section>
+        ) : allComplete ? (
+          <section className="mb-14 rounded-[var(--radius-surface)] border border-accent-200 bg-accent-soft p-8 sm:p-10">
+            <h2 className="text-2xl text-accent-on-soft">All courses complete</h2>
+            <p className="mt-3 max-w-lg leading-relaxed text-accent-on-soft/85">
+              You have finished every course assigned to you. Your certificates
+              are ready to download.
+            </p>
+            <Link to="/dashboard/certificates" className="btn btn-primary mt-7">
+              View certificates
+            </Link>
+          </section>
+        ) : (
+          <section className="card mb-14 p-10 text-center sm:p-12">
+            <h2 className="text-xl">Nothing assigned yet</h2>
+            <p className="mx-auto mt-2 max-w-sm text-sm text-body">
+              Your administrator has not assigned you any courses. They will
+              appear here as soon as they do.
+            </p>
+          </section>
         )}
 
-        {/* Course Library */}
-        <div>
-          <h3
-            className="text-xl mb-5"
-            style={{ fontFamily: 'var(--font-display)', color: 'var(--color-deep-ink)' }}
-          >
-            Your Courses
-          </h3>
+        {/* Library */}
+        <section aria-labelledby="library-heading">
+          <h2 id="library-heading" className="mb-6 text-xl">
+            Your courses
+          </h2>
           {loading ? (
             <SkeletonGrid count={3} />
           ) : enrolments.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-              {enrolments.map(enrolment => (
+            <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+              {enrolments.map((enrolment) => (
                 <CourseCard
                   key={enrolment.id || enrolment.course_id}
                   course={enrolment.course}
@@ -271,14 +176,11 @@ export default function LearnerDashboard() {
               ))}
             </div>
           ) : (
-            <div
-              className="rounded-2xl p-8 text-center text-sm"
-              style={{ backgroundColor: 'var(--color-pure-white)', border: '1px solid var(--color-border-hairline)', color: 'var(--color-stone)' }}
-            >
-              No courses found in your library.
-            </div>
+            <p className="card p-8 text-center text-sm text-muted">
+              No courses in your library yet.
+            </p>
           )}
-        </div>
+        </section>
       </main>
     </div>
   )

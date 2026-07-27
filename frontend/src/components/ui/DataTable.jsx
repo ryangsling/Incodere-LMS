@@ -68,30 +68,30 @@ export default function DataTable({
       />
 
       {filtered.length > pageSize && (
-        <div className="flex items-center justify-between border-t border-gray-200 pt-3">
+        <div className="flex items-center justify-between border-t border-border pt-3">
           <p className="text-sm text-muted">
-            Showing <span className="font-medium text-navy-700">{start + 1}</span>-
-            <span className="font-medium text-navy-700">{Math.min(start + pageSize, filtered.length)}</span> of{' '}
-            <span className="font-medium text-navy-700">{filtered.length}</span>
+            Showing <span className="font-medium text-ink">{start + 1}</span>-
+            <span className="font-medium text-ink">{Math.min(start + pageSize, filtered.length)}</span> of{' '}
+            <span className="font-medium text-ink">{filtered.length}</span>
           </p>
           <nav className="flex items-center gap-x-1">
             <button
               type="button"
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               disabled={safePage === 1}
-              className="size-8 inline-flex items-center justify-center rounded-md border border-gray-300 bg-white text-muted hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="size-8 inline-flex items-center justify-center rounded-[var(--radius-control)] border border-border-strong bg-white text-muted hover:bg-structural disabled:opacity-50 disabled:cursor-not-allowed"
               aria-label="Previous"
             >
               <ChevronLeftIcon className="size-4" />
             </button>
-            <span className="px-3 text-sm text-navy-700">
+            <span className="px-3 text-sm text-ink">
               Page {safePage} of {totalPages}
             </span>
             <button
               type="button"
               onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
               disabled={safePage === totalPages}
-              className="size-8 inline-flex items-center justify-center rounded-md border border-gray-300 bg-white text-muted hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="size-8 inline-flex items-center justify-center rounded-[var(--radius-control)] border border-border-strong bg-white text-muted hover:bg-structural disabled:opacity-50 disabled:cursor-not-allowed"
               aria-label="Next"
             >
               <ChevronRightIcon className="size-4" />

@@ -13,21 +13,22 @@ const navItems = [
   { to: '/admin/reports', label: 'Reports', icon: ChartBarIcon },
 ]
 
-const titles = {
-  '/admin': 'Learners',
-  '/admin/enrolments': 'Enrolments',
-  '/admin/certificates': 'Certificates',
-  '/admin/reports': 'Compliance Reports',
+// The shell label names the current *section* and is derived from navItems, so
+// it can never drift from the sidebar the way the old hardcoded map did.
+function sectionLabel(pathname) {
+  const match = [...navItems]
+    .sort((a, b) => b.to.length - a.to.length)
+    .find((item) => (item.end ? pathname === item.to : pathname.startsWith(item.to)))
+  return match?.label ?? 'Admin'
 }
 
 export default function CompanyAdminLayout() {
   const location = useLocation()
-  const title = titles[location.pathname] || 'Admin'
 
   return (
     <AdminShell
       navItems={navItems}
-      headerTitle={title}
+      headerTitle={sectionLabel(location.pathname)}
     >
       <Routes>
         <Route index element={<CompanyAdminLearners />} />

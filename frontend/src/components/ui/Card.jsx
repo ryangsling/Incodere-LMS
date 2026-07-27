@@ -17,7 +17,7 @@ export default function Card({
   return (
     <div
       className={classNames(
-        'bg-surface rounded-lg border border-gray-200 shadow-xs',
+        'bg-surface rounded-[var(--radius-control)] border border-border shadow-xs',
         paddingClasses[padding],
         className,
       )}
@@ -30,7 +30,7 @@ export default function Card({
 
 export function CardHeader({ children, className = '', ...rest }) {
   return (
-    <div className={classNames('border-b border-gray-200 pb-4 mb-4', className)} {...rest}>
+    <div className={classNames('border-b border-border pb-4 mb-4', className)} {...rest}>
       {children}
     </div>
   )
@@ -38,7 +38,7 @@ export function CardHeader({ children, className = '', ...rest }) {
 
 export function CardTitle({ children, className = '', ...rest }) {
   return (
-    <h3 className={classNames('text-lg font-semibold text-navy-700', className)} {...rest}>
+    <h3 className={classNames('text-lg font-semibold text-ink', className)} {...rest}>
       {children}
     </h3>
   )
@@ -64,7 +64,7 @@ export function CardFooter({ children, className = '', ...rest }) {
   return (
     <div
       className={classNames(
-        'border-t border-gray-200 pt-4 mt-4 flex items-center justify-end gap-x-2',
+        'border-t border-border pt-4 mt-4 flex items-center justify-end gap-x-2',
         className,
       )}
       {...rest}

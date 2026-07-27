@@ -5,9 +5,9 @@ const variantClasses = {
   default: 'bg-primary-50 text-primary-700 border-primary-200',
   success: 'bg-accent-50 text-accent-700 border-accent-200',
   warning: 'bg-yellow-50 text-yellow-700 border-yellow-200',
-  danger: 'bg-red-50 text-red-700 border-red-200',
+  danger: 'bg-danger-soft text-danger border-danger-border',
   info: 'bg-blue-50 text-blue-700 border-blue-200',
-  neutral: 'bg-gray-100 text-navy-700 border-gray-200',
+  neutral: 'bg-structural text-ink border-border',
 }
 
 export default function Badge({

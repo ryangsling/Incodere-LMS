@@ -73,7 +73,7 @@ export default function CourseDetail() {
   }
 
   if (loading) return <p className="text-muted">Loading course...</p>
-  if (error) return <p className="text-red-600">{error}</p>
+  if (error) return <p className="text-danger">{error}</p>
   if (!course) return <p className="text-muted">Course not found</p>
 
   return (
@@ -81,15 +81,15 @@ export default function CourseDetail() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <Link to="/super-admin/courses" className="text-sm text-primary-600 hover:underline">&larr; Back to courses</Link>
-          <h2 className="text-xl font-bold text-navy-700 mt-1">{course.title}</h2>
-          <span className={`text-xs px-2 py-0.5 rounded ${course.status === 'published' ? 'bg-accent-600 text-white' : 'bg-gray-200 text-muted'}`}>
+          <h2 className="text-xl font-bold text-ink mt-1">{course.title}</h2>
+          <span className={`text-xs px-2 py-0.5 rounded ${course.status === 'published' ? 'bg-accent-600 text-white' : 'bg-structural text-muted'}`}>
             {course.status}
           </span>
         </div>
         <div className="flex gap-2">
           <Link
             to={`/super-admin/courses/${id}/edit`}
-            className="px-3 py-1.5 text-sm border border-gray-300 rounded hover:bg-gray-50"
+            className="px-3 py-1.5 text-sm border border-border-strong rounded hover:bg-structural"
           >
             Edit
           </Link>
@@ -103,7 +103,7 @@ export default function CourseDetail() {
                 setError(e.message)
               }
             }}
-            className="px-3 py-1.5 text-sm text-red-600 border border-red-300 rounded hover:bg-red-50"
+            className="px-3 py-1.5 text-sm text-danger border border-red-300 rounded hover:bg-danger-soft"
           >
             Delete
           </button>
@@ -116,7 +116,7 @@ export default function CourseDetail() {
 
       <div className="space-y-6">
         <div>
-          <h3 className="font-bold text-navy-700 mb-3">Sections</h3>
+          <h3 className="font-bold text-ink mb-3">Sections</h3>
 
           {(!course.sections || course.sections.length === 0) && (
             <p className="text-sm text-muted mb-3">No sections yet.</p>
@@ -125,10 +125,10 @@ export default function CourseDetail() {
           {course.sections?.map(section => (
             <div key={section.id} className="bg-white rounded shadow-sm mb-4 p-4">
               <div className="flex items-center justify-between mb-3">
-                <h4 className="font-medium text-navy-700">{section.title}</h4>
+                <h4 className="font-medium text-ink">{section.title}</h4>
                 <button
                   onClick={() => deleteSection(section.id)}
-                  className="text-xs text-red-600 hover:underline"
+                  className="text-xs text-danger hover:underline"
                 >
                   Remove
                 </button>
@@ -137,13 +137,13 @@ export default function CourseDetail() {
               {section.lessons?.length > 0 && (
                 <div className="space-y-2 mb-3">
                   {section.lessons.map(lesson => (
-                    <div key={lesson.id} className="flex items-center justify-between px-3 py-2 bg-gray-50 rounded text-sm">
+                    <div key={lesson.id} className="flex items-center justify-between px-3 py-2 bg-structural rounded text-sm">
                       <span>
                         {lesson.type === 'video' ? '🎬' : '📄'} {lesson.title}
                       </span>
                       <button
                         onClick={() => deleteLesson(lesson.id)}
-                        className="text-xs text-red-600 hover:underline"
+                        className="text-xs text-danger hover:underline"
                       >
                         Remove
                       </button>
@@ -158,12 +158,12 @@ export default function CourseDetail() {
                   placeholder="Lesson title"
                   value={newLesson.sectionId === section.id ? newLesson.title : ''}
                   onChange={e => setNewLesson({ ...newLesson, sectionId: section.id, title: e.target.value })}
-                  className="flex-1 px-2 py-1 border border-gray-300 rounded text-sm"
+                  className="flex-1 px-2 py-1 border border-border-strong rounded text-sm"
                 />
                 <select
                   value={newLesson.sectionId === section.id ? newLesson.type : 'video'}
                   onChange={e => setNewLesson({ ...newLesson, type: e.target.value })}
-                  className="px-2 py-1 border border-gray-300 rounded text-sm"
+                  className="px-2 py-1 border border-border-strong rounded text-sm"
                 >
                   <option value="video">Video</option>
                   <option value="text">Text</option>
@@ -176,7 +176,7 @@ export default function CourseDetail() {
                   placeholder="YouTube URL"
                   value={newLesson.video_url}
                   onChange={e => setNewLesson({ ...newLesson, video_url: e.target.value })}
-                  className="w-full mt-2 px-2 py-1 border border-gray-300 rounded text-sm"
+                  className="w-full mt-2 px-2 py-1 border border-border-strong rounded text-sm"
                 />
               )}
 
@@ -186,7 +186,7 @@ export default function CourseDetail() {
                   value={newLesson.content}
                   onChange={e => setNewLesson({ ...newLesson, content: e.target.value })}
                   rows={3}
-                  className="w-full mt-2 px-2 py-1 border border-gray-300 rounded text-sm"
+                  className="w-full mt-2 px-2 py-1 border border-border-strong rounded text-sm"
                 />
               )}
 
@@ -207,7 +207,7 @@ export default function CourseDetail() {
               placeholder="New section title"
               value={newSectionTitle}
               onChange={e => setNewSectionTitle(e.target.value)}
-              className="flex-1 px-3 py-2 border border-gray-300 rounded text-sm"
+              className="flex-1 px-3 py-2 border border-border-strong rounded text-sm"
             />
             <button
               onClick={addSection}

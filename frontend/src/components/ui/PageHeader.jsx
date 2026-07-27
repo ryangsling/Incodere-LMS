@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom'
 import Button from './Button'
 
-// Adapted from twp-components/Application UI/Page Examples/Detail Screens
 // Accepts either { actions } (array of nodes) or { action } ({ to?, onClick?, label })
 // to keep both legacy and ergonomic call sites working.
 export default function PageHeader({
@@ -26,29 +25,37 @@ export default function PageHeader({
   }
 
   return (
-    <div className={`mb-6 ${className}`}>
+    <div className={`mb-8 ${className}`}>
       {breadcrumb && (
-        <nav className="mb-2 text-sm text-muted">
+        <nav aria-label="Breadcrumb" className="mb-2 text-sm text-muted">
           {breadcrumb.map((item, idx) => (
             <span key={idx}>
-              {idx > 0 && <span className="mx-2 text-gray-300">/</span>}
+              {idx > 0 && <span className="mx-2 text-muted" aria-hidden="true">/</span>}
               {item.to ? (
-                <Link to={item.to} className="hover:text-primary-600">
+                <Link to={item.to} className="hover:text-accent">
                   {item.label}
                 </Link>
               ) : (
-                <span className="text-navy-700">{item.label}</span>
+                <span className="text-ink">{item.label}</span>
               )}
             </span>
           ))}
         </nav>
       )}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-        <div>
-          <h1 className="text-2xl font-bold text-navy-700">{title}</h1>
-          {description && <p className="mt-1 text-sm text-muted">{description}</p>}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="min-w-0">
+          {/* This is the page's only h1. The app shell renders a plain label,
+              not a second h1 with the same text. `font-bold` is deliberately
+              absent: it previously forced weight 700 on a 400-only typeface,
+              so the browser synthesized a smeared faux-bold. */}
+          <h1 className="text-2xl sm:text-[1.75rem] leading-tight">{title}</h1>
+          {description && (
+            <p className="mt-1.5 max-w-prose text-sm text-muted">{description}</p>
+          )}
         </div>
-        {actionNode && <div className="flex items-center gap-x-2 shrink-0">{actionNode}</div>}
+        {actionNode && (
+          <div className="flex shrink-0 items-center gap-x-2">{actionNode}</div>
+        )}
       </div>
     </div>
   )

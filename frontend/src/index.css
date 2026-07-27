@@ -1,137 +1,140 @@
-/* Google Fonts — DM Serif Display (serif headings) + Inter (sans body) */
-@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600;700&display=swap');
-
 @import "tailwindcss";
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   ILMS design tokens
+
+   NOTE ON SPACING: do NOT declare `--spacing-<n>` tokens here. Tailwind v4
+   reads `--spacing-<n>` as the value of step <n> in the spacing scale, so a
+   token named `--spacing-64` meaning "64px" silently rewrites `w-64` from
+   256px to 64px. That bug previously broke the sidebar, the top bar, card
+   padding and every section rhythm in the app. The scale is left at Tailwind's
+   default (`--spacing: 0.25rem`), so `w-64` = 16rem and `p-8` = 2rem again.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
 @theme {
-  /* ── Colors ── */
-  --color-primary-indigo: #0d9488;
-  --color-primary-indigo-hover: #0f766e;
-  --color-deep-ink: #0f172a;
-  --color-midnight-violet: #1e293b;
-  --color-forest: #059669;
-  --color-ember: #ea580c;
-  --color-blossom: #f0fdfa;
-  --color-petal: #ccfbf1;
-  --color-meadow: #064e3b;
-  --color-lavender-mist: #99f6e4;
-  --color-cream: #f8fafc;
-  --color-stone: #475569;
-  --color-pure-white: #ffffff;
-  --color-true-black: #000000;
-  --color-info-blue: #e0f2fe;
+  /* ── Neutrals: warm-cast, chosen for long reading sessions ── */
+  --color-canvas: #fafaf9;        /* page background */
+  --color-surface: #ffffff;       /* cards, panels, form fields */
+  --color-structural: #f5f5f4;    /* subtle fills, hover states, table head */
+  --color-ink: #1c1917;           /* headings */
+  --color-body: #57534e;          /* body copy, 7.0:1 on canvas */
+  /* Secondary text. Chosen so it clears 4.5:1 against all three surfaces,
+     including --color-structural, which is where table headers sit. Stone-500
+     (#78716c) only reached 4.4:1 there. */
+  --color-muted: #6f6862;         /* 5.25 canvas / 5.48 surface / 5.02 structural */
+  --color-border: rgba(28, 25, 23, 0.10);
+  --color-border-strong: rgba(28, 25, 23, 0.18);
 
-  /* ── Semantic aliases ── */
-  --color-canvas: #f8fafc;
-  --color-structural: #f1f5f9;
-  --color-typography: #0f172a;
-  --color-border-hairline: rgba(15, 23, 42, 0.08);
-  --color-accent: #0d9488;
-  --color-accent-soft: #ccfbf1;
+  /* ── Accent: deep teal. Carries brand, action, progress AND completion.
+        One accent means no teal/green collision on status. ── */
+  --color-accent-50:  #f0fdfa;
+  --color-accent-100: #ccfbf1;
+  --color-accent-200: #99f6e4;
+  --color-accent-300: #5eead4;
+  --color-accent-400: #2dd4bf;
+  --color-accent-500: #14b8a6;
+  --color-accent-600: #0d9488;
+  --color-accent-700: #0f766e;   /* ← the accent. 4.85:1 on white */
+  --color-accent-800: #115e59;
+  --color-accent-900: #134e4a;
 
-  /* ── Gradient ── */
-  --gradient-logo: linear-gradient(135deg, #0f172a 0%, #0d9488 100%);
-  --gradient-hero: linear-gradient(160deg, #0f172a 0%, #134e4a 50%, #0f766e 100%);
+  --color-accent: var(--color-accent-700);
+  --color-accent-hover: var(--color-accent-800);
+  --color-accent-soft: var(--color-accent-50);
+  --color-accent-on-soft: var(--color-accent-800);
+
+  /* ── Status. Reserved for status only, never decoration. ── */
+  --color-warning: #b45309;
+  --color-warning-soft: #fffbeb;
+  --color-danger: #b91c1c;
+  --color-danger-soft: #fef2f2;
+  --color-danger-border: #fecaca;
 
   /* ── Typography ── */
-  --font-display: 'DM Serif Display', 'Georgia', ui-serif, serif;
-  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  --font-reckless-neue: 'DM Serif Display', 'Georgia', ui-serif, serif;
-  --font-saans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-sans: 'Figtree', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Figtree', system-ui, -apple-system, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
-  /* ── Typography Scale ── */
-  --text-caption: 0.75rem;
-  --text-body-sm: 0.875rem;
-  --text-body: 1rem;
-  --text-subheading: 1.25rem;
-  --text-heading-sm: 1.5rem;
-  --text-heading: 2rem;
-  --text-heading-lg: 3rem;
-  --text-display: 4rem;
+  /* ── Radii: ONE documented rule.
+        controls  = buttons, inputs, selects, small chips
+        surface   = cards, panels, modals, tables
+        pill      = avatars, status badges only ── */
+  --radius-control: 0.625rem;   /* 10px */
+  --radius-surface: 1rem;       /* 16px */
+  --radius-pill: 100rem;
 
-  --leading-caption: 1.6;
-  --leading-body-sm: 1.4;
-  --leading-body: 1.6;
-  --leading-subheading: 1.3;
-  --leading-heading-sm: 1.3;
-  --leading-heading: 1.1;
-  --leading-heading-lg: 1.1;
-  --leading-display: 1;
+  /* ── Shadows: tinted to the warm neutral, never pure black ── */
+  --shadow-xs: 0 1px 2px rgba(28, 25, 23, 0.04);
+  --shadow-sm: 0 1px 3px rgba(28, 25, 23, 0.06), 0 1px 2px rgba(28, 25, 23, 0.04);
+  --shadow-md: 0 4px 12px rgba(28, 25, 23, 0.07), 0 2px 4px rgba(28, 25, 23, 0.04);
+  --shadow-lg: 0 12px 28px rgba(28, 25, 23, 0.09), 0 4px 8px rgba(28, 25, 23, 0.04);
 
-  /* ── Font Weights ── */
-  --font-weight-regular: 400;
-  --font-weight-medium: 500;
-  --font-weight-semibold: 600;
-  --font-weight-bold: 700;
-
-  /* ── Spacing (8px base) ── */
-  --spacing-8: 0.5rem;
-  --spacing-16: 1rem;
-  --spacing-24: 1.5rem;
-  --spacing-32: 2rem;
-  --spacing-40: 2.5rem;
-  --spacing-64: 4rem;
-  --spacing-80: 5rem;
-  --spacing-128: 8rem;
-
-  /* ── Border Radius ── */
-  --radius-cards: 0.75rem;
-  --radius-links: 1.5rem;
-  --radius-buttons: 100rem;
-  --radius-badges: 100rem;
-  --radius-images: 100rem;
-  --radius-nav: 100rem;
-  --radius-full: 100rem;
-
-  /* ── Shadows ── */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.06);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.06), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.06), 0 4px 6px -4px rgba(0, 0, 0, 0.06);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
-
-  /* ── Layout ── */
-  --page-max-width: 75rem;
-  --section-gap: 4rem;
-  --card-padding: 2rem;
-  --element-gap: 1rem;
-
-  /* ── Motion ── */
+  /* ── Motion. MOTION_INTENSITY 3: feedback only, no choreography. ── */
   --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* ═══ Compatibility aliases ═══
+     These keep ~107 existing class usages resolving to the new system instead
+     of compiling to nothing. Prefer the canonical names above in new code. */
+  --color-primary-50:  var(--color-accent-50);
+  --color-primary-200: var(--color-accent-200);
+  --color-primary-600: var(--color-accent-700);
+  --color-primary-700: var(--color-accent-800);
+  --color-primary-800: var(--color-accent-900);
+  --color-navy-600: var(--color-body);
+  --color-navy-700: var(--color-ink);
+  --color-navy-900: var(--color-ink);
+  --color-deep-ink: var(--color-ink);
+  --color-typography: var(--color-ink);
+  --color-stone: var(--color-body);
+  --color-pure-white: var(--color-surface);
+  --color-border-hairline: var(--color-border);
+  --color-primary-indigo-hover: var(--color-accent-hover);
 }
 
-/* ── Global Base ── */
+/* ── Base ── */
 @layer base {
   html {
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     background-color: var(--color-canvas);
-    color: var(--color-typography);
-    scroll-behavior: auto !important;
+    color: var(--color-body);
+    text-rendering: optimizeLegibility;
   }
 
   body {
     background-color: var(--color-canvas);
-    color: var(--color-typography);
+    color: var(--color-body);
     margin: 0;
-    min-height: 100vh;
+    min-height: 100dvh;
   }
 
+  /* Headings share the body family. Hierarchy comes from size, weight and
+     colour, not from a second typeface. */
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
-    font-weight: 400;
-    color: var(--color-deep-ink);
+    color: var(--color-ink);
+    font-weight: 600;
+    letter-spacing: -0.017em;
+    text-wrap: balance;
+  }
+
+  h1 { letter-spacing: -0.022em; }
+
+  /* Numbers in tables and stat tiles align in columns. */
+  [data-numeric] {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum';
   }
 
   *:focus-visible {
     outline: 2px solid var(--color-accent);
     outline-offset: 2px;
+    border-radius: 2px;
   }
 
   @media (prefers-reduced-motion: reduce) {
-    *,
-    ::before,
-    ::after {
+    *, ::before, ::after {
       animation-duration: 0.01ms !important;
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
@@ -140,168 +143,152 @@
   }
 }
 
-/* ── Component Tokens ── */
+/* ── Components ── */
 @layer components {
   .display-title {
-    font-family: var(--font-display);
-    font-size: clamp(2.5rem, 5vw, var(--text-display));
-    line-height: 1;
-    letter-spacing: -0.02em;
-    font-weight: 400;
-    color: var(--color-deep-ink);
+    font-size: clamp(2rem, 5vw, 3.75rem);
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    font-weight: 600;
+    color: var(--color-ink);
     text-wrap: balance;
   }
 
   .section-title {
-    font-family: var(--font-display);
-    font-size: clamp(1.75rem, 4vw, var(--text-heading-lg));
-    line-height: 1.1;
-    font-weight: 400;
-    color: var(--color-deep-ink);
+    font-size: clamp(1.625rem, 3.5vw, 2.5rem);
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+    font-weight: 600;
+    color: var(--color-ink);
     text-wrap: balance;
   }
 
   .body-copy {
-    font-family: var(--font-sans);
-    font-size: var(--text-body);
-    line-height: 1.6;
-    font-weight: 400;
-    color: var(--color-stone);
+    font-size: 1rem;
+    line-height: 1.65;
+    color: var(--color-body);
+    max-width: 65ch;
   }
+
+  /* Buttons: radius-control, real hover contrast, tactile active state. */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-family: var(--font-sans);
+    font-weight: 550;
+    font-size: 0.9375rem;
+    line-height: 1;
+    padding: 0.75rem 1.25rem;
+    border-radius: var(--radius-control);
+    border: 1px solid transparent;
+    cursor: pointer;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background-color 0.15s ease, border-color 0.15s ease,
+                transform 0.1s ease, box-shadow 0.15s ease;
+  }
+  .btn:active { transform: translateY(1px); }
 
   .btn-primary {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
     background-color: var(--color-accent);
     color: #ffffff;
-    font-family: var(--font-sans);
-    font-weight: var(--font-weight-medium);
-    font-size: var(--text-body-sm);
-    padding: 0.75rem 1.5rem;
-    border-radius: var(--radius-buttons);
-    border: none;
-    cursor: pointer;
-    box-shadow: 0 1px 3px rgba(13, 148, 136, 0.3);
-    transition: all 0.2s var(--ease-expo);
-    text-decoration: none;
+    box-shadow: var(--shadow-xs);
   }
-  .btn-primary:hover {
-    background-color: var(--color-primary-indigo-hover);
-    box-shadow: 0 4px 12px rgba(13, 148, 136, 0.35);
-    transform: translateY(-1px);
+  .btn-primary:hover { background-color: var(--color-accent-hover); }
+
+  .btn-secondary {
+    background-color: var(--color-surface);
+    color: var(--color-ink);
+    border-color: var(--color-border-strong);
+    box-shadow: var(--shadow-xs);
   }
+  .btn-secondary:hover { background-color: var(--color-structural); }
 
   .btn-ghost {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
     background: transparent;
-    color: var(--color-deep-ink);
-    font-family: var(--font-sans);
-    font-weight: var(--font-weight-medium);
-    font-size: var(--text-body-sm);
-    padding: 0.75rem 1.5rem;
-    border-radius: var(--radius-buttons);
-    border: 1px solid var(--color-border-hairline);
-    cursor: pointer;
-    text-decoration: none;
-    transition: all 0.2s ease;
+    color: var(--color-ink);
   }
-  .btn-ghost:hover {
-    background: var(--color-structural);
-    border-color: rgba(15, 23, 42, 0.15);
+  .btn-ghost:hover { background: var(--color-structural); }
+
+  .card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-surface);
+    box-shadow: var(--shadow-xs);
   }
 
-  .bento-card {
-    background: var(--color-pure-white);
-    border: 1px solid var(--color-border-hairline);
-    border-radius: var(--radius-cards);
-    padding: var(--card-padding);
-    box-shadow: var(--shadow-sm);
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  .card-interactive {
+    transition: border-color 0.15s ease, box-shadow 0.15s ease,
+                transform 0.15s ease;
   }
-  .bento-card:hover {
-    border-color: rgba(13, 148, 136, 0.3);
+  .card-interactive:hover {
+    border-color: var(--color-border-strong);
     box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
   }
 
-  .tinted-card {
-    border-radius: var(--radius-cards);
-    padding: var(--card-padding);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .badge-pill {
+  /* Status badge. Pill radius is reserved for this and for avatars. */
+  .badge {
     display: inline-flex;
     align-items: center;
     gap: 0.375rem;
-    border-radius: var(--radius-badges);
-    padding: 0.375rem 0.875rem;
-    font-family: var(--font-sans);
-    font-size: var(--text-caption);
-    font-weight: var(--font-weight-semibold);
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
+    border-radius: var(--radius-pill);
+    padding: 0.1875rem 0.625rem;
+    font-size: 0.75rem;
+    font-weight: 550;
+    line-height: 1.5;
+    border: 1px solid transparent;
   }
 
-  .portrait-frame {
-    border-radius: var(--radius-images);
-    overflow: hidden;
-    aspect-ratio: 1;
+  /* Form field. Sits on --color-surface so it is never invisible against the
+     page, which was the previous failure (field fill === page fill). */
+  .field {
+    display: block;
+    width: 100%;
+    background-color: var(--color-surface);
+    color: var(--color-ink);
+    font-size: 0.9375rem;
+    padding: 0.625rem 0.75rem;
+    border-radius: var(--radius-control);
+    border: 1px solid var(--color-border-strong);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  .field::placeholder { color: var(--color-muted); }
+  .field:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px var(--color-accent-50);
+  }
+  .field:disabled {
+    background-color: var(--color-structural);
+    color: var(--color-muted);
+    cursor: not-allowed;
+  }
+  .field-error { border-color: var(--color-danger); }
+  .field-error:focus {
+    border-color: var(--color-danger);
+    box-shadow: 0 0 0 3px var(--color-danger-soft);
+  }
+
+  /* Field label. Sentence case at readable size, not tiny uppercase. */
+  .field-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 550;
+    color: var(--color-ink);
+    margin-bottom: 0.375rem;
   }
 }
 
-/* ── Hero decorative circles ── */
-.hero-circle {
-  position: absolute;
-  border-radius: 50%;
-  border: 1px solid rgba(13, 148, 136, 0.07);
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-}
-.hero-circle--inner {
-  border-color: rgba(13, 148, 136, 0.05);
-}
-.hero-circle--core {
-  border-color: rgba(13, 148, 136, 0.03);
-  background: radial-gradient(circle, rgba(13, 148, 136, 0.03) 0%, transparent 70%);
-}
+/* ── Motion: MOTION_INTENSITY 3 ──
+   Deliberately no entrance animations anywhere. Motion is limited to hover and
+   active feedback on controls, and to progress-bar width transitions, both of
+   which are pure enhancements on top of already-rendered content.
 
-/* ── Logo ticker ── */
-.logo-ticker {
-  overflow: hidden;
-  mask-image: linear-gradient(90deg, transparent, black 15%, black 85%, transparent);
-  -webkit-mask-image: linear-gradient(90deg, transparent, black 15%, black 85%, transparent);
-}
-.logo-ticker__track {
-  display: flex;
-  gap: 3rem;
-  width: max-content;
-  animation: logo-scroll 30s linear infinite;
-}
-.logo-ticker__item {
-  flex-shrink: 0;
-  font-family: var(--font-sans);
-  font-size: 1.125rem;
-  font-weight: 600;
-  color: #cbd5e1;
-  letter-spacing: -0.01em;
-  white-space: nowrap;
-  user-select: none;
-}
-@keyframes logo-scroll {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .logo-ticker__track {
-    animation: none;
-  }
-}
+   A load-in cascade was tried here and removed: any fill-mode that holds an
+   opacity-0 start state can strand content permanently when the animation does
+   not run (throttled background tab, reduced frame budget, interrupted paint).
+   That is the same class of bug as the GSAP `autoAlpha: 0` reveals this
+   redesign replaced, so it is not reintroduced in CSS form. */

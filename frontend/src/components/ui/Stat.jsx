@@ -16,14 +16,14 @@ export default function Stat({
     ? delta > 0
       ? 'text-accent-600'
       : delta < 0
-        ? 'text-red-600'
+        ? 'text-danger'
         : 'text-muted'
     : ''
 
   return (
     <div
       className={classNames(
-        'bg-surface rounded-lg border border-gray-200 shadow-xs p-5',
+        'bg-surface rounded-[var(--radius-control)] border border-border shadow-xs p-5',
         className,
       )}
       {...rest}
@@ -32,7 +32,7 @@ export default function Stat({
         {icon && (
           <div
             className={classNames(
-              'shrink-0 size-10 rounded-lg flex items-center justify-center',
+              'shrink-0 size-10 rounded-[var(--radius-control)] flex items-center justify-center',
               iconBg,
               iconColor,
             )}
@@ -42,7 +42,7 @@ export default function Stat({
         )}
         <div className="min-w-0 flex-1">
           <p className="text-sm text-muted truncate">{label}</p>
-          <p className="text-2xl font-bold text-navy-700 mt-0.5">{value}</p>
+          <p className="text-2xl font-bold text-ink mt-0.5">{value}</p>
         </div>
       </div>
       {delta !== undefined && delta !== null && (

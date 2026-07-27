@@ -88,7 +88,7 @@ export default function CompanyAdminEnrolments() {
     {
       key: 'learner',
       label: 'Learner',
-      render: (e) => <span className="font-medium text-typography">{e.learner?.first_name} {e.learner?.last_name}</span>,
+      render: (e) => <span className="font-medium text-ink">{e.learner?.first_name} {e.learner?.last_name}</span>,
     },
     { key: 'course', label: 'Course', render: (e) => e.course?.title },
     {
@@ -100,7 +100,7 @@ export default function CompanyAdminEnrolments() {
       key: 'id',
       label: '',
       render: (e) => (
-        <button onClick={() => handleUnenrol(e)} className="text-xs text-red-600 hover:underline">
+        <button onClick={() => handleUnenrol(e)} className="text-xs text-danger hover:underline">
           Remove
         </button>
       ),
@@ -115,10 +115,10 @@ export default function CompanyAdminEnrolments() {
       />
 
       {showForm && (
-        <form onSubmit={handleEnrol} className="bg-white rounded-md shadow-sm p-4 mb-6">
+        <form onSubmit={handleEnrol} className="bg-white rounded-[var(--radius-control)] shadow-sm p-4 mb-6">
           <div className="mb-4">
             <label className="block text-sm text-muted mb-2">Select Learners</label>
-            <div className="max-h-40 overflow-y-auto space-y-1 border border-gray-200 rounded-md p-2">
+            <div className="max-h-40 overflow-y-auto space-y-1 border border-border rounded-[var(--radius-control)] p-2">
               {learners.length === 0 && <p className="text-xs text-muted">No active learners in your organisation.</p>}
               {learners.map((l) => (
                 <label key={l.id} className="flex items-center gap-2 text-sm cursor-pointer">
@@ -138,7 +138,7 @@ export default function CompanyAdminEnrolments() {
             <select
               value={form.course_id}
               onChange={(e) => setForm({ ...form, course_id: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+              className="w-full px-3 py-2 border border-border-strong rounded-[var(--radius-control)] text-sm"
             >
               <option value="">-- Choose a course --</option>
               {courses.map((c) => (
