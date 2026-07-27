@@ -71,7 +71,7 @@ export default function AcceptInvite() {
   if (!tokensValid) {
     return (
       <AuthShell title="Accept invitation" subtitle="">
-        <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800">
+        <div className="rounded-[var(--radius-control)] border border-danger-border bg-danger-soft p-4 text-sm text-danger">
           <p className="font-semibold mb-1">Invalid or expired link</p>
           <p>Please ask your training manager to send a new invitation.</p>
           <Link to="/login" className="inline-block mt-4 underline">Back to sign in</Link>
@@ -84,9 +84,9 @@ export default function AcceptInvite() {
     return (
       <AuthShell title="Accept invitation" subtitle="Loading your invitation...">
         <div className="space-y-3">
-          <div className="h-10 bg-typography/10 rounded animate-pulse" />
-          <div className="h-10 bg-typography/10 rounded animate-pulse" />
-          <div className="h-10 bg-typography/10 rounded animate-pulse" />
+          <div className="h-10 bg-ink/10 rounded animate-pulse" />
+          <div className="h-10 bg-ink/10 rounded animate-pulse" />
+          <div className="h-10 bg-ink/10 rounded animate-pulse" />
         </div>
       </AuthShell>
     )
@@ -95,7 +95,7 @@ export default function AcceptInvite() {
   if (infoError) {
     return (
       <AuthShell title="Accept invitation" subtitle="">
-        <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800">
+        <div className="rounded-[var(--radius-control)] border border-danger-border bg-danger-soft p-4 text-sm text-danger">
           <p className="font-semibold mb-1">{infoError}</p>
           <p>Please ask your training manager to send a new invitation.</p>
           <Link to="/login" className="inline-block mt-4 underline">Back to sign in</Link>
@@ -111,7 +111,7 @@ export default function AcceptInvite() {
     >
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <label className="block text-xs font-bold uppercase tracking-wider text-typography/60 mb-2">
+          <label className="field-label">
             First Name
           </label>
           <Input
@@ -126,7 +126,7 @@ export default function AcceptInvite() {
         </div>
 
         <div>
-          <label className="block text-xs font-bold uppercase tracking-wider text-typography/60 mb-2">
+          <label className="field-label">
             Last Name
           </label>
           <Input
@@ -141,7 +141,7 @@ export default function AcceptInvite() {
         </div>
 
         <div>
-          <label className="block text-xs font-bold uppercase tracking-wider text-typography/60 mb-2">
+          <label className="field-label">
             Password
           </label>
           <Input
@@ -153,11 +153,11 @@ export default function AcceptInvite() {
             placeholder="••••••••"
             className="w-full"
           />
-          <p className="mt-1 text-xs text-typography/60">At least 8 characters.</p>
+          <p className="mt-1 text-xs text-muted">At least 8 characters.</p>
         </div>
 
         <div>
-          <label className="block text-xs font-bold uppercase tracking-wider text-typography/60 mb-2">
+          <label className="field-label">
             Confirm Password
           </label>
           <Input
@@ -170,7 +170,7 @@ export default function AcceptInvite() {
             className="w-full"
           />
           {confirm && !passwordsMatch && (
-            <p className="mt-1 text-xs text-red-600">Passwords do not match.</p>
+            <p className="mt-1 text-xs text-danger">Passwords do not match.</p>
           )}
         </div>
 

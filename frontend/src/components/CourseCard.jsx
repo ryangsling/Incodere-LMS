@@ -1,80 +1,70 @@
-export default function CourseCard({ course, progress, completedLessons, totalLessons, onContinue }) {
+import Button from './ui/Button'
+
+export default function CourseCard({
+  course,
+  progress,
+  completedLessons,
+  totalLessons,
+  onContinue,
+}) {
   const percentage = progress || 0
+  const isComplete = percentage === 100
+  const notStarted = percentage === 0
 
   return (
-    <div
-      className="rounded-2xl p-6 flex flex-col justify-between transition-all duration-200"
-      style={{
-        backgroundColor: 'var(--color-pure-white)',
-        border: '1px solid var(--color-border-hairline)',
-        boxShadow: 'var(--shadow-sm)',
-      }}
-      onMouseEnter={e => {
-        e.currentTarget.style.borderColor = 'rgba(13, 148, 136, 0.3)'
-        e.currentTarget.style.boxShadow = 'var(--shadow-md)'
-      }}
-      onMouseLeave={e => {
-        e.currentTarget.style.borderColor = 'var(--color-border-hairline)'
-        e.currentTarget.style.boxShadow = 'var(--shadow-sm)'
-      }}
-    >
-      <div>
-        <div className="flex justify-between items-start mb-4">
-          <span
-            className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wider"
-            style={{
-              backgroundColor: percentage === 100 ? 'var(--color-accent-soft)' : 'var(--color-structural)',
-              color: percentage === 100 ? 'var(--color-accent)' : 'var(--color-stone)',
-            }}
-          >
-            {percentage === 100 ? 'Completed' : 'In Progress'}
-          </span>
-          <span className="text-xs font-medium" style={{ color: 'var(--color-stone)' }}>
-            {completedLessons || 0}/{totalLessons || 0}
-          </span>
-        </div>
-
-        <h3
-          className="text-lg mb-2 leading-snug"
-          style={{ fontFamily: 'var(--font-display)', color: 'var(--color-deep-ink)' }}
+    // Hover is CSS (`card-interactive`). This previously mutated
+    // element.style on mouseenter/mouseleave, and one handler used e.target
+    // rather than e.currentTarget, so hovering a child restyled the wrong node.
+    <article className="card card-interactive flex flex-col p-6">
+      <div className="mb-4 flex items-start justify-between gap-3">
+        <p
+          className={
+            isComplete
+              ? 'badge border-accent-200 bg-accent-soft text-accent-on-soft'
+              : 'badge border-border bg-structural text-body'
+          }
         >
-          {course?.title || 'Untitled Course'}
-        </h3>
-        <p className="text-sm line-clamp-2 mb-6" style={{ color: 'var(--color-stone)' }}>
-          {course?.description || 'Continue your learning journey.'}
+          {isComplete ? 'Completed' : notStarted ? 'Not started' : 'In progress'}
+        </p>
+        <p data-numeric className="text-sm text-muted">
+          {completedLessons || 0}/{totalLessons || 0}
         </p>
       </div>
 
-      <div className="mt-auto">
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-xs font-semibold" style={{ color: 'var(--color-deep-ink)' }}>
-            {percentage}% complete
+      <h3 className="text-lg leading-snug">{course?.title || 'Untitled course'}</h3>
+      {course?.description && (
+        <p className="mt-2 line-clamp-2 text-sm text-body">{course.description}</p>
+      )}
+
+      <div className="mt-auto pt-6">
+        <div className="mb-2 flex items-baseline justify-between">
+          <span className="text-xs text-muted">Progress</span>
+          <span data-numeric className="text-sm font-semibold text-ink">
+            {percentage}%
           </span>
         </div>
-        <div className="w-full h-1.5 rounded-full overflow-hidden mb-5" style={{ backgroundColor: 'var(--color-structural)' }}>
+        <div
+          className="mb-5 h-1.5 w-full overflow-hidden rounded-[var(--radius-pill)] bg-structural"
+          role="progressbar"
+          aria-valuenow={percentage}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-label={`${course?.title || 'Course'} progress`}
+        >
           <div
-            className="h-full rounded-full transition-all duration-700"
-            style={{ width: `${percentage}%`, backgroundColor: 'var(--color-accent)' }}
+            className="h-full rounded-[var(--radius-pill)] bg-accent transition-[width] duration-500"
+            style={{ width: `${percentage}%` }}
           />
         </div>
 
-        <button
+        <Button
+          variant={isComplete ? 'secondary' : 'primary'}
+          fullWidth
           onClick={onContinue}
-          className="w-full py-3 rounded-lg text-sm font-semibold transition-all duration-200"
-          style={{
-            backgroundColor: 'var(--color-deep-ink)',
-            color: 'white',
-          }}
-          onMouseEnter={e => {
-            e.target.style.backgroundColor = 'var(--color-accent)'
-          }}
-          onMouseLeave={e => {
-            e.target.style.backgroundColor = 'var(--color-deep-ink)'
-          }}
         >
-          {percentage === 0 ? 'Start Course' : percentage === 100 ? 'Review Course' : 'Continue'}
-        </button>
+          {notStarted ? 'Start course' : isComplete ? 'Review course' : 'Continue'}
+        </Button>
       </div>
-    </div>
+    </article>
   )
 }

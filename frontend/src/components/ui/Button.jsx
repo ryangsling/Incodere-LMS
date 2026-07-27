@@ -1,8 +1,5 @@
-import { useState, useEffect } from 'react'
-import { Proximity } from 'z-proximity-engine'
 import { classNames } from '../../utils/classNames'
 
-// Adapted from twp-components/Application UI/Elements/Buttons (multiple variants) and Heroicons
 export default function Button({
   variant = 'primary',
   size = 'md',
@@ -16,37 +13,38 @@ export default function Button({
   className = '',
   ...rest
 }) {
-  const [isFinePointer, setIsFinePointer] = useState(() => window.matchMedia('(pointer: fine)').matches)
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(pointer: fine)')
-    const handler = (e) => setIsFinePointer(e.matches)
-    mediaQuery.addEventListener('change', handler)
-    return () => mediaQuery.removeEventListener('change', handler)
-  }, [])
-
   const base =
-    'inline-flex items-center justify-center gap-x-2 font-semibold rounded-md transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:opacity-50 disabled:cursor-not-allowed'
+    'inline-flex items-center justify-center gap-x-2 font-medium whitespace-nowrap ' +
+    'rounded-[var(--radius-control)] border border-transparent ' +
+    'transition-[background-color,border-color,transform] duration-150 ' +
+    'active:translate-y-px ' +
+    'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ' +
+    'disabled:opacity-50 disabled:cursor-not-allowed disabled:active:translate-y-0'
 
+  // Every variant keeps its label above 4.5:1 in rest, hover and active.
+  // The previous hover token was a pale mint fill behind white text at
+  // 1.13:1, which made the label vanish on hover.
   const variantClasses = {
-    primary: 'bg-accent text-white hover:bg-accent-soft active:opacity-90 shadow-xs',
-    secondary: 'bg-canvas text-typography border border-border-hairline hover:bg-structural shadow-xs',
-    ghost: 'bg-transparent text-typography hover:bg-structural',
-    danger: 'bg-red-600 text-white hover:bg-red-700 shadow-xs',
-    accent: 'bg-accent text-white hover:bg-accent-soft shadow-xs',
+    primary: 'bg-accent text-white shadow-xs hover:bg-accent-hover',
+    secondary:
+      'bg-surface text-ink border-border-strong shadow-xs hover:bg-structural',
+    ghost: 'bg-transparent text-ink hover:bg-structural',
+    danger: 'bg-danger text-white shadow-xs hover:brightness-90',
+    accent: 'bg-accent text-white shadow-xs hover:bg-accent-hover',
   }
 
   const sizeClasses = {
     xs: 'px-2 py-1 text-xs',
-    sm: 'px-2.5 py-1.5 text-xs',
-    md: 'px-3.5 py-2 text-sm',
-    lg: 'px-4 py-2.5 text-base',
+    sm: 'px-3 py-1.5 text-sm',
+    md: 'px-4 py-2 text-sm',
+    lg: 'px-5 py-2.5 text-base',
   }
 
-  const content = (
+  return (
     <button
       type={type}
       disabled={disabled || loading}
+      aria-busy={loading || undefined}
       className={classNames(
         base,
         variantClasses[variant],
@@ -57,7 +55,7 @@ export default function Button({
       {...rest}
     >
       {loading ? (
-        <svg className="size-4 animate-spin" viewBox="0 0 24 24" fill="none">
+        <svg className="size-4 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" opacity="0.25" />
           <path d="M22 12a10 10 0 0 1-10 10" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
         </svg>
@@ -66,14 +64,4 @@ export default function Button({
       {!loading && rightIcon}
     </button>
   )
-
-  if (isFinePointer && variant === 'primary' && !disabled && !loading) {
-    return (
-      <Proximity magnetic={0.2} tilt={0.1} distance={50}>
-        {content}
-      </Proximity>
-    )
-  }
-
-  return content
 }

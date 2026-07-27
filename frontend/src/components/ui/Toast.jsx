@@ -99,7 +99,7 @@ export function ToastProvider({ children }) {
           >
             <div
               className={classNames(
-                'pointer-events-auto min-w-[360px] max-w-lg rounded-xl shadow-2xl px-5 py-4 flex items-start gap-x-3',
+                'pointer-events-auto min-w-[360px] max-w-lg rounded-[var(--radius-surface)] shadow-2xl px-5 py-4 flex items-start gap-x-3',
                 variantClasses[t.variant],
               )}
               role="alert"
@@ -113,7 +113,7 @@ export function ToastProvider({ children }) {
                     t.action.onClick?.()
                     removeToast(t.id)
                   }}
-                  className="shrink-0 -m-1.5 p-1.5 rounded-md hover:bg-white/20 font-semibold text-sm"
+                  className="shrink-0 -m-1.5 p-1.5 rounded-[var(--radius-control)] hover:bg-white/20 font-semibold text-sm"
                 >
                   {t.action.label}
                 </button>
@@ -121,7 +121,7 @@ export function ToastProvider({ children }) {
               <button
                 type="button"
                 onClick={() => removeToast(t.id)}
-                className="shrink-0 -m-1.5 p-1.5 rounded-md hover:bg-white/20"
+                className="shrink-0 -m-1.5 p-1.5 rounded-[var(--radius-control)] hover:bg-white/20"
                 aria-label="Dismiss"
               >
                 <svg className="size-4" viewBox="0 0 20 20" fill="currentColor">

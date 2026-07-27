@@ -1,6 +1,6 @@
+import { useId } from 'react'
 import { classNames } from '../../utils/classNames'
 
-// Adapted from twp-components/Application UI/Forms/Input Groups/Input with label and help text/v4
 export default function Input({
   label,
   error,
@@ -11,29 +11,29 @@ export default function Input({
   id,
   ...rest
 }) {
-  const inputId = id || rest.name || `input-${Math.random().toString(36).slice(2, 9)}`
+  // useId is stable across renders; the previous Math.random() id changed on
+  // every render, which broke the label/input association it was meant to make.
+  const generatedId = useId()
+  const inputId = id || rest.name || generatedId
 
   return (
     <div className={className}>
       {label && (
-        <label htmlFor={inputId} className="block text-xs font-bold uppercase tracking-wider text-typography/60 mb-1.5">
+        <label htmlFor={inputId} className="field-label">
           {label}
         </label>
       )}
       <div className="relative">
         {leadingIcon && (
-          <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-typography/50">
+          <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-muted">
             {leadingIcon}
           </span>
         )}
         <input
           id={inputId}
           className={classNames(
-            'block w-full rounded-md bg-canvas px-3 py-2 text-sm text-typography shadow-xs',
-            'outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400',
-            'focus:outline-2 focus:-outline-offset-2 focus:outline-accent',
-            'disabled:bg-structural disabled:text-typography/50',
-            error && 'outline-red-500 focus:outline-red-500',
+            'field',
+            error && 'field-error',
             leadingIcon && 'pl-10',
             trailingIcon && 'pr-10',
           )}
@@ -42,17 +42,17 @@ export default function Input({
           {...rest}
         />
         {trailingIcon && (
-          <span className="absolute inset-y-0 right-0 flex items-center pr-3 text-typography/50">
+          <span className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted">
             {trailingIcon}
           </span>
         )}
       </div>
       {error ? (
-        <p id={`${inputId}-error`} className="mt-1.5 text-xs text-red-600">
+        <p id={`${inputId}-error`} className="mt-1.5 text-xs text-danger">
           {error}
         </p>
       ) : helperText ? (
-        <p id={`${inputId}-help`} className="mt-1.5 text-xs text-typography/60">
+        <p id={`${inputId}-help`} className="mt-1.5 text-xs text-muted">
           {helperText}
         </p>
       ) : null}

@@ -5,7 +5,7 @@ const variantClasses = {
   default: 'bg-primary-50 text-primary-800 border-primary-200',
   success: 'bg-accent-50 text-accent-800 border-accent-200',
   warning: 'bg-yellow-50 text-yellow-800 border-yellow-200',
-  danger: 'bg-red-50 text-red-800 border-red-200',
+  danger: 'bg-danger-soft text-danger border-danger-border',
   info: 'bg-blue-50 text-blue-800 border-blue-200',
 }
 
@@ -13,7 +13,7 @@ const iconColorClasses = {
   default: 'text-primary-600',
   success: 'text-accent-600',
   warning: 'text-yellow-600',
-  danger: 'text-red-600',
+  danger: 'text-danger',
   info: 'text-blue-600',
 }
 
@@ -30,7 +30,7 @@ export default function Alert({
     <div
       role="alert"
       className={classNames(
-        'rounded-md border p-4 flex gap-x-3',
+        'rounded-[var(--radius-control)] border p-4 flex gap-x-3',
         variantClasses[variant],
         className,
       )}
@@ -74,7 +74,7 @@ export default function Alert({
         <button
           type="button"
           onClick={onDismiss}
-          className="shrink-0 -m-1.5 p-1.5 rounded-md hover:bg-black/5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600"
+          className="shrink-0 -m-1.5 p-1.5 rounded-[var(--radius-control)] hover:bg-black/5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600"
           aria-label="Dismiss"
         >
           <svg className="size-4" viewBox="0 0 20 20" fill="currentColor">

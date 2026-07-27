@@ -133,11 +133,11 @@ export default function OrganisationList() {
       label: 'Organisation',
       render: (o) => (
         <div>
-          <Link to={`/super-admin/organisations/${o.id}`} className="font-medium text-navy-700 hover:text-primary-600">
+          <Link to={`/super-admin/organisations/${o.id}`} className="font-medium text-ink hover:text-primary-600">
             {o.name}
           </Link>
           {o.admin && (
-            <p className="text-xs text-typography opacity-50 mt-0.5">{o.admin.email}</p>
+            <p className="text-xs text-ink opacity-50 mt-0.5">{o.admin.email}</p>
           )}
         </div>
       ),
@@ -147,7 +147,7 @@ export default function OrganisationList() {
       label: 'Admin Status',
       render: (o) => o.admin
         ? <Badge variant={o.admin.is_active ? 'success' : 'danger'}>{o.admin.is_active ? 'Active' : 'Inactive'}</Badge>
-        : <span className="text-xs text-typography opacity-40">No admin</span>,
+        : <span className="text-xs text-ink opacity-40">No admin</span>,
     },
     {
       key: 'is_active',
@@ -160,7 +160,7 @@ export default function OrganisationList() {
       render: (o) => o.admin ? (
         <div className="flex gap-3 justify-end text-xs">
           {o.admin.is_active ? (
-            <button onClick={() => handleDeactivateAdmin(o.id, o.admin.email)} className="text-red-600 hover:underline">
+            <button onClick={() => handleDeactivateAdmin(o.id, o.admin.email)} className="text-danger hover:underline">
               Deactivate
             </button>
           ) : (
@@ -168,15 +168,15 @@ export default function OrganisationList() {
               Activate
             </button>
           )}
-          <button onClick={() => handleResendInvite(o.id, o.admin.email)} className="text-navy-600 hover:underline">
+          <button onClick={() => handleResendInvite(o.id, o.admin.email)} className="text-body hover:underline">
             Resend invite
           </button>
-          <button onClick={() => handleDeleteAdmin(o.id, o.admin.email)} className="text-red-600 hover:underline">
+          <button onClick={() => handleDeleteAdmin(o.id, o.admin.email)} className="text-danger hover:underline">
             Delete
           </button>
         </div>
       ) : (
-        <Link to={`/super-admin/organisations/${o.id}`} className="text-xs text-accent hover:underline">
+        <Link to={`/super-admin/organisations/${o.id}`} className="text-xs text-link hover:underline">
           Add admin
         </Link>
       ),
@@ -191,7 +191,7 @@ export default function OrganisationList() {
       />
 
       {showForm && (
-        <form onSubmit={handleCreate} className="bg-white rounded-md shadow-sm p-4 mb-6">
+        <form onSubmit={handleCreate} className="bg-surface border border-border rounded-[var(--radius-control)] shadow-sm p-4 mb-6">
           <div className="flex flex-wrap gap-3 items-end">
             <div className="flex-1 min-w-[200px]">
               <label className="block text-xs text-muted mb-1">Company Name</label>
@@ -211,7 +211,7 @@ export default function OrganisationList() {
                 placeholder="e.g. admin@acmecorp.com"
                 required
               />
-              {emailError && <p className="text-xs text-red-600 mt-1">{emailError}</p>}
+              {emailError && <p className="text-xs text-danger mt-1">{emailError}</p>}
             </div>
             <div className="flex-1 min-w-[140px]">
               <label className="block text-xs text-muted mb-1">Admin First Name</label>
@@ -233,13 +233,13 @@ export default function OrganisationList() {
               {submitting ? 'Creating...' : 'Create & Invite'}
             </Button>
           </div>
-          <p className="text-xs text-typography opacity-40 mt-2">
+          <p className="text-xs text-ink opacity-40 mt-2">
             If admin name is provided, an invite email will be sent. Otherwise, add an admin from the organisation page later.
           </p>
         </form>
       )}
 
-      {error && <p className="text-red-600 text-sm mb-4">{error}</p>}
+      {error && <p className="text-danger text-sm mb-4">{error}</p>}
 
       <DataTable
         columns={columns}

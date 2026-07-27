@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /$
+Allow: /login
+Disallow: /admin
+Disallow: /super-admin
+Disallow: /dashboard
+Disallow: /accept-invite
+Disallow: /reset-password
+Disallow: /forgot-password
+
+Sitemap: https://incodere-lms.vercel.app/sitemap.xml

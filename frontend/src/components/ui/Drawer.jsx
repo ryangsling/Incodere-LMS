@@ -31,7 +31,7 @@ export default function Drawer({
     <Dialog open={open} onClose={onClose} className="relative z-50">
       <DialogBackdrop
         transition
-        className="fixed inset-0 bg-navy-900/40 transition-opacity data-closed:opacity-0 data-enter:duration-200 data-leave:duration-150"
+        className="fixed inset-0 bg-black/40 transition-opacity data-closed:opacity-0 data-enter:duration-200 data-leave:duration-150"
       />
       <div className="fixed inset-0 overflow-hidden">
         <div className="absolute inset-0 overflow-hidden">
@@ -46,10 +46,10 @@ export default function Drawer({
             >
               <div className="flex h-full flex-col bg-surface shadow-xl">
                 {(title || onClose) && (
-                  <div className="px-6 py-4 border-b border-gray-200 flex items-start justify-between bg-primary-50">
+                  <div className="px-6 py-4 border-b border-border flex items-start justify-between bg-primary-50">
                     <div>
                       {title && (
-                        <DialogTitle as="h3" className="text-base font-semibold text-navy-700">
+                        <DialogTitle as="h3" className="text-base font-semibold text-ink">
                           {title}
                         </DialogTitle>
                       )}
@@ -61,7 +61,7 @@ export default function Drawer({
                       <button
                         type="button"
                         onClick={onClose}
-                        className="-m-1.5 p-1.5 rounded-md text-muted hover:bg-white/60"
+                        className="-m-1.5 p-1.5 rounded-[var(--radius-control)] text-muted hover:bg-white/60"
                         aria-label="Close"
                       >
                         <svg className="size-5" viewBox="0 0 20 20" fill="currentColor">
@@ -73,7 +73,7 @@ export default function Drawer({
                 )}
                 <div className="flex-1 overflow-y-auto px-6 py-4">{children}</div>
                 {footer && (
-                  <div className="border-t border-gray-200 px-6 py-3 flex items-center justify-end gap-x-2 bg-canvas">
+                  <div className="border-t border-border px-6 py-3 flex items-center justify-end gap-x-2 bg-canvas">
                     {footer}
                   </div>
                 )}

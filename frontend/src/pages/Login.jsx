@@ -40,7 +40,7 @@ export default function Login() {
     <AuthShell title="Sign in" subtitle="Enter your credentials to access the platform">
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <label className="block text-xs font-bold uppercase tracking-wider text-typography/60 mb-2">
+          <label className="field-label">
             Email Address
           </label>
           <Input
@@ -56,12 +56,12 @@ export default function Login() {
 
         <div>
           <div className="flex items-center justify-between mb-2">
-            <label className="block text-xs font-bold uppercase tracking-wider text-typography/60">
+            <label className="field-label !mb-0">
               Password
             </label>
             <Link
               to="/forgot-password"
-              className="text-xs text-typography/60 hover:text-typography transition-colors"
+              className="text-xs text-muted hover:text-ink transition-colors"
             >
               Forgot password?
             </Link>

@@ -18,23 +18,23 @@ export default function CompanyAdminCertificates() {
     {
       key: 'learner',
       label: 'Learner',
-      render: (c) => <span className="font-medium text-typography">{c.learner?.first_name} {c.learner?.last_name}</span>,
+      render: (c) => <span className="font-medium text-ink">{c.learner?.first_name} {c.learner?.last_name}</span>,
     },
     {
       key: 'course',
       label: 'Course',
-      render: (c) => c.course?.title || '—',
+      render: (c) => c.course?.title || 'Untitled course',
     },
     {
       key: 'issued_at',
       label: 'Issued',
-      render: (c) => c.issued_at ? new Date(c.issued_at).toLocaleDateString() : '—',
+      render: (c) => c.issued_at ? new Date(c.issued_at).toLocaleDateString() : 'Not issued',
     },
     {
       key: 'id',
       label: 'Verify',
       render: (c) => (
-        <a href={`/verify/${c.id}`} target="_blank" rel="noopener noreferrer" className="text-xs text-accent hover:underline">
+        <a href={`/verify/${c.id}`} target="_blank" rel="noopener noreferrer" className="text-xs text-link hover:underline">
           Link
         </a>
       ),
@@ -61,7 +61,7 @@ export default function CompanyAdminCertificates() {
   return (
     <div>
       <PageHeader title="Certificates" />
-      {error && <p className="text-red-600 text-sm mb-4">{error}</p>}
+      {error && <p className="text-danger text-sm mb-4">{error}</p>}
       <DataTable
         columns={columns}
         rows={rows}

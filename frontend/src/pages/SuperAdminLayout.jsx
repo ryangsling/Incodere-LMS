@@ -15,16 +15,21 @@ const navItems = [
   { to: '/super-admin/stats', label: 'Platform Stats', icon: ChartBarSquareIcon },
 ]
 
+// Derived from navItems so the shell label always matches the sidebar.
+function sectionLabel(pathname) {
+  const match = [...navItems]
+    .sort((a, b) => b.to.length - a.to.length)
+    .find((item) => (item.end ? pathname === item.to : pathname.startsWith(item.to)))
+  return match?.label ?? 'Courses'
+}
+
 export default function SuperAdminLayout() {
   const location = useLocation()
-  const isCoursesRoute = location.pathname.startsWith('/super-admin') &&
-    !location.pathname.startsWith('/super-admin/organisations') &&
-    !location.pathname.startsWith('/super-admin/stats')
 
   return (
     <AdminShell
       navItems={navItems}
-      headerTitle={isCoursesRoute ? 'Course Catalogue' : 'Platform'}
+      headerTitle={sectionLabel(location.pathname)}
     >
       <Routes>
         <Route index element={<CourseList />} />

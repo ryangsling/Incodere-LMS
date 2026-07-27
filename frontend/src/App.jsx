@@ -1,33 +1,46 @@
-import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
-import { AnimatePresence } from 'motion/react'
+import { lazy, Suspense } from 'react'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import { useAuth } from './context/AuthContext'
 import { ToastProvider, Skeleton } from './components/ui'
+
+// Landing and Login are the entry points, so they stay in the main chunk.
 import Landing from './pages/Landing'
 import Login from './pages/Login'
-import ForgotPassword from './pages/ForgotPassword'
-import ResetPassword from './pages/ResetPassword'
-import AcceptInvite from './pages/AcceptInvite'
-import VerifyCertificate from './pages/VerifyCertificate'
-import LearnerDashboard from './pages/LearnerDashboard'
-import LearnerCoursePlayer from './pages/LearnerCoursePlayer'
-import LearnerCertificates from './pages/LearnerCertificates'
-import CompanyAdminLayout from './pages/CompanyAdminLayout'
-import SuperAdminLayout from './pages/SuperAdminLayout'
+import NotFound from './pages/NotFound'
+
+// Everything else is split out. The marketing page previously downloaded and
+// parsed the entire authenticated app, including the Supabase client and every
+// admin screen, before it could paint.
+const ForgotPassword = lazy(() => import('./pages/ForgotPassword'))
+const ResetPassword = lazy(() => import('./pages/ResetPassword'))
+const AcceptInvite = lazy(() => import('./pages/AcceptInvite'))
+const VerifyCertificate = lazy(() => import('./pages/VerifyCertificate'))
+const LearnerDashboard = lazy(() => import('./pages/LearnerDashboard'))
+const LearnerCoursePlayer = lazy(() => import('./pages/LearnerCoursePlayer'))
+const LearnerCertificates = lazy(() => import('./pages/LearnerCertificates'))
+const CompanyAdminLayout = lazy(() => import('./pages/CompanyAdminLayout'))
+const SuperAdminLayout = lazy(() => import('./pages/SuperAdminLayout'))
+
+function RouteFallback() {
+  return (
+    <div
+      className="flex min-h-dvh items-center justify-center bg-canvas"
+      aria-busy="true"
+      aria-live="polite"
+    >
+      <div className="w-64 space-y-3">
+        <Skeleton variant="block" />
+        <Skeleton variant="text" />
+        <span className="sr-only">Loading</span>
+      </div>
+    </div>
+  )
+}
 
 function ProtectedRoute({ children, roles }) {
   const { user, loading } = useAuth()
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-canvas flex items-center justify-center">
-        <div className="space-y-3 w-64">
-          <Skeleton variant="block" />
-          <Skeleton variant="text" />
-        </div>
-      </div>
-    )
-  }
-
+  if (loading) return <RouteFallback />
   if (!user) return <Navigate to="/login" replace />
   if (roles && !roles.includes(user.role)) return <Navigate to="/login" replace />
 
@@ -37,17 +50,7 @@ function ProtectedRoute({ children, roles }) {
 function HomeRedirect() {
   const { user, loading } = useAuth()
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-canvas flex items-center justify-center">
-        <div className="space-y-3 w-64">
-          <Skeleton variant="block" />
-          <Skeleton variant="text" />
-        </div>
-      </div>
-    )
-  }
-
+  if (loading) return <RouteFallback />
   if (!user) return <Landing />
 
   switch (user.role) {
@@ -63,12 +66,10 @@ function HomeRedirect() {
 }
 
 function App() {
-  const location = useLocation()
-
   return (
     <ToastProvider>
-      <AnimatePresence mode="wait" initial={false}>
-        <Routes location={location} key={location.pathname}>
+      <Suspense fallback={<RouteFallback />}>
+        <Routes>
           <Route path="/" element={<HomeRedirect />} />
           <Route path="/login" element={<Login />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -115,9 +116,9 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
-      </AnimatePresence>
+      </Suspense>
     </ToastProvider>
   )
 }

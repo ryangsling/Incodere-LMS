@@ -58,14 +58,14 @@ async function request(path, { method = 'GET', body, params } = {}) {
       ...(body ? { body: JSON.stringify(body) } : {}),
     })
   } catch (err) {
-    throw new Error('Network error — please check your connection and try again', { cause: err })
+    throw new Error('Network error. Please check your connection and try again.', { cause: err })
   }
 
   let json
   try {
     json = await res.json()
   } catch {
-    throw new Error(`Server error (${res.status}) — please try again later`)
+    throw new Error(`Server error (${res.status}). Please try again later.`)
   }
 
   if (!json.success) throw new Error(json.error || 'Request failed')

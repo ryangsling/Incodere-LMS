@@ -5,15 +5,15 @@ export function Skeleton({ variant = 'text', className = '', ...rest }) {
     text: 'h-3 w-full',
     title: 'h-5 w-2/3',
     avatar: 'size-10 rounded-full',
-    card: 'h-24 w-full rounded-lg',
+    card: 'h-24 w-full rounded-[var(--radius-control)]',
     row: 'h-12 w-full',
-    block: 'h-32 w-full rounded-lg',
+    block: 'h-32 w-full rounded-[var(--radius-control)]',
   }
 
   return (
     <div
       className={classNames(
-        'animate-pulse bg-gray-200',
+        'animate-pulse bg-structural',
         variantClasses[variant],
         variant !== 'avatar' && variant !== 'card' && variant !== 'block' && 'rounded',
         className
