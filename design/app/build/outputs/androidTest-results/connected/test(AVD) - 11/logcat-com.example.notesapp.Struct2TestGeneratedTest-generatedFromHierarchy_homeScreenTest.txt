@@ -1,0 +1,153 @@
+07-20 13:52:22.045  5946  5966 I TestRunner: started: generatedFromHierarchy_homeScreenTest(com.example.notesapp.Struct2TestGeneratedTest)
+07-20 13:52:22.049  5946  5966 W Settings: Setting always_finish_activities has moved from android.provider.Settings.System to android.provider.Settings.Global, returning read-only value.
+07-20 13:52:22.055   502   535 D EventSequenceValidator: inc AccIntentStartedEvents to 2
+07-20 13:52:22.074   424   424 I perfetto: ing_service_impl.cc:758 Configured tracing session 2, #sources:1, duration:5000 ms, #buffers:1, total buffer size:4096 KB, total sessions:1, uid:1071 session name: ""
+07-20 13:52:22.075   423   423 I perfetto: probes_producer.cc:230  Ftrace setup (target_buf=2)
+07-20 13:52:22.099   423   423 I perfetto: ftrace_procfs.cc:176    enabled ftrace
+07-20 13:52:22.295  5946  5946 D AppCompatDelegate: Checking for metadata for AppLocalesMetadataHolderService : Service not found
+07-20 13:52:22.313  5946  5946 D LifecycleMonitor: Lifecycle status change: com.example.notesapp.MainActivity@cfe3a31 in: PRE_ON_CREATE
+07-20 13:52:22.317  5946  5946 V ActivityScenario: Activity lifecycle changed event received but ignored because the reported transition was not ON_CREATE while the last known transition was PRE_ON_CREATE
+07-20 13:52:22.358  5946  5975 D libEGL  : loaded /vendor/lib64/egl/libEGL_emulation.so
+07-20 13:52:22.361  5946  5975 D libEGL  : loaded /vendor/lib64/egl/libGLESv1_CM_emulation.so
+07-20 13:52:22.363  5946  5975 D libEGL  : loaded /vendor/lib64/egl/libGLESv2_emulation.so
+07-20 13:52:22.390  5946  5946 W xample.notesap: Accessing hidden method Landroid/view/View;->computeFitSystemWindows(Landroid/graphics/Rect;Landroid/graphics/Rect;)Z (greylist, reflection, allowed)
+07-20 13:52:22.394  5946  5946 W xample.notesap: Accessing hidden method Landroid/view/ViewGroup;->makeOptionalFitsSystemWindows()V (greylist, reflection, allowed)
+07-20 13:52:22.674  5946  5946 D LifecycleMonitor: Lifecycle status change: com.example.notesapp.MainActivity@cfe3a31 in: CREATED
+07-20 13:52:22.675  5946  5946 V ActivityScenario: Update currentActivityStage to CREATED, currentActivity=com.example.notesapp.MainActivity@cfe3a31
+07-20 13:52:22.677  5946  5946 D LifecycleMonitor: Lifecycle status change: com.example.notesapp.MainActivity@cfe3a31 in: STARTED
+07-20 13:52:22.677  5946  5946 V ActivityScenario: Update currentActivityStage to STARTED, currentActivity=com.example.notesapp.MainActivity@cfe3a31
+07-20 13:52:22.680  5946  5946 D LifecycleMonitor: Lifecycle status change: com.example.notesapp.MainActivity@cfe3a31 in: RESUMED
+07-20 13:52:22.680  5946  5946 V ActivityScenario: Update currentActivityStage to RESUMED, currentActivity=com.example.notesapp.MainActivity@cfe3a31
+07-20 13:52:22.744  5946  5973 D HostConnection: HostConnection::get() New Host Connection established 0x71b92cab1410, tid 5973
+07-20 13:52:22.749  5946  5973 D HostConnection: HostComposition ext ANDROID_EMU_CHECKSUM_HELPER_v1 ANDROID_EMU_native_sync_v2 ANDROID_EMU_dma_v1 ANDROID_EMU_direct_mem ANDROID_EMU_host_composition_v1 ANDROID_EMU_host_composition_v2 ANDROID_EMU_vulkan ANDROID_EMU_deferred_vulkan_commands ANDROID_EMU_vulkan_null_optional_strings ANDROID_EMU_vulkan_create_resources_with_requirements ANDROID_EMU_YUV_Cache ANDROID_EMU_vulkan_ignored_handles ANDROID_EMU_has_shared_slots_host_memory_allocator ANDROID_EMU_vulkan_free_memory_sync ANDROID_EMU_vulkan_shader_float16_int8 ANDROID_EMU_vulkan_async_queue_submit ANDROID_EMU_sync_buffer_data ANDROID_EMU_vulkan_async_qsri ANDROID_EMU_read_color_buffer_dma ANDROID_EMU_hwc_color_transform GL_OES_EGL_image_external_essl3 GL_OES_vertex_array_object GL_KHR_texture_compression_astc_ldr ANDROID_EMU_host_side_tracing ANDROID_EMU_gles_max_version_3_0
+07-20 13:52:22.752   166   166 I hwservicemanager: getTransport: Cannot find entry android.hardware.configstore@1.0::ISurfaceFlingerConfigs/default in either framework or device manifest.
+07-20 13:52:22.754  5946  5973 D EGL_emulation: eglCreateContext: 0x71b91cad34f0: maj 3 min 0 rcv 3
+07-20 13:52:22.757  5946  5973 D EGL_emulation: eglMakeCurrent: 0x71b91cad34f0: ver 3 0 (tinfo 0x71b8bcafe470) (first time)
+07-20 13:52:22.784   166   166 I hwservicemanager: getTransport: Cannot find entry android.hardware.graphics.mapper@4.0::IMapper/default in either framework or device manifest.
+07-20 13:52:22.784  5946  5973 I Gralloc4: mapper 4.x is not supported
+07-20 13:52:22.786  5946  5973 D HostConnection: createUnique: call
+07-20 13:52:22.786  5946  5973 D HostConnection: HostConnection::get() New Host Connection established 0x71b92cab2790, tid 5973
+07-20 13:52:22.809  5946  5973 D HostConnection: HostComposition ext ANDROID_EMU_CHECKSUM_HELPER_v1 ANDROID_EMU_native_sync_v2 ANDROID_EMU_dma_v1 ANDROID_EMU_direct_mem ANDROID_EMU_host_composition_v1 ANDROID_EMU_host_composition_v2 ANDROID_EMU_vulkan ANDROID_EMU_deferred_vulkan_commands ANDROID_EMU_vulkan_null_optional_strings ANDROID_EMU_vulkan_create_resources_with_requirements ANDROID_EMU_YUV_Cache ANDROID_EMU_vulkan_ignored_handles ANDROID_EMU_has_shared_slots_host_memory_allocator ANDROID_EMU_vulkan_free_memory_sync ANDROID_EMU_vulkan_shader_float16_int8 ANDROID_EMU_vulkan_async_queue_submit ANDROID_EMU_sync_buffer_data ANDROID_EMU_vulkan_async_qsri ANDROID_EMU_read_color_buffer_dma ANDROID_EMU_hwc_color_transform GL_OES_EGL_image_external_essl3 GL_OES_vertex_array_object GL_KHR_texture_compression_astc_ldr ANDROID_EMU_host_side_tracing ANDROID_EMU_gles_max_version_3_0
+07-20 13:52:23.402  5946  5973 I OpenGLRenderer: Davey! duration=706ms; Flags=1, IntendedVsync=161172418045, Vsync=161172418045, OldestInputEvent=9223372036854775807, NewestInputEvent=0, HandleInputStart=161173495765, AnimationStart=161173497899, PerformTraversalsStart=161173499592, DrawStart=161288652897, SyncQueued=161297813113, SyncStart=161298398568, IssueDrawCommandsStart=161298477174, SwapBuffers=161810885497, FrameCompleted=161879205185, DequeueBufferDuration=167072, QueueBufferDuration=2649038, GpuCompleted=2563467345148232566,
+07-20 13:52:23.409   502   540 D ArtManagerInternalImpl: /data/misc/iorapd/com.example.notesapp/1/com.example.notesapp.MainActivity/compiled_traces/compiled_trace.pb doesn't exist
+07-20 13:52:23.410   502   535 D EventSequenceValidator: dec AccIntentStartedEvents to 1
+07-20 13:52:23.419  5946  5946 I Choreographer: Skipped 42 frames!  The application may be doing too much work on its main thread.
+07-20 13:52:23.466   355   382 W ServiceManager: Permission failure: android.permission.ACCESS_SURFACE_FLINGER from uid=10168 pid=5946
+07-20 13:52:23.466   355   382 D PermissionCache: checking android.permission.ACCESS_SURFACE_FLINGER for uid=10168 => denied (168 us)
+07-20 13:52:23.468   502   540 I ActivityTaskManager: Displayed com.example.notesapp/.MainActivity: +1s354ms
+07-20 13:52:23.484  5946  5973 I OpenGLRenderer: Davey! duration=771ms; Flags=0, IntendedVsync=161189084711, Vsync=161889084683, OldestInputEvent=9223372036854775807, NewestInputEvent=0, HandleInputStart=161896269875, AnimationStart=161896272580, PerformTraversalsStart=161896351027, DrawStart=161901252092, SyncQueued=161901578520, SyncStart=161903057608, IssueDrawCommandsStart=161903248765, SwapBuffers=161906884031, FrameCompleted=161961789793, DequeueBufferDuration=14776147, QueueBufferDuration=17143105, GpuCompleted=-502761581221019727,
+07-20 13:52:23.518   432  1062 E IPCThreadState: binder thread pool (1 threads) starved for 108 ms
+07-20 13:52:23.627   286   286 I Zygote  : Process 4526 exited due to signal 9 (Killed)
+07-20 13:52:23.633  4571  4571 I GH.CAR  : onDestroy
+07-20 13:52:23.633  4571  4571 I GH.CAR  : tearDown()
+07-20 13:52:23.633  4571  4571 I GH.DelegateMngCarSvc: tearDown()
+07-20 13:52:23.633  4571  5283 I GH.DelegateICarSupplier: Calling release callback on delegate com.google.android.gms.car.DelegatingCarServiceBinder@c928868
+07-20 13:52:23.633  4571  5283 I GH.DelegateICarSupplier: Releasing delegate ICar.
+07-20 13:52:23.634  4571  5283 I GH.DelegateICarSupplier: Logging successful delegate lifespan (74789 ms). Acquisition (91 ms). [Generation: 1]
+07-20 13:52:23.658  5946  5966 W FileTestStorage: Output properties is not supported.
+07-20 13:52:23.658  5946  5966 I Tracing : Tracer added: class androidx.test.platform.tracing.AndroidXTracer
+07-20 13:52:23.668   502   543 I libprocessgroup: Successfully killed process cgroup uid 10114 pid 4526 in 135ms
+07-20 13:52:23.687  5946  5966 D EventInjectionStrategy: Creating injection strategy with input manager.
+07-20 13:52:23.696  5946  5966 W xample.notesap: Accessing hidden method Landroid/hardware/input/InputManager;->getInstance()Landroid/hardware/input/InputManager; (greylist, reflection, allowed)
+07-20 13:52:23.696  1830  2703 I PBSessionCacheImpl: Deleted sessionId[8050209670735279] from persistence.
+07-20 13:52:23.696  5946  5966 W xample.notesap: Accessing hidden method Landroid/hardware/input/InputManager;->injectInputEvent(Landroid/view/InputEvent;I)Z (greylist, reflection, allowed)
+07-20 13:52:23.696  5946  5966 W xample.notesap: Accessing hidden field Landroid/hardware/input/InputManager;->INJECT_INPUT_EVENT_MODE_WAIT_FOR_FINISH:I (greylist, reflection, allowed)
+07-20 13:52:23.725  5946  5946 W xample.notesap: Accessing hidden method Landroid/os/MessageQueue;->next()Landroid/os/Message; (greylist, reflection, allowed)
+07-20 13:52:23.725  5946  5946 W xample.notesap: Accessing hidden field Landroid/os/MessageQueue;->mMessages:Landroid/os/Message; (greylist, reflection, allowed)
+07-20 13:52:23.725  5946  5946 W xample.notesap: Accessing hidden method Landroid/os/Message;->recycleUnchecked()V (greylist, reflection, allowed)
+07-20 13:52:23.727  5946  5946 W xample.notesap: Accessing hidden method Landroid/view/WindowManagerGlobal;->getInstance()Landroid/view/WindowManagerGlobal; (greylist, reflection, allowed)
+07-20 13:52:23.727  5946  5946 W xample.notesap: Accessing hidden field Landroid/view/WindowManagerGlobal;->mViews:Ljava/util/ArrayList; (greylist, reflection, allowed)
+07-20 13:52:23.727  5946  5946 W xample.notesap: Accessing hidden field Landroid/view/WindowManagerGlobal;->mParams:Ljava/util/ArrayList; (greylist, reflection, allowed)
+07-20 13:52:23.729  5946  5946 I ViewInteraction: Checking 'MatchesViewAssertion{viewMatcher=(view has effective visibility <VISIBLE> and view.getGlobalVisibleRect() to return non-empty rectangle)}' assertion on view view.getId() is <2131231087/com.example.notesapp:id/searchView_home>
+07-20 13:52:23.736  5946  5946 I ViewInteraction: Checking 'MatchesViewAssertion{viewMatcher=(view has effective visibility <VISIBLE> and view.getGlobalVisibleRect() to return non-empty rectangle)}' assertion on view view.getId() is <2131230904/com.example.notesapp:id/fab_add>
+07-20 13:52:23.738  5946  5966 W xample.notesap: Accessing hidden method Landroid/view/ViewConfiguration;->getDoubleTapMinTime()I (greylist, reflection, allowed)
+07-20 13:52:23.740  5946  5946 I ViewInteraction: Performing 'single click' action on view view.getId() is <2131230904/com.example.notesapp:id/fab_add>
+07-20 13:52:23.793   502   535 D EventSequenceValidator: inc AccIntentStartedEvents to 2
+07-20 13:52:23.849  1830  2116 W SearchServiceCore: Abort, client detached.
+07-20 13:52:23.871  1830  2116 I MicroDetectionState: Should stop hotword detection immediately - false
+07-20 13:52:23.910   424   424 I perfetto: ing_service_impl.cc:758 Configured tracing session 3, #sources:1, duration:5000 ms, #buffers:1, total buffer size:4096 KB, total sessions:2, uid:1071 session name: ""
+07-20 13:52:23.910   423   423 I perfetto: probes_producer.cc:230  Ftrace setup (target_buf=3)
+07-20 13:52:23.916   502   536 W system_server: Long monitor contention with owner Binder:502_1 (529) at android.app.ActivityManager$TaskSnapshot com.android.server.wm.TaskSnapshotCache.getSnapshot(int, int, boolean, boolean)(TaskSnapshotCache.java:68) waiters=0 in void com.android.server.wm.InputMonitor$UpdateInputWindows.run() for 115ms
+07-20 13:52:23.917   502   535 W system_server: Long monitor contention with owner Binder:502_1 (529) at android.app.ActivityManager$TaskSnapshot com.android.server.wm.TaskSnapshotCache.getSnapshot(int, int, boolean, boolean)(TaskSnapshotCache.java:68) waiters=1 in void com.android.server.wm.TaskChangeNotificationController.forAllRemoteListeners(com.android.server.wm.TaskChangeNotificationController$TaskStackConsumer, android.os.Message) for 122ms
+07-20 13:52:23.926   502   535 D EventSequenceValidator: dec AccIntentStartedEvents to 1
+07-20 13:52:23.951  5946  5946 D LifecycleMonitor: Lifecycle status change: com.example.notesapp.MainActivity@cfe3a31 in: PAUSED
+07-20 13:52:23.951  5946  5946 V ActivityScenario: Update currentActivityStage to PAUSED, currentActivity=com.example.notesapp.MainActivity@cfe3a31
+07-20 13:52:24.001  5946  5946 D LifecycleMonitor: Lifecycle status change: com.example.notesapp.NotesTakerActivity@7a4feb5 in: PRE_ON_CREATE
+07-20 13:52:24.002  5946  5946 V ActivityScenario: Activity lifecycle changed event received but ignored because the intent does not match. startActivityIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10008000 cmp=com.example.notesapp/.MainActivity }, activity.getIntent()=Intent { cmp=com.example.notesapp/.NotesTakerActivity }, activity=com.example.notesapp.NotesTakerActivity@7a4feb5
+07-20 13:52:24.018   385  5595 W AudioFlinger: createTrack_l(): mismatch between requested flags (00000004) and output flags (00000002)
+07-20 13:52:24.019   385  5595 D AF::TrackHandle: OpPlayAudio: track:55 usage:13 not muted
+07-20 13:52:24.029   502   658 D AudioTrack: createTrack_l(0): AUDIO_OUTPUT_FLAG_FAST denied by server; frameCount 0 -> 4512
+07-20 13:52:24.031   502   529 I system_server: oneway function results will be dropped but finished with status OK and parcel size 4
+07-20 13:52:24.031   502   529 I system_server: oneway function results will be dropped but finished with status OK and parcel size 4
+07-20 13:52:24.089  5946  5946 W System.err: java.lang.NullPointerException: Attempt to invoke virtual method 'java.lang.String com.example.notesapp.Models.Notes.getTitle()' on a null object reference
+07-20 13:52:24.094  5946  5946 W System.err: 	at com.example.notesapp.NotesTakerActivity.onCreate(NotesTakerActivity.java:42)
+07-20 13:52:24.094  5946  5946 W System.err: 	at android.app.Activity.performCreate(Activity.java:7994)
+07-20 13:52:24.094  5946  5946 W System.err: 	at android.app.Activity.performCreate(Activity.java:7978)
+07-20 13:52:24.094  5946  5946 W System.err: 	at android.app.Instrumentation.callActivityOnCreate(Instrumentation.java:1309)
+07-20 13:52:24.094  5946  5946 W System.err: 	at androidx.test.runner.MonitoringInstrumentation.callActivityOnCreate(MonitoringInstrumentation.java:779)
+07-20 13:52:24.094  5946  5946 W System.err: 	at android.app.ActivityThread.performLaunchActivity(ActivityThread.java:3422)
+07-20 13:52:24.094  5946  5946 W System.err: 	at android.app.ActivityThread.handleLaunchActivity(ActivityThread.java:3601)
+07-20 13:52:24.094  5946  5946 W System.err: 	at android.app.servertransaction.LaunchActivityItem.execute(LaunchActivityItem.java:85)
+07-20 13:52:24.094  5946  5946 W System.err: 	at android.app.servertransaction.TransactionExecutor.executeCallbacks(TransactionExecutor.java:135)
+07-20 13:52:24.094  5946  5946 W System.err: 	at android.app.servertransaction.TransactionExecutor.execute(TransactionExecutor.java:95)
+07-20 13:52:24.094  5946  5946 W System.err: 	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:2066)
+07-20 13:52:24.094  5946  5946 W System.err: 	at android.os.Handler.dispatchMessage(Handler.java:106)
+07-20 13:52:24.094  5946  5946 W System.err: 	at androidx.test.espresso.base.Interrogator.loopAndInterrogate(Interrogator.java:14)
+07-20 13:52:24.094  5946  5946 W System.err: 	at androidx.test.espresso.base.UiControllerImpl.loopUntil(UiControllerImpl.java:8)
+07-20 13:52:24.094  5946  5946 W System.err: 	at androidx.test.espresso.base.UiControllerImpl.loopUntil(UiControllerImpl.java:1)
+07-20 13:52:24.094  5946  5946 W System.err: 	at androidx.test.espresso.base.UiControllerImpl.injectMotionEvent(UiControllerImpl.java:5)
+07-20 13:52:24.094  5946  5946 W System.err: 	at androidx.test.espresso.action.MotionEvents.sendUp(MotionEvents.java:7)
+07-20 13:52:24.094  5946  5946 W System.err: 	at androidx.test.espresso.action.MotionEvents.sendUp(MotionEvents.java:1)
+07-20 13:52:24.094  5946  5946 W System.err: 	at androidx.test.espresso.action.Tap.sendSingleTap(Tap.java:5)
+07-20 13:52:24.094  5946  5946 W System.err: 	at androidx.test.espresso.action.Tap.-$$Nest$smsendSingleTap(Unknown Source:0)
+07-20 13:52:24.095  5946  5946 W System.err: 	at androidx.test.espresso.action.Tap$1.sendTap(Tap.java:3)
+07-20 13:52:24.095  5946  5946 W System.err: 	at androidx.test.espresso.action.GeneralClickAction.perform(GeneralClickAction.java:6)
+07-20 13:52:24.097   502  1496 I system_server: oneway function results will be dropped but finished with status OK and parcel size 4
+07-20 13:52:24.098  5946  5946 W System.err: 	at androidx.test.espresso.ViewInteraction$SingleExecutionViewAction.perform(ViewInteraction.java:2)
+07-20 13:52:24.098  5946  5946 W System.err: 	at androidx.test.espresso.ViewInteraction.doPerform(ViewInteraction.java:25)
+07-20 13:52:24.098  5946  5946 W System.err: 	at androidx.test.espresso.ViewInteraction.-$$Nest$mdoPerform(Unknown Source:0)
+07-20 13:52:24.098  5946  5946 W System.err: 	at androidx.test.espresso.ViewInteraction$1.call(ViewInteraction.java:7)
+07-20 13:52:24.098  5946  5946 W System.err: 	at androidx.test.espresso.ViewInteraction$1.call(ViewInteraction.java:1)
+07-20 13:52:24.101  5946  5946 W System.err: 	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+07-20 13:52:24.101  5946  5946 W System.err: 	at android.os.Handler.handleCallback(Handler.java:938)
+07-20 13:52:24.101  5946  5946 W System.err: 	at android.os.Handler.dispatchMessage(Handler.java:99)
+07-20 13:52:24.101  5946  5946 W System.err: 	at android.os.Looper.loop(Looper.java:223)
+07-20 13:52:24.101  5946  5946 W System.err: 	at android.app.ActivityThread.main(ActivityThread.java:7656)
+07-20 13:52:24.101  5946  5946 W System.err: 	at java.lang.reflect.Method.invoke(Native Method)
+07-20 13:52:24.101  5946  5946 W System.err: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:592)
+07-20 13:52:24.101  5946  5946 W System.err: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:947)
+07-20 13:52:24.105  5946  5946 D LifecycleMonitor: Lifecycle status change: com.example.notesapp.NotesTakerActivity@7a4feb5 in: CREATED
+07-20 13:52:24.105  5946  5946 V ActivityScenario: Activity lifecycle changed event received but ignored because the intent does not match. startActivityIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10008000 cmp=com.example.notesapp/.MainActivity }, activity.getIntent()=Intent { cmp=com.example.notesapp/.NotesTakerActivity }, activity=com.example.notesapp.NotesTakerActivity@7a4feb5
+07-20 13:52:24.116  5946  5946 D LifecycleMonitor: Lifecycle status change: com.example.notesapp.NotesTakerActivity@7a4feb5 in: STARTED
+07-20 13:52:24.116  5946  5946 V ActivityScenario: Activity lifecycle changed event received but ignored because the intent does not match. startActivityIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10008000 cmp=com.example.notesapp/.MainActivity }, activity.getIntent()=Intent { cmp=com.example.notesapp/.NotesTakerActivity }, activity=com.example.notesapp.NotesTakerActivity@7a4feb5
+07-20 13:52:24.117  5946  5946 D LifecycleMonitor: Lifecycle status change: com.example.notesapp.NotesTakerActivity@7a4feb5 in: RESUMED
+07-20 13:52:24.117  5946  5946 V ActivityScenario: Activity lifecycle changed event received but ignored because the intent does not match. startActivityIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10008000 cmp=com.example.notesapp/.MainActivity }, activity.getIntent()=Intent { cmp=com.example.notesapp/.NotesTakerActivity }, activity=com.example.notesapp.NotesTakerActivity@7a4feb5
+07-20 13:52:24.121   292   292 E FMQ     : grantorIdx must be less than 3
+07-20 13:52:24.121   292   292 E FMQ     : grantorIdx must be less than 3
+07-20 13:52:24.151   385   463 E FMQ     : grantorIdx must be less than 3
+07-20 13:52:24.151   385   463 E FMQ     : grantorIdx must be less than 3
+07-20 13:52:24.243   502   540 I ActivityTaskManager: Displayed com.example.notesapp/.NotesTakerActivity: +448ms
+07-20 13:52:24.297   502  1496 I system_server: oneway function results will be dropped but finished with status OK and parcel size 4
+07-20 13:52:24.326  5946  5946 D LifecycleMonitor: Lifecycle status change: com.example.notesapp.MainActivity@cfe3a31 in: STOPPED
+07-20 13:52:24.327  5946  5946 V ActivityScenario: Update currentActivityStage to STOPPED, currentActivity=com.example.notesapp.MainActivity@cfe3a31
+07-20 13:52:24.464   502   535 D EventSequenceValidator: inc AccIntentStartedEvents to 2
+07-20 13:52:24.468  5946  5946 D LifecycleMonitor: Lifecycle status change: com.example.notesapp.NotesTakerActivity@7a4feb5 in: PAUSED
+07-20 13:52:24.468  5946  5946 V ActivityScenario: Activity lifecycle changed event received but ignored because the intent does not match. startActivityIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10008000 cmp=com.example.notesapp/.MainActivity }, activity.getIntent()=Intent { cmp=com.example.notesapp/.NotesTakerActivity }, activity=com.example.notesapp.NotesTakerActivity@7a4feb5
+07-20 13:52:24.489   286   286 D Zygote  : Forked child process 5998
+07-20 13:52:24.493   424   424 I perfetto: ing_service_impl.cc:758 Configured tracing session 4, #sources:1, duration:5000 ms, #buffers:1, total buffer size:4096 KB, total sessions:3, uid:1071 session name: ""
+07-20 13:52:24.493   423   423 I perfetto: probes_producer.cc:230  Ftrace setup (target_buf=4)
+07-20 13:52:24.500  5998  5998 I e.notesapp.tes: Late-enabling -Xcheck:jni
+07-20 13:52:24.525  5998  5998 I e.notesapp.tes: Unquickening 12 vdex files!
+07-20 13:52:24.526  5998  5998 W e.notesapp.tes: Unexpected CPU variant for X86 using defaults: x86_64
+07-20 13:52:24.529   400   414 I adbd    : jdwp connection from 5998
+07-20 13:52:24.549  5998  5998 D ApplicationLoaders: Returning zygote-cached class loader: /system/framework/android.test.base.jar
+07-20 13:52:24.549  5998  5998 D ApplicationLoaders: Returning zygote-cached class loader: /system/framework/android.test.base.jar
+07-20 13:52:24.551  5998  5998 I e.notesapp.tes: The ClassLoaderContext is a special shared library.
+07-20 13:52:24.551  5998  5998 D ApplicationLoaders: Returning zygote-cached class loader: /system/framework/android.test.base.jar
+07-20 13:52:24.551  5998  5998 D ApplicationLoaders: Returning zygote-cached class loader: /system/framework/android.test.base.jar
+07-20 13:52:24.553  5998  5998 I e.notesapp.tes: The ClassLoaderContext is a special shared library.
+07-20 13:52:24.588  5998  5998 D NetworkSecurityConfig: No Network Security Config specified, using platform default
+07-20 13:52:24.589  5998  5998 D NetworkSecurityConfig: No Network Security Config specified, using platform default
+07-20 13:52:24.611  5946  5946 D LifecycleMonitor: Lifecycle status change: com.example.notesapp.MainActivity@cfe3a31 in: DESTROYED
+07-20 13:52:24.612  5946  5946 V ActivityScenario: Update currentActivityStage to DESTROYED, currentActivity=null
+07-20 13:52:24.616  5946  5966 I TestRunner: finished: generatedFromHierarchy_homeScreenTest(com.example.notesapp.Struct2TestGeneratedTest)

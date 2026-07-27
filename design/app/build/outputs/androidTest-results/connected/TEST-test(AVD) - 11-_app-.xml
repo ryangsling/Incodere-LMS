@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<testsuite name="com.example.notesapp.ExampleInstrumentedTest" tests="2" failures="0" errors="0" skipped="0" time="3.86" timestamp="2026-07-20T13:52:26" hostname="localhost">
+  <properties>
+    <property name="device" value="test(AVD) - 11" />
+    <property name="flavor" value="" />
+    <property name="project" value=":app" />
+  </properties>
+  <testcase name="useAppContext" classname="com.example.notesapp.ExampleInstrumentedTest" time="0.019" />
+  <testcase name="generatedFromHierarchy_homeScreenTest" classname="com.example.notesapp.Struct2TestGeneratedTest" time="2.419" />
+</testsuite>
